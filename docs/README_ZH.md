@@ -22,6 +22,9 @@
 |x方向顺序连接元素|[connect elements sequece by x](../Scripts/Connect%20elements%20sequence%20by%20x.md)|<img src="../images/connect elements sequece by x.gif" alt="Image" width="400">|
 |y方向顺序连接元素|[connect elements sequece by y](../Scripts/Connect%20elements%20sequence%20by%20x.md)|<img src="../images/connect elements sequece by y.gif" alt="Image" width="400">|
 |连接元素为思维导图结构|[connect elements sequece by y](../Scripts/Connect%20elements_by_x.md)|<img src="../images/connect elements by x - mindmap.gif" alt="Image" width="400">|
+|按需加载library|[load more library](../Scripts/Encrypted/load%20more%20library.md)|<img src="../images/library1.gif" alt="Image" width="400"><img src="../images/library2.gif" alt="Image" width="400">|
+|自定义形状箭头拉伸|- [add fixed and dragable for line](../Scripts/Encrypted/add%20fixed%20and%20dragable%20for%20line.md)</br>- [autorun-handlePointDraggingHook](../Scripts/Encrypted/autorun-handlePointDraggingHook.md)|<img src="../images/fixedDragable.gif" alt="Image" width="400">|
+
 
 你可以查看演示和更多细节在:
 - 我的[B站空间](https://space.bilibili.com/39231346/)

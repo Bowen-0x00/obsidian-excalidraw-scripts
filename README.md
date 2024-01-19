@@ -21,6 +21,9 @@ Some scripts rely on [modified version](https://github.com/Bowen-0x00/obsidian-e
 | Connect elements sequence in x direction |[connect elements sequece by x](Scripts/Connect%20elements%20sequence%20by%20x.md)|<img src="images/connect elements sequece by x.gif" alt="Image" width="400">|
 | Connect elements sequence in y direction |[connect elements sequece by y](Scripts/Connect%20elements%20sequence%20by%20x.md)|<img src="images/connect elements sequece by y.gif" alt="Image" width="400">|
 | Connect elements to mindmap structure |[connect elements sequece by y](Scripts/Connect%20elements_by_x.md)|<img src="images/connect elements by x - mindmap.gif" alt="Image" width="400">|
+|Library grouping & on-demand loading.|[load more library](Scripts/Encrypted/load%20more%20library.md)|<img src="images/library1.gif" alt="Image" width="400"><img src="images/library2.gif" alt="Image" width="400">|
+| drag and stretch custom-shaped arrows while keeping the arrowhead|- [add fixed and dragable for line](Scripts/Encrypted/add%20fixed%20and%20dragable%20for%20line.md)</br>- [autorun-handlePointDraggingHook](Scripts/Encrypted/autorun-handlePointDraggingHook.md)|<img src="images/fixedDragable.gif" alt="Image" width="400">|
+
 
 You can view the demonstration and more details on
 - My [Bilibili Space](https://space.bilibili.com/39231346/).
