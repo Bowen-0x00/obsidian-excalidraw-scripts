@@ -1,0 +1,13 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+	<title>New Project</title>
+	<defs>
+		<image  width="900" height="91" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA4QAAABbAQMAAAARANkfAAAAAXNSR0IB2cksfwAAAANQTFRFVsP3DEWM6gAAACFJREFUeJztwTEBAAAAwqD1T20Hb6AAAAAAAAAAAAAAHgMohgABA62m4AAAAABJRU5ErkJggg=="/>
+		<image  width="700" height="91" id="img2" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAArwAAABbAQMAAACrqsQTAAAAAXNSR0IB2cksfwAAAANQTFRFVvemqwMefwAAAB9JREFUeJztwTEBAAAAwqD1T20LL6AAAAAAAAAAgIMBH6MAAfnbI4kAAAAASUVORK5CYII="/>
+		<image  width="500" height="91" id="img3" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAABbAQMAAAC/JeVGAAAAAXNSR0IB2cksfwAAAAZQTFRF92dW7WNSAgsgAgAAACFJREFUeJztwUERAAAIA6D1T2sDF8LzByQAAAAAAPBgT6bvOj6zQa3VlwAAAABJRU5ErkJggg=="/>
+	</defs>
+	<style>
+	</style>
+	<use id="Shape 1" href="#img1" x="90" y="831"/>
+	<use id="Shape 1 copy 2" href="#img2" x="190" y="468"/>
+	<use id="Shape 1 copy" href="#img3" x="290" y="106"/>
+</svg>

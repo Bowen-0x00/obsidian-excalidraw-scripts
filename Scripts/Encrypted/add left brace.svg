@@ -1,0 +1,28 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98.71875 122.33943211548876" width="98.71875"
+  height="122.33943211548876" class="excalidraw-svg">
+  <!-- svg-source:excalidraw -->
+
+  <defs>
+    <style>
+      undefined
+    </style>
+  </defs>
+  <rect x="0" y="0" width="98.71875" height="122.33943211548876" fill="#ffffff" />
+  <g stroke-linecap="round" style="stroke: chocolate;">
+    <g transform="translate(30.467886423097752 10) rotate(0 -10.233943211548876 51.16971605774438)">
+      <path
+        d="M0 0 C-1.71 1.71, -8.53 3.41, -10.23 10.23 C-11.94 17.06, -8.53 34.11, -10.23 40.94 C-11.94 47.76, -20.47 47.76, -20.47 51.17 C-20.47 54.58, -11.94 54.58, -10.23 61.4 C-8.53 68.23, -11.94 85.28, -10.23 92.11 C-8.53 98.93, -1.71 100.63, 0 102.34 M0 0 C-1.71 1.71, -8.53 3.41, -10.23 10.23 C-11.94 17.06, -8.53 34.11, -10.23 40.94 C-11.94 47.76, -20.47 47.76, -20.47 51.17 C-20.47 54.58, -11.94 54.58, -10.23 61.4 C-8.53 68.23, -11.94 85.28, -10.23 92.11 C-8.53 98.93, -1.71 100.63, 0 102.34"
+        stroke="#f08c00" stroke-width="4" fill="none" />
+    </g>
+  </g>
+  <mask />
+  <g transform="translate(42 10) rotate(0 20 11.5)"><text x="0" y="0" font-family="Helvetica, Segoe UI Emoji"
+      font-size="20px" fill="#1e1e1e" text-anchor="start" style="white-space: pre;stroke-width: initial;" direction="ltr"
+      dominant-baseline="text-before-edge">xxxx</text></g>
+  <g transform="translate(42 49.169716057744154) rotate(0 22.24609375 11.5)"><text x="0" y="0"
+      font-family="Helvetica, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start"
+      style="white-space: pre;stroke-width: initial;" direction="ltr" dominant-baseline="text-before-edge">oooo</text></g>
+  <g transform="translate(42 88.33943211548876) rotate(0 23.359375 11.5)"><text x="0" y="0"
+      font-family="Helvetica, Segoe UI Emoji" font-size="20px" fill="#1e1e1e" text-anchor="start"
+      style="white-space: pre;stroke-width: initial;" direction="ltr" dominant-baseline="text-before-edge">====</text></g>
+</svg>

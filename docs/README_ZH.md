@@ -24,7 +24,7 @@
 |连接元素为思维导图结构|[connect elements sequece by y](../Scripts/Connect%20elements_by_x.md)|<img src="../images/connect elements by x - mindmap.gif" alt="Image" width="400">|
 |按需加载library|[load more library](../Scripts/Encrypted/load%20more%20library.md)|<img src="../images/library1.gif" alt="Image" width="400"><img src="../images/library2.gif" alt="Image" width="400">|
 |自定义形状箭头拉伸|- [add fixed and dragable for line](../Scripts/Encrypted/add%20fixed%20and%20dragable%20for%20line.md)</br>- [autorun-handlePointDraggingHook](../Scripts/Encrypted/autorun-handlePointDraggingHook.md)|<img src="../images/fixedDragable.gif" alt="Image" width="400">|
-
+| 显示/隐藏细节 |- [add detail - detail](../Scripts/Encrypted/add%20detial%20-%20detail.md)</br>- [add detail - target](../Scripts/Encrypted/add%20detial%20-%20target.md)</br>- [autorun-handleCanvasPointerUp_detail_Hook](../Scripts/Encrypted/autorun-handleCanvasPointerUp_detail_Hook.md)|<img src="../images/detail2.gif" alt="Image" width="400">|
 
 你可以查看演示和更多细节在:
 - 我的[B站空间](https://space.bilibili.com/39231346/)

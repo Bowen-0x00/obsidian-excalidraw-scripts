@@ -1,0 +1,13 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 323 323" width="323" height="323">
+	<title>highlight text</title>
+	<style>
+		tspan { white-space:pre } 
+		.s0 { fill: #0ec27c } 
+		.t1 { font-size: 67px;fill: #000000;font-weight: 400;font-family: "DejaVuSans", "DejaVu Sans" } 
+	</style>
+	<path id="" class="s0" d="m157 104h161v105h-161z"/>
+	<text id="highlight text" style="transform: matrix(1,0,0,1,14.292,173.695)" >
+		<tspan x="0" y="0" class="t1">highlight</tspan><tspan  y="0" class="t1"> </tspan><tspan  y="0" class="t1">t</tspan><tspan  y="0" class="t1">e</tspan><tspan  y="0" class="t1">x</tspan><tspan  y="0" class="t1">t
+</tspan>
+	</text>
+</svg>

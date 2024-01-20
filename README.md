@@ -23,6 +23,7 @@ Some scripts rely on [modified version](https://github.com/Bowen-0x00/obsidian-e
 | Connect elements to mindmap structure |[connect elements sequece by y](Scripts/Connect%20elements_by_x.md)|<img src="images/connect elements by x - mindmap.gif" alt="Image" width="400">|
 |Library grouping & on-demand loading.|[load more library](Scripts/Encrypted/load%20more%20library.md)|<img src="images/library1.gif" alt="Image" width="400"><img src="images/library2.gif" alt="Image" width="400">|
 | drag and stretch custom-shaped arrows while keeping the arrowhead|- [add fixed and dragable for line](Scripts/Encrypted/add%20fixed%20and%20dragable%20for%20line.md)</br>- [autorun-handlePointDraggingHook](Scripts/Encrypted/autorun-handlePointDraggingHook.md)|<img src="images/fixedDragable.gif" alt="Image" width="400">|
+| Show and hide detail |- [add detail - detail](Scripts/Encrypted/add%20detial%20-%20detail.md)</br>- [add detail - target](Scripts/Encrypted/add%20detial%20-%20target.md)</br>- [autorun-handleCanvasPointerUp_detail_Hook](Scripts/Encrypted/autorun-handleCanvasPointerUp_detail_Hook.md)|<img src="images/detail2.gif" alt="Image" width="400">|
 
 
 You can view the demonstration and more details on

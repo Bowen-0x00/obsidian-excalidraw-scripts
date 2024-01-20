@@ -1,0 +1,28 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142.37375000000003 161.4000000000001"
+  width="142.37375000000003" height="161.4000000000001" class="excalidraw-svg">
+  <!-- svg-source:excalidraw -->
+
+  <defs>
+    <style>
+      undefined
+    </style>
+  </defs>
+  <rect x="0" y="0" width="142.37375000000003" height="161.4000000000001" fill="#ffffff" />
+  <g stroke-linecap="round" style="stroke-width: initial;stroke: chocolate;" >
+    <g transform="translate(104.09375 10) rotate(0 14.140000000000015 70.70000000000005)">
+      <path
+        d="M0 0 C2.36 2.36, 11.78 4.71, 14.14 14.14 C16.5 23.57, 11.78 47.13, 14.14 56.56 C16.5 65.99, 28.28 65.99, 28.28 70.7 C28.28 75.41, 16.5 75.41, 14.14 84.84 C11.78 94.27, 16.5 117.83, 14.14 127.26 C11.78 136.69, 2.36 139.04, 0 141.4 M0 0 C2.36 2.36, 11.78 4.71, 14.14 14.14 C16.5 23.57, 11.78 47.13, 14.14 56.56 C16.5 65.99, 28.28 65.99, 28.28 70.7 C28.28 75.41, 16.5 75.41, 14.14 84.84 C11.78 94.27, 16.5 117.83, 14.14 127.26 C11.78 136.69, 2.36 139.04, 0 141.4"
+        stroke="#f08c00" stroke-width="4" fill="none" />
+    </g>
+  </g>
+  <mask />
+  <g transform="translate(10 10) rotate(0 36 20.700000000000045)"><text x="0" y="0"
+      font-family="Helvetica, Segoe UI Emoji" font-size="36px" fill="#000000" text-anchor="start"
+      style="white-space: pre;stroke-width: initial;" direction="ltr" dominant-baseline="text-before-edge">xxxx</text></g>
+  <g transform="translate(10 60) rotate(0 40.04296875 20.700000000000045)"><text x="0" y="0"
+      font-family="Helvetica, Segoe UI Emoji" font-size="36px" fill="#000000" text-anchor="start"
+      style="white-space: pre;stroke-width: initial;" direction="ltr" dominant-baseline="text-before-edge">oooo</text></g>
+  <g transform="translate(10 110) rotate(0 42.046875 20.700000000000045)"><text x="0" y="0"
+      font-family="Helvetica, Segoe UI Emoji" font-size="36px" fill="#000000" text-anchor="start"
+      style="white-space: pre;stroke-width: initial;" direction="ltr" dominant-baseline="text-before-edge">====</text></g>
+</svg>
