@@ -8,6 +8,8 @@
 
 部分脚本依赖于我对obsidian-excalidraw的[修改版本](https://github.com/Bowen-0x00/obsidian-excalidraw-plugin-ymjr)，大部分不需要任何依赖。
 
+obsidian 示例库 [obsidian-excalidraw-example-vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault)中放了一些功能演示。 你也可以看[视频](https://www.bilibili.com/video/BV1zN4y1H7Dx/) 了解部分这些功能。
+
 
 ## 特性&功能 (上传中...)
 
@@ -25,6 +27,8 @@
 |按需加载library|[load more library](../Scripts/Encrypted/load%20more%20library.md)|<img src="../images/library1.gif" alt="Image" width="400"><img src="../images/library2.gif" alt="Image" width="400">|
 |自定义形状箭头拉伸|- [add fixed and dragable for line](../Scripts/Encrypted/add%20fixed%20and%20dragable%20for%20line.md)</br>- [autorun-handlePointDraggingHook](../Scripts/Encrypted/autorun-handlePointDraggingHook.md)|<img src="../images/fixedDragable.gif" alt="Image" width="400">|
 | 显示/隐藏细节 |- [add detail - detail](../Scripts/Encrypted/add%20detial%20-%20detail.md)</br>- [add detail - target](../Scripts/Encrypted/add%20detial%20-%20target.md)</br>- [autorun-handleCanvasPointerUp_detail_Hook](../Scripts/Encrypted/autorun-handleCanvasPointerUp_detail_Hook.md)|<img src="../images/detail2.gif" alt="Image" width="400">|
+| 自动连接功能 (直角连接、附着到连接点) |- [autorun-binding](../Scripts/Encrypted/autorun-binding.md)</br>- [autorun-utils](../Scripts/Encrypted/autorun-utils.md)</br>- [switch connection shape](../Scripts/Encrypted/switch%20connection%20shape.md)|<img src="../images/switch connection shape2.gif" alt="Image" width="400">|
+
 
 你可以查看演示和更多细节在:
 - 我的[B站空间](https://space.bilibili.com/39231346/)

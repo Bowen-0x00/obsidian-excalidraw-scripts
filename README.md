@@ -8,6 +8,9 @@ It implements many useful/interesting features to enhance the experience of usin
 
 Some scripts rely on [modified version](https://github.com/Bowen-0x00/obsidian-excalidraw-plugin-ymjr) to Obsidian-Excalidraw, while others don't require any dependencies.
 
+You can find the demo obsidian vault at [obsidian-excalidraw-example-vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault). Here is a demonstration [video](https://www.bilibili.com/video/BV1zN4y1H7Dx/). 
+
+
 ## Features (Uploading...)
 
 |feature|scripts|image|
@@ -24,7 +27,7 @@ Some scripts rely on [modified version](https://github.com/Bowen-0x00/obsidian-e
 |Library grouping & on-demand loading.|[load more library](Scripts/Encrypted/load%20more%20library.md)|<img src="images/library1.gif" alt="Image" width="400"><img src="images/library2.gif" alt="Image" width="400">|
 | drag and stretch custom-shaped arrows while keeping the arrowhead|- [add fixed and dragable for line](Scripts/Encrypted/add%20fixed%20and%20dragable%20for%20line.md)</br>- [autorun-handlePointDraggingHook](Scripts/Encrypted/autorun-handlePointDraggingHook.md)|<img src="images/fixedDragable.gif" alt="Image" width="400">|
 | Expand/collapse details  |- [add detail - detail](Scripts/Encrypted/add%20detial%20-%20detail.md)</br>- [add detail - target](Scripts/Encrypted/add%20detial%20-%20target.md)</br>- [autorun-handleCanvasPointerUp_detail_Hook](Scripts/Encrypted/autorun-handleCanvasPointerUp_detail_Hook.md)|<img src="images/detail2.gif" alt="Image" width="400">|
-
+| Automatic connection feature (right-angle connection, attaching to connection points) |- [autorun-binding](Scripts/Encrypted/autorun-binding.md)</br>- [autorun-utils](Scripts/Encrypted/autorun-utils.md)</br>- [switch connection shape](Scripts/Encrypted/switch%20connection%20shape.md)|<img src="images/switch connection shape2.gif" alt="Image" width="400">|
 
 You can view the demonstration and more details on
 - My [Bilibili Space](https://space.bilibili.com/39231346/).
