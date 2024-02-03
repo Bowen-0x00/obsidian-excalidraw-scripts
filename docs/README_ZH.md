@@ -6,29 +6,32 @@
 
 实现了很多实用/有趣的功能，以提高使用excalidraw的体验
 
-部分脚本依赖于我对obsidian-excalidraw的[修改版本](https://github.com/Bowen-0x00/obsidian-excalidraw-plugin-ymjr)，大部分不需要任何依赖。
+部分脚本依赖于我对obsidian-excalidraw的[修改版本](https://github.com/Bowen-0x00/obsidian-excalidraw-plugin-ymjr)，部分不需要任何依赖。
 
-obsidian 示例库 [obsidian-excalidraw-example-vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault)中放了一些功能演示。 你也可以看[视频](https://www.bilibili.com/video/BV1zN4y1H7Dx/) 了解部分这些功能。
+我打包了一个obsidian 示例库 [obsidian-excalidraw-example-vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault), 其中包含了修改后的插件和很多自定义脚本，以及一些用于演示功能的excalidraw画布。你可以直接用obsidian打开然后体验功能。
+你也可以看[视频](https://www.bilibili.com/video/BV1zN4y1H7Dx/) 快速了解其中的部分功能。
 
 
 ## 特性&功能 (上传中...)
 
 |feature|scripts|image|
 |---|---|---|
-|转换连接为直角连接| [convert line to Right-angle.md](../Scripts/convert%20line%20to%20Right-angle.md) | <img src="../images/right%20angle.gif" alt="Image" width="400">|
-用kanban显示frame为大纲|[show outline by frame - kanban.md](../Scripts/show%20outline%20by%20frame%20-%20kanban.md)|<img src="../images/kanban.gif" alt="Image" width="400">|
-|设置箭头类型| [Set arrow type.md](../Scripts/Set%20arrow%20type.md) | <img src="../images/arrow type2.gif" alt="Image" width="400">|
-|插入垂直间隔 | [insert vertical space.md](../Scripts/insert%20vertical%20space.md) | <img src="../images/insert vertical space.gif" alt="Image" width="400">|
-|插入垂直间隔 (宽度范围) | [insert vertical space with width.md](../Scripts/insert%20vertical%20space%20with%20width.md) | <img src="../images/insert vertical space.gif" alt="Image" width="400">|
-|增加图片到当前画布|[add image server.md](../Scripts/add%20image%20server.md)| <img src="../images/add image by server1.gif" alt="Image" width="400">|
-|x方向顺序连接元素|[connect elements sequece by x](../Scripts/Connect%20elements%20sequence%20by%20x.md)|<img src="../images/connect elements sequece by x.gif" alt="Image" width="400">|
-|y方向顺序连接元素|[connect elements sequece by y](../Scripts/Connect%20elements%20sequence%20by%20x.md)|<img src="../images/connect elements sequece by y.gif" alt="Image" width="400">|
-|连接元素为思维导图结构|[connect elements sequece by y](../Scripts/Connect%20elements_by_x.md)|<img src="../images/connect elements by x - mindmap.gif" alt="Image" width="400">|
-|按需加载library|[load more library](../Scripts/Encrypted/load%20more%20library.md)|<img src="../images/library1.gif" alt="Image" width="400"><img src="../images/library2.gif" alt="Image" width="400">|
-|自定义形状箭头拉伸|- [add fixed and dragable for line](../Scripts/Encrypted/add%20fixed%20and%20dragable%20for%20line.md)</br>- [autorun-handlePointDraggingHook](../Scripts/Encrypted/autorun-handlePointDraggingHook.md)|<img src="../images/fixedDragable.gif" alt="Image" width="400">|
-| 显示/隐藏细节 |- [add detail - detail](../Scripts/Encrypted/add%20detial%20-%20detail.md)</br>- [add detail - target](../Scripts/Encrypted/add%20detial%20-%20target.md)</br>- [autorun-handleCanvasPointerUp_detail_Hook](../Scripts/Encrypted/autorun-handleCanvasPointerUp_detail_Hook.md)|<img src="../images/detail2.gif" alt="Image" width="400">|
-| 自动连接功能 (直角连接、附着到连接点) |- [autorun-binding](../Scripts/Encrypted/autorun-binding.md)</br>- [autorun-utils](../Scripts/Encrypted/autorun-utils.md)</br>- [switch connection shape](../Scripts/Encrypted/switch%20connection%20shape.md)|<img src="../images/switch connection shape2.gif" alt="Image" width="400">|
-
+|转换连接为直角连接| [convert line to Right-angle.md](../Scripts/convert%20line%20to%20Right-angle.md) | <img src="../images/right%20angle.gif" alt="Image" >|
+|转换连接为直角连接 (圆角边)| [convert connection shape to elbow.md](../Scripts/Encrypted/convert%20connection%20shape%20to%20elbow.md) | <img src="../images/Convert connection to elbow.gif" alt="Image" >|
+用kanban显示frame为大纲|[show outline by frame - kanban.md](../Scripts/show%20outline%20by%20frame%20-%20kanban.md)|<img src="../images/kanban.gif" alt="Image" >|
+|设置箭头类型| [Set arrow type.md](../Scripts/Set%20arrow%20type.md) | <img src="../images/arrow type2.gif" alt="Image" >|
+|插入垂直间隔 | [insert vertical space.md](../Scripts/insert%20vertical%20space.md) | <img src="../images/insert vertical space.gif" alt="Image" >|
+|插入垂直间隔 (宽度范围) | [insert vertical space with width.md](../Scripts/insert%20vertical%20space%20with%20width.md) | <img src="../images/insert vertical space.gif" alt="Image" >|
+|增加图片到当前画布|[add image server.md](../Scripts/add%20image%20server.md)| <img src="../images/add image by server1.gif" alt="Image" >|
+|x方向顺序连接元素|[connect elements sequece by x](../Scripts/Connect%20elements%20sequence%20by%20x.md)|<img src="../images/connect elements sequece by x.gif" alt="Image" >|
+|y方向顺序连接元素|[connect elements sequece by y](../Scripts/Connect%20elements%20sequence%20by%20x.md)|<img src="../images/connect elements sequece by y.gif" alt="Image" >|
+|连接元素为思维导图结构|[connect elements sequece by y](../Scripts/Connect%20elements_by_x.md)|<img src="../images/connect elements by x - mindmap.gif" alt="Image" >|
+|按需加载library|[load more library](../Scripts/Encrypted/load%20more%20library.md)|<img src="../images/library1.gif" alt="Image" ><img src="../images/library2.gif" alt="Image" >|
+|自定义形状箭头拉伸|- [add fixed and dragable for line](../Scripts/Encrypted/add%20fixed%20and%20dragable%20for%20line.md)</br>- [autorun-handlePointDraggingHook](../Scripts/Encrypted/autorun-handlePointDraggingHook.md)|<img src="../images/fixedDragable.gif" alt="Image" >|
+| 显示/隐藏细节 |- [add detail - detail](../Scripts/Encrypted/add%20detial%20-%20detail.md)</br>- [add detail - target](../Scripts/Encrypted/add%20detial%20-%20target.md)</br>- [autorun-handleCanvasPointerUp_detail_Hook](../Scripts/Encrypted/autorun-handleCanvasPointerUp_detail_Hook.md)|<img src="../images/detail2.gif" alt="Image" >|
+| 自动连接功能 (直角连接、附着到连接点) |- [autorun-binding](../Scripts/Encrypted/autorun-binding.md)</br>- [_autorun-utils](../Scripts/Encrypted/_autorun-utils.md)</br>- [switch connection shape](../Scripts/Encrypted/switch%20connection%20shape.md)|<img src="../images/switch connection shape2.gif" alt="Image" > </br> <img src="../images/curve.gif" alt="Image" >|
+| 代码语法高亮 |- [mark as code](../Scripts/Encrypted/mark%20as%20code.md)</br>- [autorun-drawElementOnCanvasHook](../Scripts/Encrypted/autorun-drawElementOnCanvasHook.md)</br>- [_autorun-utils](../Scripts/Encrypted/_autorun-utils.md)|<img src="../images/code.gif" alt="Image" >|
+| 展开/折叠元素  |- [add collapse by line](../Scripts/Encrypted/add%20collapse%20by%20line.md)</br>- [autorun-onPointerDownHook](../Scripts/Encrypted/autorun-onPointerDownHook.md)|<img src="../images/collapse.gif" alt="Image" >|
 
 你可以查看演示和更多细节在:
 - 我的[B站空间](https://space.bilibili.com/39231346/)
