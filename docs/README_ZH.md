@@ -36,7 +36,7 @@
 | 展开/折叠元素  |- [add collapse by line](../Scripts/Encrypted/add%20collapse%20by%20line.md)</br>- [autorun-onPointerDownHook](../Scripts/Encrypted/autorun-onPointerDownHook.md)|<img src="../images/collapse.gif" alt="Image" >|
 | echarts  |- [insert echarts](../Scripts/Encrypted/insert%20echarts.md)</br>- [convert text to echarts](../Scripts/Encrypted/convert%20text%20to%20echarts.md) </br>- [switch echarts type](../Scripts/Encrypted/switch%20echarts%20type.md) </br>- [autorun-onPasteHook](../Scripts/Encrypted/autorun-onPasteHook.md) </br>- [autorun-renderCustomDocument](../Scripts/Encrypted/autorun-renderCustomDocument.md)|<img src="../images/echarts.gif" >|
 | 导出svg时渲染本地md、代码高亮、echarts  |- [autorun-renderElementToSvg_Hook](../Scripts/Encrypted/autorun-renderElementToSvg_Hook.md)</br>|<img src="../images/export svg.gif" alt="Image" >|
-
+| 箭头和形状流动动画  |- [add animation for line](../Scripts/Encrypted/add%20animation%20for%20line.md)</br> - [autorun-drawElementFromCanvasHook](../Scripts/Encrypted/autorun-drawElementFromCanvasHook.md)</br> - [remove animation](../Scripts/Encrypted/remove%20animation.md)</br> - [autorun-deleteSelectedElementsHook](../Scripts/Encrypted/autorun-deleteSelectedElementsHook.md)|<img src="../images/arrow flow animation.gif" alt="Image" >|
 
 你可以查看演示和更多细节在:
 - 我的[B站空间](https://space.bilibili.com/39231346/)

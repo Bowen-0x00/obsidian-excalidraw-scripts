@@ -35,6 +35,7 @@ You can find the demo obsidian vault at [obsidian-excalidraw-example-vault](http
 | Expand/collapse elements  |- [add collapse by line](Scripts/Encrypted/add%20collapse%20by%20line.md)</br>- [autorun-onPointerDownHook](Scripts/Encrypted/autorun-onPointerDownHook.md)|<img src="images/collapse.gif" alt="Image" >|
 | echarts  |- [insert echarts](Scripts/Encrypted/insert%20echarts.md)</br>- [convert text to echarts](Scripts/Encrypted/convert%20text%20to%20echarts.md) </br>- [switch echarts type](Scripts/Encrypted/switch%20echarts%20type.md) </br>- [autorun-onPasteHook](Scripts/Encrypted/autorun-onPasteHook.md) </br>- [autorun-renderCustomDocument](Scripts/Encrypted/autorun-renderCustomDocument.md)|<img src="images/echarts.gif" >|
 | Rendering local MD, code highlighting, and Echarts when exporting SVG/embedding Excalidraw into MD. |- [autorun-renderElementToSvg_Hook](Scripts/Encrypted/autorun-renderElementToSvg_Hook.md)</br>|<img src="images/export svg.gif" alt="Image" >|
+| Flow animation fow arrow and shapes  |- [add animation for line](Scripts/Encrypted/add%20animation%20for%20line.md)</br> - [autorun-drawElementFromCanvasHook](Scripts/Encrypted/autorun-drawElementFromCanvasHook.md)</br> - [remove animation](Scripts/Encrypted/remove%20animation.md)</br> - [autorun-deleteSelectedElementsHook](Scripts/Encrypted/autorun-deleteSelectedElementsHook.md)|<img src="images/arrow flow animation.gif" alt="Image" >|
 
 
 You can view the demonstration and more details on

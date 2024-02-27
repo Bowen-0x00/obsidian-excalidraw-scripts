@@ -115,7 +115,7 @@
 |<span>show layer.md</span>|[[#show layer]]|
 |<span>show layers.md</span>|[[#show layers]]|
 |<span>add zoomHide.md</span>|[[#add zoomHide]]|
-|<span>add animation.md</span>|[[#add animation]]|
+|<span>add elements appear by line.md</span>|[[#add elements appear by line]]|
 
 ## Outline
 **Keywords**: Outline, thumbnail
@@ -241,6 +241,14 @@
 |<span>follow.md</span>|[[#follow]]|
 |<span>follow_inv.md</span>|[[#follow_inv]]|
 |<span>return click link pos.md</span>|[[#return click link pos]]|
+
+## Animation
+**Keywords**: Selection
+
+|    |     |
+|----|-----|
+|<span>add animation for line.md</span>|[[#add animation for line]]|
+|<span>remove animation.md</span>|[[#remove animation]]|
 
 ## Miscellaneous
 
@@ -467,12 +475,21 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
-## add animation
+## add animation for line
 
 ```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20animation.md
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20animation%20for%20line.md
 ```
-<table><tr  valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20animation.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<table><tr  valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20animation%20for%20line.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## add elements appear by line
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20elements%20appear%20by%20line.md
+```
+<table><tr  valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20elements%20appear%20by%20line.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
@@ -1396,6 +1413,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/reduce%20size.md
 ```
 <table><tr  valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/reduce%20size.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## remove animation
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/remove%20animation.md
+```
+<table><tr  valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/remove%20animation.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
