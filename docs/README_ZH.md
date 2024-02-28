@@ -38,6 +38,7 @@
 | 导出svg时渲染本地md、代码高亮、echarts  |- [autorun-renderElementToSvg_Hook](../Scripts/Encrypted/autorun-renderElementToSvg_Hook.md)</br>|<img src="../images/export svg.gif" alt="Image" >|
 | 箭头和形状流动动画  |- [add animation for line](../Scripts/Encrypted/add%20animation%20for%20line.md)</br> - [autorun-drawElementFromCanvasHook](../Scripts/Encrypted/autorun-drawElementFromCanvasHook.md)</br> - [remove animation](../Scripts/Encrypted/remove%20animation.md)</br> - [autorun-deleteSelectedElementsHook](../Scripts/Encrypted/autorun-deleteSelectedElementsHook.md)|<img src="../images/arrow flow animation.gif" alt="Image" >|
 | 高亮连接 |- [add highlight link](../Scripts/Encrypted/add%20highlight%20link.md)</br> - [autorun-_renderInteractiveScene_Hook](../Scripts/Encrypted/autorun-_renderInteractiveScene_Hook.md)</br> - [autorun-handleCanvasPointerUp_Hook](../Scripts/Encrypted/autorun-handleCanvasPointerUp_Hook.md)|<img src="../images/highlight link.gif" alt="Image" >|
+| 添加标签 (Obsidian) |- [add highlight link](../Scripts/Encrypted/set%20element%20tags.md)|<img src="../images/tags.gif" alt="Image" >|
 
 你可以查看演示和更多细节在:
 - 我的[B站空间](https://space.bilibili.com/39231346/)

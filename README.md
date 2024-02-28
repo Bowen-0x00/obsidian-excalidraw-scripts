@@ -37,6 +37,8 @@ You can find the demo obsidian vault at [obsidian-excalidraw-example-vault](http
 | Rendering local MD, code highlighting, and Echarts when exporting SVG/embedding Excalidraw into MD. |- [autorun-renderElementToSvg_Hook](Scripts/Encrypted/autorun-renderElementToSvg_Hook.md)</br>|<img src="images/export svg.gif" alt="Image" >|
 | Flow animation fow arrow and shapes  |- [add animation for line](Scripts/Encrypted/add%20animation%20for%20line.md)</br> - [autorun-drawElementFromCanvasHook](Scripts/Encrypted/autorun-drawElementFromCanvasHook.md)</br> - [remove animation](Scripts/Encrypted/remove%20animation.md)</br> - [autorun-deleteSelectedElementsHook](Scripts/Encrypted/autorun-deleteSelectedElementsHook.md)|<img src="images/arrow flow animation.gif" alt="Image" >|
 | Highlight link |- [add highlight link](Scripts/Encrypted/add%20highlight%20link.md)</br> - [autorun-_renderInteractiveScene_Hook](Scripts/Encrypted/autorun-_renderInteractiveScene_Hook.md)</br> - [autorun-handleCanvasPointerUp_Hook](Scripts/Encrypted/autorun-handleCanvasPointerUp_Hook.md)|<img src="images/highlight link.gif" alt="Image" >|
+| Set tags for element (Obsidian) |- [add highlight link](Scripts/Encrypted/set%20element%20tags.md)|<img src="images/tags.gif" alt="Image" >|
+
 
 You can view the demonstration and more details on
 - My [Bilibili Space](https://space.bilibili.com/39231346/).
