@@ -264,6 +264,7 @@
 |<span>add hover.md</span>|[[#add hover]]|
 |<span>add measure.md</span>|[[#add measure]]|
 |<span>add wrapper.md</span>|[[#add wrapper]]|
+|<span>copy customData.md</span>|[[#copy customData]]|
 |<span>convert to shape (iink).md</span>|[[#convert to shape (iink)]]|
 |<span>edit custom data.md</span>|[[#edit custom data]]|
 |<span>get element id to clipboard.md</span>|[[#get element id to clipboard]]|
@@ -1142,6 +1143,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/convert%20text%20to%20echarts.md
 ```
 <table><tr  valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/convert%20text%20to%20echarts.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## copy customData
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/copy%20customData.md
+```
+<table><tr  valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/copy%20customData.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
