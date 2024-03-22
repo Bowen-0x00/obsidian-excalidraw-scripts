@@ -1,1 +1,195 @@
-const ds=X;(function(l,J){const dh=X,C=l();while(!![]){try{const j=-parseInt(dh(0x2d0))/(0x3*-0x1bf+-0x17*0x9+0x60d)+parseInt(dh(0x2bc))/(0x1587+0x1793+-0x2d18)*(parseInt(dh(0x2c7))/(0x14ab+0xff3*-0x1+-0x4b5))+parseInt(dh(0x203))/(0x1*-0xde6+0x20b*0xb+-0x88f)*(-parseInt(dh(0x20c))/(0x111e+-0x24be*-0x1+-0xb3*0x4d))+-parseInt(dh(0x2cd))/(0x14a0+-0x18b2+0x418)+-parseInt(dh(0x228))/(-0x226d+0x321+0x1f53)+parseInt(dh(0x2d7))/(-0x23a+-0x1*-0x192d+-0x16eb)+parseInt(dh(0x226))/(-0x2009*0x1+0x13c4+0xc4e);if(j===J)break;else C['push'](C['shift']());}catch(o){C['push'](C['shift']());}}}(d,-0x1*0x52273+0x5189a+0x2c2a5),console[ds(0x204)](ds(0x2e2)+ds(0x25d)),await ea[ds(0x2b8)](ea[ds(0x2ed)]));function d(){const XX=['Conic','boGYZ','uJVvJ','ibuwW','UzbLT','TweQb','\x20caption','title','lFjBq','kewWL','uHGHG','cRRWV','PZSQY','joGOm','sCsOE','gOpOO','XcRvo','YKoQy','kevvI','start','DjyLD','QgGeH','LYHhY','cxqMa','fhvat','IPgdZ','CJfwK','height','MaxDU','alGradient','fter','createRadi','WUEaQ','uDoEl','min','vGnBM','end','YWsUK','LsdKo','hGeDP','LfzvA','temp','dNOkB','fgWeY','TCoXR','IgKwM','mxKoI','LLoGv','colorParti','yADhi','svgGradien','OtojX','KZsPp','rGezv','PYMGi','MsIsd','LbLIg','zgLtP','eZcwV','diFfc','match','KFjfR','mdZhQ','FLhlp','HvHNx','setView','QHdEH','Ywlho','IxXFx','19430JGccXp','fEYLb','ZzudN','ient','wyAWE','llyzL','weight','yQrKp','zosGC','brPgw','hTHaW','39PUqlSR','appcp','DXbPO','npjbP','mNAgq','ZEpsL','925776BnSnAz','XZCgm','JKBlR','181932VQBPHF','length','otmtH','hCIWb','HLUxF','UbsDj','TIXxZ','1805408uQvbRu','YSgdQ','JbdId','vmqmw','RiTAo','AcDud','bjzIF','save','XqEeF','cruQS','hUMSJ','autorun-Te','linearGrad','PFrID','tePUb','SOQEI','bold','dkIwo','font','strokeStyl','mDQEl','tpZmh','targetView','PFBIb','quqnX','width','bWwnr','bold\x20','Lbduj','NNAQi','qdulz','createConi','nMPbE','measureTex','OgepO','Cvqon','KeXzy','FNpfP','Mmlnc','FFfbU','GoACZ','substring','4jJyizi','log','TextHook_a','restore','MmXAs','NsmkY','pCgnW','qfPUO','CYosE','1714175iFiUvX','LwJBA','LBqnG','LvHhw','ldSSp','asSNW','kOtyM','iaICZ','SQJoE','fsVTb','yXUdo','UpCPw','eyNlL','JhaEh','YOxVA','gradient','gradientTy','customData','drawElemen','jWIZE','OFbli','TextHook_b','VDovq','gRhYA','MwnUk','push','4947723pxKsKB','GbsCu','309925LAjgrb','EIuow','QtQdx','boldPartia','YxStD','tqJTe','sort','nANfC','kxqhC','rawAPI','myTuK','fCDFY','pOjFU','lsJqX','IBoQd','PueYW','NONlK','tenbp','fillText','zvhRI','colorStops','zlshF','LVvWW','emQBU','goIaZ','VLClh','lTeIB','tOnCanvas_','DqWAy','radialGrad','ydCDE','BsohQ','SchUI','imXJG','UPrhd','tUhia','fWsDS','hkEPK','BPOet','HPkrA','QLlPt','cGradient','Oguhw','zXJXT','vFJyr','huwlk','color','znnJk','KYpZV','YcNOI','getExcalid','cfXMt','fillStyle','xtHook','EIPoM','TzBBq','rcslr','MuQod','byMhc','efore','sVHdE','fsuXc','contains','aKlGL','VJySq','GvjVP','iWTOe','psnaY','vDEMI','xUWUv','WPMsl','NnELW','xGQOP','dcGbM','kfgAw','max','createArgs','pWpcP','MzXQT'];d=function(){return XX;};return d();}function X(l,J){const C=d();return X=function(j,o){j=j-(-0x3*-0x282+0x5*-0x6a1+0x24c*0xc);let M=C[j];return M;},X(l,J);}let dw=ea[ds(0x25a)+ds(0x231)](),dO=![];function dU(l){const dW=ds;!dO&&(l[dW(0x2de)](),dO=!![]);}window[ds(0x21e)+ds(0x243)+ds(0x221)+ds(0x263)]=function(l,J,C,j,o,M){const dP=ds,k={'uJVvJ':function(H,B){return H+B;},'Mmlnc':function(H,B){return H*B;},'ZzudN':function(H,B){return H-B;},'znnJk':function(H,B){return H-B;},'kOtyM':function(H,B){return H+B;},'IgKwM':function(H,B){return H>B;},'XqEeF':function(H,B){return H-B;},'UPrhd':function(H,B){return H+B;},'YcNOI':function(H,B,T,S){return H(B,T,S);},'zgLtP':function(H,B){return H+B;},'tUhia':function(H,B){return H+B;},'YWsUK':function(H,B){return H(B);},'LLoGv':dP(0x1f4),'brPgw':dP(0x27d),'LvHhw':function(H,B){return H in B;},'LbLIg':dP(0x2c2),'kevvI':dP(0x2e7),'uDoEl':function(H,B){return H+B;},'HvHNx':dP(0x27e),'MaxDU':function(H,B){return H!==B;},'OtojX':dP(0x2bb),'aKlGL':dP(0x21a),'BsohQ':function(H,B){return H*B;},'tePUb':function(H,B){return H+B;},'DqWAy':function(H,B){return H!==B;},'YxStD':dP(0x27b),'gOpOO':dP(0x1f1),'LYHhY':function(H,B){return H<B;},'fhvat':function(H,B){return H<B;},'EIuow':function(H,B){return H+B;},'iaICZ':function(H,B){return H-B;},'SchUI':function(H,B){return H*B;},'FFfbU':function(H,B){return H-B;},'zlshF':function(H,B){return H!==B;},'TzBBq':dP(0x26c),'psnaY':dP(0x29d),'PueYW':function(H,B){return H+B;},'eyNlL':function(H,B){return H*B;},'ZEpsL':function(H,B){return H+B;},'KeXzy':function(H,B){return H===B;},'fsVTb':dP(0x2c1),'FLhlp':dP(0x290),'boGYZ':function(H,B){return H*B;},'nANfC':function(H,B){return H!==B;},'bjzIF':dP(0x2e1),'GvjVP':dP(0x264),'QHdEH':function(H,B){return H+B;},'XcRvo':function(H,B){return H*B;},'TweQb':function(H,B){return H+B;},'yXUdo':function(H,B,T,S){return H(B,T,S);},'UbsDj':dP(0x245)+dP(0x2bf),'gRhYA':function(H,B){return H+B;},'ibuwW':function(H,B){return H-B;},'pCgnW':dP(0x26f),'vGnBM':function(H,B){return H-B;},'CYosE':function(H,B){return H*B;},'fEYLb':function(H,B){return H+B;},'kewWL':function(H,B){return H-B;},'rGezv':function(H,B){return H+B;},'MwnUk':function(H,B){return H-B;},'ydCDE':function(H,B){return H*B;},'cruQS':function(H,B,T,S){return H(B,T,S);},'JKBlR':function(H,B){return H+B;},'Cvqon':function(H,B){return H===B;},'imXJG':dP(0x2c8),'GoACZ':dP(0x258),'uHGHG':function(H,B){return H-B;},'NONlK':function(H,B){return H*B;},'hTHaW':function(H,B){return H+B;},'dkIwo':function(H,B){return H*B;},'tqJTe':function(H,B){return H/B;},'zXJXT':function(H,B){return H/B;},'UpCPw':function(H,B){return H/B;},'KFjfR':function(H,B){return H===B;},'VDovq':dP(0x262),'joGOm':function(H,B){return H in B;},'fgWeY':function(H,B){return H+B;},'pOjFU':function(H,B){return H in B;},'ldSSp':function(H,B){return H+B;},'QLlPt':function(H,B){return H in B;},'goIaZ':dP(0x2e9),'nMPbE':function(H,B){return H(B);},'sCsOE':function(H,B){return H in B;},'eZcwV':function(H,B){return H!==B;},'HLUxF':dP(0x2c3),'diFfc':dP(0x220),'LBqnG':function(H,B){return H+B;},'mDQEl':function(H,B){return H in B;},'YSgdQ':function(H,B){return H+B;},'PFrID':dP(0x21b),'MmXAs':dP(0x219),'VLClh':dP(0x282),'qdulz':function(H,B){return H(B);},'lFjBq':dP(0x2e3)+dP(0x2bf),'dNOkB':dP(0x296)+dP(0x294),'hCIWb':function(H,B){return H!==B;},'cxqMa':dP(0x1f6),'fWsDS':dP(0x270),'fsuXc':dP(0x1f8)+dP(0x251),'SOQEI':function(H,B){return H===B;},'LVvWW':dP(0x268),'JbdId':dP(0x277),'dcGbM':function(H,B){return H(B);},'QgGeH':function(H,B){return H==B;},'QtQdx':function(H,B){return H/B;},'hGeDP':function(H,B){return H/B;},'DXbPO':function(H,B){return H/B;},'asSNW':function(H,B){return H==B;},'mxKoI':function(H,B){return H===B;},'BPOet':dP(0x24d),'vmqmw':dP(0x1f5),'cfXMt':function(H,B){return H/B;},'GbsCu':function(H,B){return H/B;},'fCDFY':function(H,B){return H/B;},'lsJqX':function(H,B){return H/B;},'WUEaQ':function(H,B){return H===B;},'bWwnr':dP(0x232),'PFBIb':dP(0x2ce),'emQBU':function(H,B){return H<B;},'vFJyr':function(H,B,T,S){return H(B,T,S);},'zosGC':function(H,B){return H===B;},'DjyLD':dP(0x2b5),'jWIZE':dP(0x2d2),'TIXxZ':dP(0x2ba),'kfgAw':function(H,B,T,S){return H(B,T,S);}};if(l[dP(0x21d)]){if(k[dP(0x2b4)](k[dP(0x222)],k[dP(0x222)])){k[dP(0x284)](k[dP(0x289)],l[dP(0x21d)])&&(k[dP(0x29c)](dU,J),J[dP(0x2e9)]=k[dP(0x2a2)](k[dP(0x2a6)],J[dP(0x2e9)]));k[dP(0x234)](k[dP(0x2b7)],l[dP(0x21d)])&&(k[dP(0x29c)](dU,J),J[dP(0x2e9)]=k[dP(0x210)](J[dP(0x2e9)][dP(0x2b3)](/\d*\.*\d+px/)[-0x1*-0x79d+0x137*0x7+-0x101e],k[dP(0x2c5)]));k[dP(0x250)](k[dP(0x240)],l[dP(0x21d)])&&(k[dP(0x1f9)](dU,J),k[dP(0x285)](k[dP(0x2af)],l[dP(0x21d)][dP(0x2e9)])&&(k[dP(0x2b1)](k[dP(0x2d4)],k[dP(0x2d4)])?k[dP(0x23a)](H,B,k[dP(0x279)](k[dP(0x1ff)](T,S),a)):J[dP(0x2e9)]=l[dP(0x21d)][dP(0x2e9)][dP(0x2c2)]+'\x20'+J[dP(0x2e9)]),k[dP(0x284)](k[dP(0x289)],l[dP(0x21d)])&&(k[dP(0x2b4)](k[dP(0x2b2)],k[dP(0x2b2)])?J[dP(0x2e9)]=k[dP(0x20e)](k[dP(0x2a6)],J[dP(0x2e9)]):J[dP(0x206)]()),k[dP(0x2eb)](k[dP(0x2b7)],l[dP(0x21d)])&&(J[dP(0x2e9)]=k[dP(0x2d8)](J[dP(0x2e9)][dP(0x2b3)](/\d*\.*\d+px/)[-0x2383*0x1+0x6ad+0x1cd6],k[dP(0x2c5)])));if(k[dP(0x284)](k[dP(0x2e4)],l[dP(0x21d)])){if(k[dP(0x22f)](k[dP(0x207)],k[dP(0x241)])){k[dP(0x1f7)](dU,J),window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)]={},window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x21c)+'pe']=k[dP(0x27f)];if(l[dP(0x21d)][dP(0x21b)][dP(0x266)](k[dP(0x2a1)])){if(k[dP(0x2d3)](k[dP(0x28e)],k[dP(0x24c)]))window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x21c)+'pe']=k[dP(0x2d5)];else{const L=s[dP(0x273)](0x13a3*0x1+-0x1119+0x82*-0x5,k[dP(0x2be)](W[P][dP(0x28a)],G));let v=K[dP(0x202)](0x900+-0x25c7+0x1cc7*0x1,L);v&&dx[dP(0x23a)](v,dz,k[dP(0x257)](k[dP(0x1ff)](k[dP(0x212)](du,-0x1*0xe89+0x7a9+0x6e1),dF),dY));d2+=v[dP(0x2d1)],d3+=d4[dP(0x1fa)+'t'](v)[dP(0x1f2)],d5[dP(0x2de)](),d6[dP(0x25c)]=d7[d8][dP(0x256)],d9[dP(0x2ea)+'e']=dd[dX][dP(0x256)];const f=k[dP(0x2a4)](k[dP(0x257)](dl[dJ][dP(0x29b)],dC),dj[dP(0x2d1)]),r=dM[dP(0x299)](k[dP(0x279)](k[dP(0x2df)](dk[dH][dP(0x29b)],dB),v[dP(0x2d1)]),dT[dP(0x2d1)]);let R=dS[dP(0x202)](L,r);R&&dc[dP(0x23a)](R,dn,k[dP(0x2be)](k[dP(0x1ff)](k[dP(0x24a)](dN,-0x1*-0x949+-0xc15+0x2cd),dZ),dq)),dR+=R[dP(0x2d1)],dQ[dP(0x206)](),k[dP(0x259)](dD,dV[dP(0x202)](r),k[dP(0x2b0)](dt,dg[dP(0x1fa)+'t'](R)[dP(0x1f2)]),k[dP(0x24b)](dp,!f));}}else l[dP(0x21d)][dP(0x21b)][dP(0x266)](k[dP(0x265)])&&(k[dP(0x2e6)](k[dP(0x23e)],k[dP(0x23e)])?window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x21c)+'pe']=k[dP(0x2d9)]:(k[dP(0x29c)](o,M),k[dP(0x2e9)]=k[dP(0x279)](k[dP(0x2a6)],H[dP(0x2e9)])));let T=l,S=J;k[dP(0x271)](eval,''+l[dP(0x21d)][dP(0x21b)]),S[dP(0x25c)]=gradient,window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)]=[];if(k[dP(0x28c)](window?.[dP(0x21d)]?.[dP(0x2a9)+'t']?.[dP(0x274)]?.[dP(0x2d1)],-0x7*0x38f+0xd*0x1d2+0x143))window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x22a)](window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][0x1740+0x2d8+-0x2*0xd0c],l[dP(0x1f2)])),window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x29e)](window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][-0x9*-0x2f1+0x2f5*-0x3+0x11*-0x109],l[dP(0x292)])),window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x2c9)](window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][0xe7*0x1f+-0x1945*0x1+-0x2b2],l[dP(0x1f2)])),window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x29e)](window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][0x96*-0x1b+0x47a+0x33*0x39],l[dP(0x292)]));else{if(k[dP(0x211)](createArgs?.[dP(0x2d1)],-0x1*0xc85+-0x1db4+0x1*0x2a3f)){if(k[dP(0x2a5)](k[dP(0x24e)],k[dP(0x2da)]))j[dP(0x2e9)]=o[dP(0x21d)][dP(0x2e9)][dP(0x2c2)]+'\x20'+M[dP(0x2e9)];else{const f=Math[dP(0x273)](l[dP(0x1f2)],l[dP(0x292)]);window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x25b)](window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][0x1*-0x13+-0x5b6+0x5c9],l[dP(0x1f2)])),window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x22d)](window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][0x161f+-0x22*0x89+-0x3ec],l[dP(0x292)])),window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x227)](window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][-0x1*0x1381+-0x2b*-0xbc+-0xc11],f)),window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x233)](window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][-0x1a7f+-0x3*0x80d+0x32a9],l[dP(0x1f2)])),window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x235)](window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][0x1376+0x36e*-0x9+0x4*0x2db],l[dP(0x292)])),window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x217)](window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][0x1ffa+-0x1d9+-0x2f*0xa4],f));}}}window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x23c)]=window[dP(0x21d)][dP(0x2a9)+'t'][dP(0x23c)];}else C[dP(0x2e9)]=k[dP(0x2b0)](j[dP(0x2e9)][dP(0x2b3)](/\d*\.*\d+px/)[-0xe27+-0x1*-0xd5a+0xcd],k[dP(0x2c5)]);}if(l[dP(0x21d)]?.[dP(0x22b)+'l']){if(k[dP(0x297)](k[dP(0x1f3)],k[dP(0x2ee)]))!j&&(k[dP(0x2de)](),H=!![]);else{let Q=-0x609*0x1+0x273+-0x2*-0x1cb;const D=l[dP(0x21d)][dP(0x22b)+'l'][dP(0x22e)]((t,g)=>{const dm=dP,p={'KZsPp':function(x,z){const dG=X;return k[dG(0x29c)](x,z);},'huwlk':function(z,u){const dK=X;return k[dK(0x20f)](z,u);},'tenbp':k[dm(0x2af)],'OgepO':k[dm(0x289)],'SQJoE':function(z,u){const dA=dm;return k[dA(0x298)](z,u);},'NsmkY':k[dm(0x2a6)],'MuQod':function(z,u){const di=dm;return k[di(0x20f)](z,u);},'npjbP':k[dm(0x2b7)],'EIPoM':k[dm(0x2c5)]};if(k[dm(0x293)](k[dm(0x2aa)],k[dm(0x267)]))return k[dm(0x257)](t[dm(0x28a)],g[dm(0x28a)]);else p[dm(0x2ab)](L,v),p[dm(0x255)](p[dm(0x239)],f[dm(0x21d)][dm(0x2e9)])&&(z[dm(0x2e9)]=u[dm(0x21d)][dm(0x2e9)][dm(0x2c2)]+'\x20'+F[dm(0x2e9)]),p[dm(0x255)](p[dm(0x1fb)],D[dm(0x21d)])&&(Y[dm(0x2e9)]=p[dm(0x214)](p[dm(0x208)],c[dm(0x2e9)])),p[dm(0x261)](p[dm(0x2ca)],g[dm(0x21d)])&&(n[dm(0x2e9)]=p[dm(0x214)](N[dm(0x2e9)][dm(0x2b3)](/\d*\.*\d+px/)[-0x166d+-0x15b0+-0x17*-0x1eb],p[dm(0x25e)]));});let V=0x1*0x1ebb+-0x23bb+-0x28*-0x20;for(let t=-0x1347+-0x254f*-0x1+-0x4*0x482;k[dP(0x23f)](t,C[dP(0x2d1)]);t++){const g=C[t];function p(z,u,F){const X0=dP;if(k[X0(0x244)](k[X0(0x22c)],k[X0(0x286)])){if(!z)return;if(k[X0(0x28d)](F,D[X0(0x2d1)])&&k[X0(0x28f)](D[F][X0(0x28a)],k[X0(0x229)](Q,g[X0(0x2d1)]))){const Y=Math[X0(0x273)](0x1b*-0x56+-0x1*0xa75+0x1387*0x1,k[X0(0x213)](D[F][X0(0x28a)],Q));let c=z[X0(0x202)](0x1*-0x201b+-0x2687+0x2351*0x2,Y);c&&J[X0(0x23a)](c,u,k[X0(0x298)](k[X0(0x248)](t,M),o));Q+=c[X0(0x2d1)],u+=J[X0(0x1fa)+'t'](c)[X0(0x1f2)],J[X0(0x2de)](),J[X0(0x2e9)]=k[X0(0x279)](k[X0(0x2a6)],J[X0(0x2e9)]);const n=k[X0(0x2a4)](k[X0(0x200)](D[F][X0(0x29b)],Q),z[X0(0x2d1)]),N=Math[X0(0x299)](k[X0(0x212)](k[X0(0x213)](D[F][X0(0x29b)],Q),c[X0(0x2d1)]),z[X0(0x2d1)]);let Z=z[X0(0x202)](Y,N);Z&&(k[X0(0x23d)](k[X0(0x25f)],k[X0(0x26b)])?J[X0(0x23a)](Z,u,k[X0(0x237)](k[X0(0x218)](t,M),o)):(C[X0(0x2de)](),j=!![])),Q+=Z[X0(0x2d1)],J[X0(0x206)](),k[X0(0x259)](p,z[X0(0x202)](N),k[X0(0x212)](u,J[X0(0x1fa)+'t'](Z)[X0(0x1f2)]),k[X0(0x2cc)](F,!n));}else k[X0(0x1fd)](k[X0(0x215)],k[X0(0x2b6)])?J[X0(0x206)]():(J[X0(0x23a)](z,u,k[X0(0x237)](k[X0(0x278)](t,M),o)),Q+=z[X0(0x2d1)]);}else k[X0(0x23a)](H,B,k[X0(0x257)](k[X0(0x247)](k[X0(0x2e5)](T,0x18c7*0x1+0x15f4+-0x2eba),S),a));}k[dP(0x254)](p,g,j,V);}return!![];}}if(l[dP(0x21d)]?.[dP(0x2a7)+'al']){if(k[dP(0x2c4)](k[dP(0x28b)],k[dP(0x28b)])){let x=-0x121*0x22+-0x4*-0x877+0x486;const z=l[dP(0x21d)][dP(0x2a7)+'al'][dP(0x22e)]((F,Y)=>{const X1=dP;if(k[X1(0x22f)](k[X1(0x2dd)],k[X1(0x269)]))return k[X1(0x2be)](F[X1(0x28a)],Y[X1(0x28a)]);else J[X1(0x206)]();});let u=-0x3*-0x433+0x1*-0x2dc+0x115*-0x9;for(let F=-0x7*-0x542+-0x401*-0x8+-0x44d6;k[dP(0x23f)](F,C[dP(0x2d1)]);F++){if(k[dP(0x2b4)](k[dP(0x21f)],k[dP(0x2d6)]))J[dP(0x206)]();else{const c=C[F];function n(N,Z,q){const X6=dP,b={'TCoXR':function(I,E){const X2=X;return k[X2(0x257)](I,E);},'mNAgq':function(I,E){const X3=X;return k[X3(0x2b9)](I,E);},'zvhRI':function(I,E){const X4=X;return k[X4(0x287)](I,E);},'wyAWE':function(I,E){const X5=X;return k[X5(0x2cc)](I,E);},'LfzvA':k[X6(0x2a6)],'PZSQY':function(I,E){const X7=X6;return k[X7(0x2a4)](I,E);},'FNpfP':function(I,E){const X8=X6;return k[X8(0x27c)](I,E);},'kxqhC':function(I,E,y,e){const X9=X6;return k[X9(0x216)](I,E,y,e);},'pWpcP':k[X6(0x2d5)]};if(!N)return;if(k[X6(0x28d)](q,z[X6(0x2d1)])&&k[X6(0x28d)](z[q][X6(0x28a)],k[X6(0x223)](x,c[X6(0x2d1)]))){const I=Math[X6(0x273)](-0x1*-0x1796+0xbe2+-0x2378,k[X6(0x27a)](z[q][X6(0x28a)],x));let E=N[X6(0x202)](-0x70c*-0x2+0x8cb*0x3+-0x2879,I);if(E){if(k[X6(0x23d)](k[X6(0x209)],k[X6(0x209)])){const U=w[X6(0x273)](0x2559*0x1+-0x1*-0x203+-0x13ae*0x2,b[X6(0x2a3)](O[U][X6(0x28a)],h));let h=s[X6(0x202)](-0xad6*0x2+0x192*-0xf+-0x33b*-0xe,U);h&&dr[X6(0x23a)](h,dR,b[X6(0x2cb)](b[X6(0x23b)](dQ,dD),dV));A+=h[X6(0x2d1)],i+=d0[X6(0x1fa)+'t'](h)[X6(0x1f2)],d1[X6(0x2de)](),d2[X6(0x2e9)]=b[X6(0x2c0)](b[X6(0x29f)],d3[X6(0x2e9)]);const s=b[X6(0x283)](b[X6(0x2a3)](d4[d5][X6(0x29b)],d6),d7[X6(0x2d1)]),W=d8[X6(0x299)](b[X6(0x2cb)](b[X6(0x2a3)](d9[dd][X6(0x29b)],dX),h[X6(0x2d1)]),dl[X6(0x2d1)]);let P=dJ[X6(0x202)](U,W);P&&dt[X6(0x23a)](P,dg,b[X6(0x1fe)](b[X6(0x23b)](dp,dx),dz)),dB+=P[X6(0x2d1)],dT[X6(0x206)](),b[X6(0x230)](dS,da[X6(0x202)](W),b[X6(0x2c0)](dL,dv[X6(0x1fa)+'t'](P)[X6(0x1f2)]),b[X6(0x2c0)](df,!s));}else J[X6(0x23a)](E,Z,k[X6(0x29a)](k[X6(0x20b)](k[X6(0x2bd)](F,0xa13*-0x3+-0x101*-0x21+-0x2e7),M),o));}x+=E[X6(0x2d1)],Z+=J[X6(0x1fa)+'t'](E)[X6(0x1f2)],J[X6(0x2de)](),J[X6(0x25c)]=z[q][X6(0x256)],J[X6(0x2ea)+'e']=z[q][X6(0x256)];const y=k[X6(0x2a4)](k[X6(0x280)](z[q][X6(0x29b)],x),N[X6(0x2d1)]),e=Math[X6(0x299)](k[X6(0x2ac)](k[X6(0x224)](z[q][X6(0x29b)],x),E[X6(0x2d1)]),N[X6(0x2d1)]);let w=N[X6(0x202)](I,e);w&&J[X6(0x23a)](w,Z,k[X6(0x280)](k[X6(0x246)](k[X6(0x279)](F,0x25d6+0x866+-0x2e3b),M),o)),x+=w[X6(0x2d1)],J[X6(0x206)](),k[X6(0x2e0)](n,N[X6(0x202)](e),k[X6(0x2cf)](Z,J[X6(0x1fa)+'t'](w)[X6(0x1f2)]),k[X6(0x2b0)](q,!y));}else k[X6(0x1fc)](k[X6(0x249)],k[X6(0x201)])?J[X6(0x21d)][X6(0x2a9)+'t'][X6(0x2a0)][X6(0x21c)+'pe']=b[X6(0x275)]:(J[X6(0x23a)](N,Z,k[X6(0x281)](k[X6(0x238)](k[X6(0x2c6)](F,0x8cb*0x3+-0x1c22+0xf*0x1e),M),o)),x+=N[X6(0x2d1)]);}k[dP(0x272)](n,c,j,u);}}return!![];}else k[dP(0x23a)](H,B,k[dP(0x24b)](k[dP(0x2e8)](T,S),a));}}else L[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x22d)](v[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][0x3*-0x19f+-0x203+0x6e0],f[dP(0x1f2)])),r[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x253)](R[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][0x6a*-0x16+0x14dc+0x61*-0x1f],Q[dP(0x292)])),D[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x217)](V[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][0x5ad+-0x1f58+-0x3ab*-0x7],t[dP(0x1f2)])),g[dP(0x21d)][dP(0x2a9)+'t'][dP(0x2a0)][dP(0x274)][dP(0x225)](k[dP(0x253)](p[dP(0x21d)][dP(0x2a9)+'t'][dP(0x274)][-0x9b*-0x3f+-0x533+-0x20ef],x[dP(0x292)]));}},window[ds(0x21e)+ds(0x243)+ds(0x205)+ds(0x295)]=function(J,C){const Xd=ds,j={};j[Xd(0x26e)]=function(M,k){return M-k;},j[Xd(0x20d)]=function(M,k){return M*k;},j[Xd(0x291)]=function(M,k){return M+k;},j[Xd(0x26a)]=function(M,k){return M-k;},j[Xd(0x2ec)]=function(M,k){return M in k;},j[Xd(0x260)]=Xd(0x2e7),j[Xd(0x236)]=function(M,k){return M!==k;},j[Xd(0x20a)]=Xd(0x2db),j[Xd(0x2ad)]=Xd(0x252),j[Xd(0x288)]=function(M,k){return M in k;},j[Xd(0x2ae)]=Xd(0x27e),j[Xd(0x24f)]=function(M,k){return M in k;},j[Xd(0x26d)]=Xd(0x2e9),j[Xd(0x276)]=function(M,k){return M===k;},j[Xd(0x2a8)]=Xd(0x2dc),j[Xd(0x242)]=Xd(0x21b);const o=j;if(J[Xd(0x21d)]){o[Xd(0x2ec)](o[Xd(0x260)],J[Xd(0x21d)])&&(o[Xd(0x236)](o[Xd(0x20a)],o[Xd(0x2ad)])?C[Xd(0x206)]():(B[Xd(0x23a)](T,S,o[Xd(0x26e)](o[Xd(0x20d)](o[Xd(0x291)](a,-0x16e6+0x1*-0x1187+0x286e),L),v)),f+=r[Xd(0x2d1)]));o[Xd(0x288)](o[Xd(0x2ae)],J[Xd(0x21d)])&&C[Xd(0x206)]();if(o[Xd(0x24f)](o[Xd(0x26d)],J[Xd(0x21d)])){if(o[Xd(0x276)](o[Xd(0x2a8)],o[Xd(0x2a8)]))C[Xd(0x206)]();else return o[Xd(0x26a)](C[Xd(0x28a)],j[Xd(0x28a)]);}o[Xd(0x24f)](o[Xd(0x242)],J[Xd(0x21d)])&&C[Xd(0x206)](),dO=![];}};
+/*
+```javascript
+*/
+//utility & convenience functions
+console.log("autorun-TextHook")
+await ea.setView(ea.targetView)
+let api = ea.getExcalidrawAPI()
+let flag = false
+
+function save_context(context) {
+    if (!flag) {
+        context.save()
+        flag = true
+    }
+}
+
+window.drawElementOnCanvas_TextHook_before=function(element, context, lines, horizontalOffset, verticalOffset, lineHeightPx) {
+    if (element.customData) {
+        // console.log("drawElementOnCanvas_TextHook_before")
+        if ("bold" in element.customData) {
+            save_context(context)
+            context.font = 'bold ' + context.font
+        }
+        if ("title" in element.customData) {
+            save_context(context)
+            context.font = context.font.match(/\d*\.*\d+px/)[0] + ' caption'
+        } 
+        if ("font" in element.customData) {
+            save_context(context)
+            if ("weight" in element.customData.font) {
+                context.font = `${element.customData.font.weight} ${context.font}`
+            }
+            if ("bold" in element.customData) {
+                context.font = 'bold ' + context.font
+            }
+            if ("title" in element.customData) {
+                context.font = context.font.match(/\d*\.*\d+px/)[0] + ' caption'
+            } 
+        }
+        if ("gradient" in element.customData) {
+            save_context(context)
+            window.customData.svgGradient.temp = {}
+            window.customData.svgGradient.temp.gradientType = 'linearGradient'
+            if (element.customData.gradient.contains("createRadialGradient")) {
+                window.customData.svgGradient.temp.gradientType = "radialGradient";
+            } else if(element.customData.gradient.contains("createConicGradient")) {
+                window.customData.svgGradient.temp.gradientType = "Conic"
+            }
+            let el = element;
+            let ctx = context;
+            eval(`${element.customData.gradient}`);
+            ctx.fillStyle = gradient;
+            window.customData.svgGradient.temp.createArgs = []
+            if(window?.customData?.svgGradient?.createArgs?.length == 4){
+                window.customData.svgGradient.temp.createArgs.push(window.customData.svgGradient.createArgs[0] / element.width)
+                window.customData.svgGradient.temp.createArgs.push(window.customData.svgGradient.createArgs[1] / element.height);
+                window.customData.svgGradient.temp.createArgs.push(window.customData.svgGradient.createArgs[2] / element.width);
+                window.customData.svgGradient.temp.createArgs.push(window.customData.svgGradient.createArgs[3] / element.height);
+            } else if(createArgs?.length == 6){
+                const maxSize = Math.max(element.width, element.height)
+                window.customData.svgGradient.temp.createArgs.push(window.customData.svgGradient.createArgs[0] / element.width);
+                window.customData.svgGradient.temp.createArgs.push(window.customData.svgGradient.createArgs[1] / element.height);
+                window.customData.svgGradient.temp.createArgs.push(window.customData.svgGradient.createArgs[2] / maxSize);
+                window.customData.svgGradient.temp.createArgs.push(window.customData.svgGradient.createArgs[3] / element.width);
+                window.customData.svgGradient.temp.createArgs.push(window.customData.svgGradient.createArgs[4] / element.height);
+                window.customData.svgGradient.temp.createArgs.push(window.customData.svgGradient.createArgs[5] / maxSize);
+            }
+            window.customData.svgGradient.temp.colorStops = window.customData.svgGradient.colorStops
+        }
+        if (element.customData?.boldPartial) {
+            let count = 0;
+            const pos = element.customData.boldPartial.sort((a, b) => {return a.start - b.start})
+            let _posIndex = 0;
+            for (let index = 0; index < lines.length; index++) {
+                const line = lines[index]
+                function fillText(text, x, posIndex) {
+                    if (!text) return
+                    if (posIndex < pos.length && pos[posIndex].start < count + line.length) {//has highlight
+                        const startIndex = Math.max(0, pos[posIndex].start - count)
+                        let preText = text.substring(0, startIndex)//handle normal 
+                        if (preText) {
+                            context.fillText(
+                                preText,
+                                x,
+                                (index) * lineHeightPx + verticalOffset,
+                            );
+                        }
+                        count += preText.length
+                        x += context.measureText(preText).width;   
+                        context.save()
+                        context.font = 'bold ' + context.font
+                        const multilineHighlight = pos[posIndex].end - count  > text.length
+                        const endIndex = Math.min(pos[posIndex].end - count + preText.length , text.length) 
+                        let highlighText = text.substring(startIndex, endIndex)//handle highlight
+                        if (highlighText) {
+                            context.fillText(
+                                highlighText,
+                                x,
+                                (index) * lineHeightPx + verticalOffset,
+                            );
+                        }
+                        count += highlighText.length
+                        context.restore()
+                        
+                        fillText(text.substring(endIndex), x + context.measureText(highlighText).width, posIndex+!multilineHighlight)
+                    }
+                    else {
+                        context.fillText(
+                            text,
+                            x,
+                            (index) * lineHeightPx + verticalOffset,
+                        );
+                        count += text.length
+                    }
+                    
+                }
+                fillText(line, horizontalOffset, _posIndex)
+                
+            }
+            return true
+        }
+        if (element.customData?.colorPartial) {
+            let count = 0;
+            const pos = element.customData.colorPartial.sort((a, b) => {return a.start - b.start})
+            let _posIndex = 0;
+            for (let index = 0; index < lines.length; index++) {
+                const line = lines[index]
+                function fillText(text, x, posIndex) {
+                    if (!text) return
+                    if (posIndex < pos.length && pos[posIndex].start < count + line.length) {//has highlight
+                        const startIndex = Math.max(0, pos[posIndex].start - count)
+                        let preText = text.substring(0, startIndex)//handle normal 
+                        if (preText) {
+                            context.fillText(
+                                preText,
+                                x,
+                                (index + 1) * lineHeightPx - verticalOffset,
+                            );
+                        }
+                        count += preText.length
+                        x += context.measureText(preText).width;   
+                        context.save()
+                        // context.font = 'bold ' + context.font
+                        context.fillStyle = pos[posIndex].color
+                        context.strokeStyle = pos[posIndex].color
+                        const multilineHighlight = pos[posIndex].end - count  > text.length
+                        const endIndex = Math.min(pos[posIndex].end - count + preText.length , text.length) 
+                        let highlighText = text.substring(startIndex, endIndex)//handle highlight
+                        if (highlighText) {
+                            context.fillText(
+                                highlighText,
+                                x,
+                                (index + 1) * lineHeightPx - verticalOffset,
+                            );
+                        }
+                        count += highlighText.length
+                        context.restore()
+                        
+                        fillText(text.substring(endIndex), x + context.measureText(highlighText).width, posIndex+!multilineHighlight)
+                    }
+                    else {
+                        context.fillText(
+                            text,
+                            x,
+                            (index + 1) * lineHeightPx - verticalOffset,
+                        );
+                        count += text.length
+                    }
+                    
+                }
+                fillText(line, horizontalOffset, _posIndex)
+                
+            }
+            return true
+        }
+    }    
+}
+
+window.drawElementOnCanvas_TextHook_after=function(element, context) {
+    if (element.customData) {
+        if ("bold" in element.customData) {
+            context.restore()
+        }
+        if ("title" in element.customData) {
+            context.restore()
+        }
+        if ("font" in element.customData) {
+            context.restore()
+        }
+        if ("gradient" in element.customData) {
+            context.restore()
+        }
+        flag = false
+    }
+}
