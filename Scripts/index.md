@@ -110,6 +110,7 @@
 |----|-----|
 |<span>add detial - detail.md</span>|[[#add detial - detail]]|
 |<span>add detial - target.md</span>|[[#add detial - target]]|
+|<span>clear detail pos.md</span>|[[#clear detail pos]]|
 |<span>add collapse by line.md</span>|[[#add collapse by line]]|
 |<span>change slide line.md</span>|[[#change slide line]]|
 |<span>add layer.md</span>|[[#add layer]]|
@@ -141,6 +142,8 @@
 |<span>increase size.md</span>|[[#increase size]]|
 |<span>reduce size.md</span>|[[#reduce size]]|
 |<span>resize images in same width.md</span>|[[#resize images in same width]]|
+|<span>Set line angle.md</span>|[[#Set line angle]]|
+|<span>Set line length.md</span>|[[#Set line length]]|
 
 ## Selection
 **Keywords**: Selection
@@ -552,6 +555,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
+## clear detail pos
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/clear%20detail%20pos.md
+```
+<table><tr  valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/clear%20detail%20pos.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
 ## add fixed and dragable for line
 
 ```excalidraw-script-install
@@ -567,6 +579,25 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20fixed%20length.md
 ```
 <table><tr  valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20fixed%20length.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## Set line length
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Set%20line%20length.md
+```
+<table><tr  valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Set%20line%20length.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+
+## Set line angle
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Set%20line%20angle.md
+```
+<table><tr  valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Set%20line%20angle.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
