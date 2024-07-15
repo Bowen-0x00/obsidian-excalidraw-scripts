@@ -36,6 +36,9 @@ window.drawElementOnCanvas_TextHook_before=function(element, context, lines, hor
             if ("title" in element.customData) {
                 context.font = context.font.match(/\d*\.*\d+px/)[0] + ' caption'
             } 
+            if (element.customData?.font?.italic) {
+                context.font =  `italic ${context.font}`
+            } 
         }
         if ("gradient" in element.customData) {
             save_context(context)
@@ -134,7 +137,7 @@ window.drawElementOnCanvas_TextHook_before=function(element, context, lines, hor
                             context.fillText(
                                 preText,
                                 x,
-                                (index + 1) * lineHeightPx - verticalOffset,
+                                (index) * lineHeightPx + verticalOffset,
                             );
                         }
                         count += preText.length
@@ -150,7 +153,7 @@ window.drawElementOnCanvas_TextHook_before=function(element, context, lines, hor
                             context.fillText(
                                 highlighText,
                                 x,
-                                (index + 1) * lineHeightPx - verticalOffset,
+                                (index) * lineHeightPx + verticalOffset,
                             );
                         }
                         count += highlighText.length
@@ -162,7 +165,7 @@ window.drawElementOnCanvas_TextHook_before=function(element, context, lines, hor
                         context.fillText(
                             text,
                             x,
-                            (index + 1) * lineHeightPx - verticalOffset,
+                            (index) * lineHeightPx + verticalOffset,
                         );
                         count += text.length
                     }
