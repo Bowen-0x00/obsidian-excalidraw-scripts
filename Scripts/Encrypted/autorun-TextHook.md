@@ -176,6 +176,9 @@ window.drawElementOnCanvas_TextHook_before=function(element, context, lines, hor
             }
             return true
         }
+        if (element?.customData?.wavedrom) {
+            return true
+        }
     }    
 }
 
