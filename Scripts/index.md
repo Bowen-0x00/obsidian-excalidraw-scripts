@@ -13,6 +13,7 @@
 |<span>autorun-addElementsFromPasteOrLibrary_Hook.md</span>|[[#autorun-addElementsFromPasteOrLibrary_Hook]]|
 |<span>autorun-afterTransformElementsHook.md</span>|[[#autorun-afterTransformElementsHook]]|
 |<span>autorun-binding.md</span>|[[#autorun-binding]]|
+|<span>autorun-canvasNodeReadyHook.md</span>|[[#autorun-canvasNodeReadyHook]]|
 |<span>autorun-deleteSelectedElementsHook.md</span>|[[#autorun-deleteSelectedElementsHook]]|
 |<span>autorun-dragSelectedElementsHook.md</span>|[[#autorun-dragSelectedElementsHook]]|
 |<span>autorun-drawElementFromCanvasHook.md</span>|[[#autorun-drawElementFromCanvasHook]]|
@@ -26,6 +27,9 @@
 |<span>autorun-handleTextWysiwygHook.md</span>|[[#autorun-handleTextWysiwygHook]]|
 |<span>autorun-handleWheelHook.md</span>|[[#autorun-handleWheelHook]]|
 |<span>autorun-maybeBindLinearElement_Hook.md</span>|[[#autorun-maybeBindLinearElement_Hook]]|
+|<span>autorun-onAfterLoadSceneHook.md</span>|[[#autorun-onAfterLoadSceneHook]]|
+|<span>autorun-onBeforeTextSubmit_Hook.md</span>|[[#autorun-onBeforeTextSubmit_Hook]]|
+|<span>autorun-onFileModify.md</span>|[[#autorun-onFileModify]]|
 |<span>autorun-onKeyDownHook.md</span>|[[#autorun-onKeyDownHook]]|
 |<span>autorun-onLinkHook.md</span>|[[#autorun-onLinkHook]]|
 |<span>autorun-onPasteHook.md</span>|[[#autorun-onPasteHook]]|
@@ -35,6 +39,7 @@
 |<span>autorun-renderElementToSvg_Hook.md</span>|[[#autorun-renderElementToSvg_Hook]]|
 |<span>autorun-renderStaticSceneHook.md</span>|[[#autorun-renderStaticSceneHook]]|
 |<span>autorun-replaceAllElementsHook.md</span>|[[#autorun-replaceAllElementsHook]]|
+|<span>autorun-selectElementsHook.md</span>|[[#autorun-selectElementsHook]]|
 |<span>autorun-translateCanvasHook.md</span>|[[#autorun-translateCanvasHook]]|
 |<span>autorun-updateBoundPoint_Hook.md</span>|[[#autorun-updateBoundPoint_Hook]]|
 |<span>autorun-updateSceneHook.md</span>|[[#autorun-updateSceneHook]]|
@@ -80,6 +85,7 @@
 |<span>Set font size.md</span>|[[#Set font size]]|
 |<span>inputToMultipleShape.md</span>|[[#inputToMultipleShape]]|
 |<span>get-link-as-text-table.md</span>|[[#get-link-as-text-table]]|
+|<span>reverseText.md</span>|[[#reverseText]]|
 
 ## List and Number
 **Keywords**: List, Number
@@ -157,6 +163,8 @@
 |<span>select by script.md</span>|[[#select by script]]|
 |<span>search then select.md</span>|[[#search then select]]|
 |<span>select text elements.md</span>|[[#select text elements]]|
+|<span>stageElementsIds.md</span>|[[#stageElementsIds]]|
+|<span>selectElementsByStageIds.md</span>|[[#selectElementsByStageIds]]|
 
 ## Other Apps
 **Keywords**: Quicker, Anki, Eagle, App
@@ -183,6 +191,8 @@
 |<span>generate shape grid.md</span>|[[#generate shape grid]]|
 |<span>insert image from ex link.md</span>|[[#insert image from ex link]]|
 |<span>insert image from file area.md</span>|[[#insert image from file area]]|
+|<span>generate cuboid.md</span>|[[#generate cuboid]]|
+|<span>gridSelected.md</span>|[[#gridSelected]]|
 
 ## Equation
 **Keywords**: Latex, Equation
@@ -254,14 +264,23 @@
 |<span>follow.md</span>|[[#follow]]|
 |<span>follow_inv.md</span>|[[#follow_inv]]|
 |<span>return click link pos.md</span>|[[#return click link pos]]|
+|<span>generateAdvancedUri.md</span>|[[#generateAdvancedUri]]|
 
 ## Animation
-**Keywords**: Selection
+**Keywords**: Animation
 
 |    |     |
 |----|-----|
 |<span>add animation for line.md</span>|[[#add animation for line]]|
 |<span>remove animation.md</span>|[[#remove animation]]|
+
+## Template
+**Keywords**: Template, SmartArt
+
+|    |     |
+|----|-----|
+|<span>changeBlockLinkForTemplate.md</span>|[[#changeBlockLinkForTemplate]]|
+|<span>changeFileLinkForTemplate.md</span>|[[#changeFileLinkForTemplate]]|
 
 ## Miscellaneous
 
@@ -750,6 +769,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
+## autorun-canvasNodeReadyHook
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-canvasNodeReadyHook.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-canvasNodeReadyHook.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
 ## autorun-deleteSelectedElementsHook
 
 ```excalidraw-script-install
@@ -867,6 +895,33 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
+## autorun-onAfterLoadSceneHook
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-onAfterLoadSceneHook.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-onAfterLoadSceneHook.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## autorun-onBeforeTextSubmit_Hook
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-onBeforeTextSubmit_Hook.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-onBeforeTextSubmit_Hook.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## autorun-onFileModify
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-onFileModify.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-onFileModify.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
 ## autorun-onKeyDownHook
 
 ```excalidraw-script-install
@@ -948,6 +1003,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
+## autorun-selectElementsHook
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-selectElementsHook.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-selectElementsHook.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
 ## autorun-TextHook
 
 ```excalidraw-script-install
@@ -1008,6 +1072,24 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/change%20slide%20line.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/change%20slide%20line.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## changeBlockLinkForTemplate
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/changeBlockLinkForTemplate.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/changeBlockLinkForTemplate.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## changeFileLinkForTemplate
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/changeFileLinkForTemplate.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/changeFileLinkForTemplate.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
@@ -1308,6 +1390,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
+## generate cuboid
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/generate%20cuboid.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/generate%20cuboid.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
 ## generate shape grid - hexagon
 
 ```excalidraw-script-install
@@ -1332,6 +1423,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/generate%20table.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/generate%20table.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## generateAdvancedUri
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/generateAdvancedUri.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/generateAdvancedUri.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
@@ -1368,6 +1468,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/get-link-as-text-table.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/get-link-as-text-table.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## gridSelected
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/gridSelected.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/gridSelected.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
@@ -1650,6 +1759,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
+## reverseText
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/reverseText.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/reverseText.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
 ## run code from text of element
 
 ```excalidraw-script-install
@@ -1692,6 +1810,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/select%20text%20elements.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/select%20text%20elements.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## selectElementsByStageIds
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/selectElementsByStageIds.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/selectElementsByStageIds.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
@@ -1872,6 +1999,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Split%20text%20by%20caesura.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Split%20text%20by%20caesura.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## stageElementsIds
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/stageElementsIds.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/stageElementsIds.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 

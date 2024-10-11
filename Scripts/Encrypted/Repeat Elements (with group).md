@@ -1,1 +1,105 @@
-const HH=H;(function(l,m){const HU=H,e=l();while(!![]){try{const V=parseInt(HU(0x1ba))/(0x15cb+0x251*-0x5+-0xa35)+-parseInt(HU(0x1ad))/(0xe24+-0x1f97+-0x1*-0x1175)+-parseInt(HU(0x19f))/(0x2670+0xc*0xa9+-0x2e59)+-parseInt(HU(0x19b))/(-0x2e*-0xb2+-0x2615*-0x1+-0x460d)*(parseInt(HU(0x1b8))/(0x1fc1+-0x22c7+-0x13*-0x29))+-parseInt(HU(0x19d))/(0x11*-0x11f+-0x22ec+0x3601)+parseInt(HU(0x19c))/(0x89*-0x39+-0x87a+0x2*0x1381)*(parseInt(HU(0x1a2))/(0x1*0x1dcc+0xda2+0xa*-0x457))+parseInt(HU(0x187))/(0x319+-0x1*-0x119f+0x14af*-0x1);if(V===m)break;else e['push'](e['shift']());}catch(d){e['push'](e['shift']());}}}(U,0x176934+-0x7ddc3+0xdd*-0x19f));let UE=parseInt(await utils[HH(0x1bd)+'t'](HH(0x1a1)+HH(0x1a3),HH(0x188),'5'));if(!UE){new Notice(HH(0x1ac)+HH(0x1b4)+'r.');return;}const UG=ea[HH(0x1c0)+HH(0x1b6)+HH(0x19e)]();let Ug=ea[HH(0x1be)+HH(0x197)](UG);if(Ug[HH(0x1b7)]<-0x1799+-0x1302+-0x2a9d*-0x1){new Notice(HH(0x191)+HH(0x1b1)+HH(0x18b)+HH(0x194));return;}let UC=Ug[Ug[HH(0x1b7)]-(-0x22c7+-0x1077*0x2+0x43b7)][0x13a5+-0x7f8+-0xbad],Uu=Ug[Ug[HH(0x1b7)]-(-0x640+-0x4e+-0x1*-0x68f)][-0x1270+-0x8c*-0x2+0x22b*0x8];if(UC[HH(0x18f)]!==Uu[HH(0x18f)]){new Notice(HH(0x1b3)+HH(0x1a6)+HH(0x1a0)+HH(0x196)+HH(0x1b0));return;}function H(j,l){const m=U();return H=function(e,V){e=e-(-0x1a*-0x13+-0xab8+0x18*0x6e);let d=m[e];return d;},H(j,l);}const UT=Uu['x']-UC['x'],UQ=Uu['y']-UC['y'],UY=Uu[HH(0x1ae)]-UC[HH(0x1ae)],Uh=Uu[HH(0x18e)]-UC[HH(0x18e)],Ua=Uu[HH(0x1a5)]-UC[HH(0x1a5)],Uk=ea[HH(0x1bb)+HH(0x1a7)](UC[HH(0x189)+HH(0x18a)]),Up=ea[HH(0x1ab)](Uk),UA=ea[HH(0x1bb)+HH(0x1a7)](Uu[HH(0x189)+HH(0x18a)]);let UK=ea[HH(0x1ab)](UA);const UM=Up[HH(0x1a8)]===0x48b*0x6+-0x1110*0x2+0x6*0x125||UK[HH(0x1a8)]===-0x3*-0x763+0x1017+0x9*-0x440,Uv=UK[HH(0x192)]-Up[HH(0x192)],Uq=UK[HH(0x18c)]-Up[HH(0x18c)],UN=UK[HH(0x198)]-Up[HH(0x198)],Uc=UK[HH(0x1a8)]-Up[HH(0x1a8)],Ux=ea[HH(0x1bb)+HH(0x1a7)](UC[HH(0x193)+'r']),UB=ea[HH(0x1ab)](Ux),Ut=ea[HH(0x1bb)+HH(0x1a7)](Uu[HH(0x193)+'r']);let UW=ea[HH(0x1ab)](Ut);const UZ=UB[HH(0x1a8)]===0xa12+-0x264a+-0x4*-0x70e||UW[HH(0x1a8)]===0x580+-0x1a0e+-0x3*-0x6da,Uf=UW[HH(0x192)]-UB[HH(0x192)],UO=UW[HH(0x18c)]-UB[HH(0x18c)],Uw=UW[HH(0x198)]-UB[HH(0x198)],Uz=UW[HH(0x1a8)]-UB[HH(0x1a8)];for(let H0=0x97*0x42+0x1c2*0x9+-0x36c0;H0<UE;H0++){for(el of Ug[Ug[HH(0x1b7)]-(0x1783+0x19b5+-0x1*0x3137)]){const H1=ea[HH(0x199)+'nt'](el);ea[HH(0x1bf)+'ct'][H1['id']]=H1;for(let H6 in H1[HH(0x195)]){H1[HH(0x195)][H6]+=''+H0;}H1['x']+=UT*(H0+(0x593+0x1113+0x155*-0x11)),H1['y']+=UQ*(H0+(-0x1*0x155f+-0x140f*0x1+0x1*0x296f)),H1[HH(0x1a5)]+=Ua*(H0+(-0x3*-0x81d+-0x2569*-0x1+0x21*-0x1df));const H2=H1[HH(0x1ae)],H3=H1[HH(0x18e)],H4=H1[HH(0x1ae)]+UY*(H0+(0x1420+0xabc+-0x1edb)),H5=H1[HH(0x18e)]+Uh*(H0+(-0xb82*0x1+-0x5b3*0x4+-0x1*-0x224f));if(H4>=-0xf6*0x1+0x3*-0x98b+0x3*0x9dd&&H5>=0x2139+-0x1605+0x3bc*-0x3){if(H1[HH(0x18f)]===HH(0x1c1)||H1[HH(0x18f)]===HH(0x1a4)||H1[HH(0x18f)]===HH(0x1a9)){const H7=Math[HH(0x1b5)](...H1[HH(0x1b9)][HH(0x18d)](l=>l[0x29*0xc1+-0x18c*-0x15+-0x3f65])),H8=Math[HH(0x1b5)](...H1[HH(0x1b9)][HH(0x18d)](l=>l[0x1f*0x4b+-0x259a*-0x1+-0x2eae]));for(let H9=-0x277*-0x4+0xa9*0xf+-0x13c3;H9<H1[HH(0x1b9)][HH(0x1b7)];H9++){H1[HH(0x1b9)][H9][-0x1b04+-0x773*-0x2+0x40a*0x3]>H7&&(H1[HH(0x1b9)][H9][-0x134f+0x4c7*0x5+-0x494]=H1[HH(0x1b9)][H9][0x4*-0x778+0x36*0x9+0x1bfa]+(H1[HH(0x1b9)][H9][-0x12d1*0x2+0x1e6f+-0x13*-0x61]-H7)/H2*(H4-H2)),H1[HH(0x1b9)][H9][0x7d4+-0x28c*-0xa+-0x214b]>H8&&(H1[HH(0x1b9)][H9][-0x395*0x2+-0x1d41+-0x9*-0x40c]=H1[HH(0x1b9)][H9][0x1bd+-0x1fe1+0x1*0x1e25]+(H1[HH(0x1b9)][H9][-0x7+-0x2501+0x1f3*0x13]-H8)/H3*(H5-H3));}}else H1[HH(0x1ae)]=H4,H1[HH(0x18e)]=H5;}!UM?(UK=UK[HH(0x186)](Uv)[HH(0x1aa)](Uq)[HH(0x190)](UN)[HH(0x1b2)](Uc),H1[HH(0x189)+HH(0x18a)]=UK[HH(0x19a)]()):H1[HH(0x189)+HH(0x18a)]=HH(0x1c2)+'t',!UZ?(UW=UW[HH(0x186)](Uf)[HH(0x1aa)](UO)[HH(0x190)](Uw)[HH(0x1b2)](Uz),H1[HH(0x193)+'r']=UW[HH(0x19a)]()):H1[HH(0x193)+'r']=HH(0x1c2)+'t';}}await ea[HH(0x1bc)+HH(0x1af)](![],![],!![]);function U(){const Hj=['s\x20must\x20be\x20','repeat\x20tim','32gFeyme','es?','line','angle','ed\x20element','oHex','alpha','freedraw','saturateBy','getCM','Please\x20ent','2027098pphXte','width','sToView','e\x20type.','ect\x20at\x20lea','alphaBy','The\x20select','er\x20a\x20numbe','min','ectedEleme','length','1404945nZgJkc','points','1246363ZabxCi','colorNameT','addElement','inputPromp','getMaximum','elementsDi','getViewSel','arrow','transparen','hueBy','12761109OuolVw','number','background','Color','st\x202\x20eleme','saturation','map','height','type','lighterBy','Please\x20sel','hue','strokeColo','nts.','groupIds','of\x20the\x20sam','Groups','lightness','cloneEleme','stringHEX','12iODNJe','1796207aMWVAH','1760460xQuAuH','nts','1841160yIcJWM'];U=function(){return Hj;};return U();}
+/*
+```javascript
+*/
+
+let repeatNum = parseInt(await utils.inputPrompt("repeat times?","number","5"));
+if(!repeatNum) {
+    new Notice("Please enter a number.");
+    return;
+}
+
+const selectedElements = ea.getViewSelectedElements()
+let groups = ea.getMaximumGroups(selectedElements);
+if(groups.length < 2) {
+  new Notice("Please select at least 2 elements.");
+  return;
+}
+let el1 = groups[groups.length-2][0]
+let el2 = groups[groups.length-1][0]
+
+
+
+if(el1.type !== el2.type) {
+    new Notice("The selected elements must be of the same type.");
+    return;
+}
+
+const xDistance = el2.x - el1.x;
+const yDistance = el2.y - el1.y;
+const widthDistance = el2.width - el1.width;
+const heightDistance = el2.height - el1.height;
+const angleDistance = el2.angle - el1.angle;
+
+// const bgColor1 = ea.colorNameToHex(el1.backgroundColor);
+// const cmBgColor1 = ea.getCM(bgColor1);
+// const bgColor2 = ea.colorNameToHex(el2.backgroundColor);
+// let   cmBgColor2 = ea.getCM(bgColor2);
+// const isBgTransparent = cmBgColor1.alpha === 0  || cmBgColor2.alpha === 0;
+// const bgHDistance = cmBgColor2.hue - cmBgColor1.hue;
+// const bgSDistance = cmBgColor2.saturation - cmBgColor1.saturation;
+// const bgLDistance = cmBgColor2.lightness - cmBgColor1.lightness;
+// const bgADistance = cmBgColor2.alpha - cmBgColor1.alpha;
+
+// const strokeColor1 = ea.colorNameToHex(el1.strokeColor);
+// const cmStrokeColor1 = ea.getCM(strokeColor1);
+// const strokeColor2 = ea.colorNameToHex(el2.strokeColor);
+// let   cmStrokeColor2 = ea.getCM(strokeColor2);
+// const isStrokeTransparent = cmStrokeColor1.alpha === 0 || cmStrokeColor2.alpha ===0;
+// const strokeHDistance = cmStrokeColor2.hue - cmStrokeColor1.hue;
+// const strokeSDistance = cmStrokeColor2.saturation - cmStrokeColor1.saturation;
+// const strokeLDistance = cmStrokeColor2.lightness - cmStrokeColor1.lightness;
+// const strokeADistance = cmStrokeColor2.alpha - cmStrokeColor1.alpha;
+
+
+// ea.copyViewElementsToEAforEditing(selectedElements);
+for(let i=0; i<repeatNum; i++) {
+    for (el of groups[groups.length-1]) {
+        const newEl = ea.cloneElement(el);
+        ea.elementsDict[newEl.id] = newEl;
+        for (let j in newEl.groupIds) {
+          newEl.groupIds[j] += `${i}`;
+        }
+        
+        newEl.x += xDistance * (i + 1);
+        newEl.y += yDistance * (i + 1);
+        newEl.angle += angleDistance * (i + 1);
+        const originWidth = newEl.width;
+        const originHeight = newEl.height;
+        const newWidth = newEl.width + widthDistance * (i + 1);
+        const newHeight = newEl.height + heightDistance * (i + 1);
+        if(newWidth >= 0 && newHeight >= 0) {
+            if(newEl.type === 'arrow' || newEl.type === 'line' || newEl.type === 'freedraw') {
+              const minX = Math.min(...newEl.points.map(pt => pt[0]));
+              const minY = Math.min(...newEl.points.map(pt => pt[1]));
+              for(let j = 0; j < newEl.points.length; j++) {
+                if(newEl.points[j][0] > minX) {
+                  newEl.points[j][0] = newEl.points[j][0] + ((newEl.points[j][0] - minX) / originWidth) * (newWidth - originWidth);
+                }
+                if(newEl.points[j][1] > minY) {
+                  newEl.points[j][1] = newEl.points[j][1] + ((newEl.points[j][1] - minY) / originHeight) * (newHeight - originHeight);
+                }
+              }
+            }
+            else {
+              newEl.width = newWidth;
+              newEl.height = newHeight;
+            }
+        }
+
+        // if(!isBgTransparent) {
+        // cmBgColor2 = cmBgColor2.hueBy(bgHDistance).saturateBy(bgSDistance).lighterBy(bgLDistance).alphaBy(bgADistance);
+        // newEl.backgroundColor = cmBgColor2.stringHEX();
+        // } else {
+        //   newEl.backgroundColor = "transparent";
+        // }
+
+        // if(!isStrokeTransparent) {
+        // cmStrokeColor2 = cmStrokeColor2.hueBy(strokeHDistance).saturateBy(strokeSDistance).lighterBy(strokeLDistance).alphaBy(strokeADistance);
+        // newEl.strokeColor = cmStrokeColor2.stringHEX();
+        // } else {
+        //   newEl.strokeColor = "transparent";
+        // }
+    }
+}
+
+await ea.addElementsToView(false, false, true);

@@ -179,6 +179,24 @@ window.drawElementOnCanvas_TextHook_before=function(element, context, lines, hor
         if (element?.customData?.wavedrom) {
             return true
         }
+        if (element?.customData?.template) {
+            if (window?.templateMap) {
+                // lines[0] = window.templateMap[element.id] || element.text
+                // element.originalText = window.templateMap[element.id].content
+                let api = ea.getExcalidrawAPI()
+                const {height, text, width, x, y }= ExcalidrawLib.refreshTextDimensions(element, null, api.App.scene.nonDeletedElementsMap, window.templateMap[element.id].content)
+                const newArray = text.replace(/\r\n?/g, "\n").split("\n");
+                lines.splice(0, lines.length, ...newArray);
+                // context.canvas.width = context.measureText(window.templateMap[element.id]).width * window.devicePixelRatio + element.fontSize
+                // element.width = context.measureText(window.templateMap[element.id]).width
+                element.width = width
+                element.height = height
+                const el = api.App.scene.nonDeletedElementsMap.get(element.id)
+                el.width = width
+                el.height = height
+            }
+            return false
+        }
     }    
 }
 
