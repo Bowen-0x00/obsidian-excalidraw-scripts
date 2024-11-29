@@ -309,7 +309,6 @@
 
 
 # Description and Installation
-
 ## add animation for line
 
 ```excalidraw-script-install
@@ -2002,6 +2001,24 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
+## Split text by input
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Split%20text%20by%20input.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Split%20text%20by%20input.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## splitTextWhenEditing
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/splitTextWhenEditing.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/splitTextWhenEditing.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
 ## stageElementsIds
 
 ```excalidraw-script-install
@@ -2089,6 +2106,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/wrap%20text.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/wrap%20text.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## _autorun-obMenu
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/_autorun-obMenu.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/_autorun-obMenu.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 

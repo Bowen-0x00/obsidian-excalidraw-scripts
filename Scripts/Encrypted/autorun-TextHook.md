@@ -194,6 +194,8 @@ window.drawElementOnCanvas_TextHook_before=function(element, context, lines, hor
                 const el = api.App.scene.nonDeletedElementsMap.get(element.id)
                 el.width = width
                 el.height = height
+            } else {
+                
             }
             return false
         }
