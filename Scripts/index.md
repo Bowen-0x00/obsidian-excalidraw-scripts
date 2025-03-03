@@ -329,15 +329,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
-## add bottom brace.svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20bottom%20brace.svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20bottom%20brace.svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
 ## add bound by arrow
 
 ```excalidraw-script-install
@@ -527,15 +518,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
-## add left brace.svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20left%20brace.svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20left%20brace.svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
 ## Add list continue
 
 ```excalidraw-script-install
@@ -578,15 +560,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Add%20order%20list.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Add%20order%20list.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
-## Add order list.svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Add%20order%20list.svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Add%20order%20list.svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
@@ -644,15 +617,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
-## add right brace.svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20right%20brace.svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20right%20brace.svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
 ## add row for table
 
 ```excalidraw-script-install
@@ -689,30 +653,12 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
-## add top brace.svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20top%20brace.svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/add%20top%20brace.svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
 ## Add unorder list
 
 ```excalidraw-script-install
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Add%20unorder%20list.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Add%20unorder%20list.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
-## Add unorder list.svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Add%20unorder%20list.svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Add%20unorder%20list.svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
@@ -1193,24 +1139,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
-## convert latex in text.svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/convert%20latex%20in%20text.svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/convert%20latex%20in%20text.svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
-## convert latex in text2.svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/convert%20latex%20in%20text2.svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/convert%20latex%20in%20text2.svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
 ## convert line to Right-angle
 
 ```excalidraw-script-install
@@ -1289,15 +1217,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/distribute%20elements%20(center).md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/distribute%20elements%20(center).md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
-## distribute elements (center).svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/distribute%20elements%20(center).svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/distribute%20elements%20(center).svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
@@ -1517,15 +1436,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
-## highlight text.svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/highlight%20text.svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/highlight%20text.svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
 ## highlight text3
 
 ```excalidraw-script-install
@@ -1550,15 +1460,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Horizontal%20distribution.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Horizontal%20distribution.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
-## Horizontal distribution.svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Horizontal%20distribution.svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Horizontal%20distribution.svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
@@ -1742,15 +1643,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
-## Repeat Elements (with group).svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Repeat%20Elements%20(with%20group).svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Repeat%20Elements%20(with%20group).svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
 ## replace mindmap node
 
 ```excalidraw-script-install
@@ -1931,15 +1823,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
-## show layer toolbar.svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/show%20layer%20toolbar.svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/show%20layer%20toolbar.svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
 ## show layer
 
 ```excalidraw-script-install
@@ -2057,15 +1940,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
-## switch connection shape.svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/switch%20connection%20shape.svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/switch%20connection%20shape.svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
 ## switch echarts type
 
 ```excalidraw-script-install
@@ -2108,15 +1982,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Vertical%20distribution.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Vertical%20distribution.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
-## Vertical distribution.svg
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Vertical%20distribution.svg
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/Vertical%20distribution.svg'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
