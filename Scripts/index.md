@@ -195,6 +195,10 @@
 |<span>insert image from file area.md</span>|[[#insert image from file area]]|
 |<span>generate cuboid.md</span>|[[#generate cuboid]]|
 |<span>gridSelected.md</span>|[[#gridSelected]]|
+|<span>add top brace.md</span>|[[#add top brace]]|
+|<span>add bottom brace.md</span>|[[#add bottom brace]]|
+|<span>add left brace.md</span>|[[#add left brace]]|
+|<span>add right brace.md</span>|[[#add right brace]]|
 
 ## Equation
 **Keywords**: Latex, Equation
