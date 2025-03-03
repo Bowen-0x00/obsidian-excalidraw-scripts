@@ -45,6 +45,7 @@
 |<span>autorun-updateSceneHook.md</span>|[[#autorun-updateSceneHook]]|
 |<span>autorun-wrapTextHook.md</span>|[[#autorun-wrapTextHook]]|
 |<span>autorun-zoomToFitWrapper.md</span>|[[#autorun-zoomToFitWrapper]]|
+|<span>_autorun-obMenu.md</span>|[[#_autorun-obMenu]]|
 
 ## Connection
 **Keywords**: Connection, line, arrow
@@ -74,6 +75,8 @@
 |<span>add partial color.md</span>|[[#add partial color]]|
 |<span>wrap text.md</span>|[[#wrap text]]|
 |<span>Split text by caesura.md</span>|[[#Split text by caesura]]|
+|<span>Split text by input.md</span>|[[#Split text by input]]|
+|<span>splitTextWhenEditing.md</span>|[[#splitTextWhenEditing]]|
 |<span>add indent for text.md</span>|[[#add indent for text]]|
 |<span>copy elements text as single text.md</span>|[[#copy elements text as single text]]|
 |<span>cover text by text.md</span>|[[#cover text by text]]|
@@ -191,6 +194,7 @@
 |<span>add mermaid svg.md</span>|[[#add mermaid svg]]|
 |<span>add wave drom.md</span>|[[#add wave drom]]|
 |<span>generate shape grid.md</span>|[[#generate shape grid]]|
+|<span>generate shape grid - hexagon.md</span>|[[#generate shape grid - hexagon]]|
 |<span>insert image from ex link.md</span>|[[#insert image from ex link]]|
 |<span>insert image from file area.md</span>|[[#insert image from file area]]|
 |<span>generate cuboid.md</span>|[[#generate cuboid]]|
@@ -257,9 +261,11 @@
 |    |     |
 |----|-----|
 |<span>add mind map.md</span>|[[#add mind map]]|
+|<span>Mindmap format.md</span>|[[#Mindmap format]]|
 |<span>Mindmap format2.md</span>|[[#Mindmap format2]]|
 |<span>replace mindmap node.md</span>|[[#replace mindmap node]]|
 |<span>export mindmap to md.md</span>|[[#export mindmap to md]]|
+|<span>export mindmap to md_##Mindmap.md</span>|[[#export mindmap to md_##Mindmap]]|
 |<span>clear ea Mindmap.md</span>|[[#clear ea Mindmap]]|
 
 ## Navigation
@@ -312,6 +318,7 @@
 |<span>mark as code.md</span>|[[#mark as code]]|
 |<span>run code from text of element.md</span>|[[#run code from text of element]]|
 |<span>save pos.md</span>|[[#save pos]]|
+|<span>mark as wavedrom.md</span>|[[#mark as wavedrom]]|
 
 
 # Description and Installation
@@ -1179,15 +1186,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
-## copy customData
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/copy%20customData.md
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/copy%20customData.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
 ## copy elements text as single text
 
 ```excalidraw-script-install
@@ -1302,15 +1300,6 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/font%20bold.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/font%20bold.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
-<td class="data">
-</td></tr></table>
-
-## font line through
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/font%20line%20through.md
-```
-<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/font%20line%20through.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
