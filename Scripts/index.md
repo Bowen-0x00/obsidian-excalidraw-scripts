@@ -267,6 +267,7 @@
 |<span>export mindmap to md.md</span>|[[#export mindmap to md]]|
 |<span>export mindmap to md_##Mindmap.md</span>|[[#export mindmap to md_##Mindmap]]|
 |<span>clear ea Mindmap.md</span>|[[#clear ea Mindmap]]|
+|<span>change mindmap style.md</span>|[[#change mindmap style]]|
 
 ## Navigation
 **Keywords**: Navigation, Follow, Return
@@ -323,6 +324,7 @@
 |<span>set iFrame children script.md</span>|[[#set iFrame children script]]|
 |<span>set iFrame on click.md</span>|[[#set iFrame on click]]|
 |<span>set iFrame on click2.md</span>|[[#set iFrame on click2]]|
+|<span>replaceTemplateFromUnorderList.md</span>|[[#replaceTemplateFromUnorderList]]|
 
 # Description and Installation
 ## add animation for line
@@ -1054,6 +1056,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
+## change mindmap style
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/change%20mindmap%20style.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/change%20mindmap%20style.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
 ## change slide line
 
 ```excalidraw-script-install
@@ -1672,6 +1683,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/replace%20mindmap%20node.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/replace%20mindmap%20node.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## replaceTemplateFromUnorderList
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/replaceTemplateFromUnorderList.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/replaceTemplateFromUnorderList.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
