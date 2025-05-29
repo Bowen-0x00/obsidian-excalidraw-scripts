@@ -59,6 +59,7 @@
 |<span>convert connection shape to elbow.md</span>|[[#convert connection shape to elbow]]|
 |<span>switch connection shape.md</span>|[[#switch connection shape]]|
 |<span>convert line to Right-angle.md</span>|[[#convert line to Right-angle]]|
+|<span>convert line to Right-angle (multi-points).md</span>|[[#convert line to Right-angle (multi-points)]]|
 |<span>add highlight link.md</span>|[[#add highlight link]]|
 |<span>simplifyLineTo2Points_2.md</span>|[[#simplifyLineTo2Points_2]]|
 |<span>mark as nobind.md</span>|[[#mark as nobind]]|
@@ -145,6 +146,7 @@
 |<span>show outline by frame - kanban.md</span>|[[#show outline by frame - kanban]]|
 |<span>show outline by title level - ex.md</span>|[[#show outline by title level - ex]]|
 |<span>show outline by title level - kanban.md</span>|[[#show outline by title level - kanban]]|
+|<span>show outline by title level  - panel.md</span>|[[#show outline by title level  - panel]]|
 |<span>show outline by title level.md</span>|[[#show outline by title level]]|
 |<span>show thumbnail.md</span>|[[#show thumbnail]]|
 
@@ -1192,6 +1194,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
+## convert line to Right-angle (multi-points)
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/convert%20line%20to%20Right-angle%20(multi-points).md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/convert%20line%20to%20Right-angle%20(multi-points).md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
 ## convert line to Right-angle
 
 ```excalidraw-script-install
@@ -1927,6 +1938,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/show%20outline%20by%20frame%20-%20kanban.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/show%20outline%20by%20frame%20-%20kanban.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## show outline by title level  - panel
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/show%20outline%20by%20title%20level%20%20-%20panel.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/show%20outline%20by%20title%20level%20%20-%20panel.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
