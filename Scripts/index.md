@@ -24,6 +24,7 @@
 |<span>autorun-handleCanvasPointerUp_Hook.md</span>|[[#autorun-handleCanvasPointerUp_Hook]]|
 |<span>autorun-handleLinearElementOnPointerDownHook.md</span>|[[#autorun-handleLinearElementOnPointerDownHook]]|
 |<span>autorun-handlePointDraggingHook.md</span>|[[#autorun-handlePointDraggingHook]]|
+|<span>autorun-onTextWysiwygChangeHook.md</span>|[[#autorun-onTextWysiwygChangeHook]]|
 |<span>autorun-handleTextWysiwygHook.md</span>|[[#autorun-handleTextWysiwygHook]]|
 |<span>autorun-handleWheelHook.md</span>|[[#autorun-handleWheelHook]]|
 |<span>autorun-maybeBindLinearElement_Hook.md</span>|[[#autorun-maybeBindLinearElement_Hook]]|
@@ -939,6 +940,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-onPointerDownHook.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-onPointerDownHook.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## autorun-onTextWysiwygChangeHook
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-onTextWysiwygChangeHook.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-onTextWysiwygChangeHook.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
