@@ -48,6 +48,7 @@
 |<span>autorun-zoomToFitWrapper.md</span>|[[#autorun-zoomToFitWrapper]]|
 |<span>_autorun-obMenu.md</span>|[[#_autorun-obMenu]]|
 |<span>autorun-handleCanvasPointerDown_Hook.md</span>|[[#autorun-handleCanvasPointerDown_Hook]]|
+|<span>autorun-actionAddToLibrary_Hoot.md</span>|[[#autorun-actionAddToLibrary_Hoot]]|
 
 ## Connection
 **Keywords**: Connection, line, arrow
@@ -794,6 +795,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/align%20arrows.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/align%20arrows.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## autorun-actionAddToLibrary_Hoot
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-actionAddToLibrary_Hoot.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-actionAddToLibrary_Hoot.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
