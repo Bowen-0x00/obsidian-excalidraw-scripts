@@ -49,6 +49,7 @@
 |<span>_autorun-obMenu.md</span>|[[#_autorun-obMenu]]|
 |<span>autorun-handleCanvasPointerDown_Hook.md</span>|[[#autorun-handleCanvasPointerDown_Hook]]|
 |<span>autorun-actionAddToLibrary_Hoot.md</span>|[[#autorun-actionAddToLibrary_Hoot]]|
+|<span>autorun-excalidrawExtraColors_Hook.md</span>|[[#autorun-excalidrawExtraColors_Hook]]|
 
 ## Connection
 **Keywords**: Connection, line, arrow
@@ -344,6 +345,8 @@
 |<span>set iFrame on click2.md</span>|[[#set iFrame on click2]]|
 |<span>replaceTemplateFromUnorderList.md</span>|[[#replaceTemplateFromUnorderList]]|
 |<span>copy customData.md</span>|[[#copy customData]]|
+|<span>addPaletteColors.md</span>|[[#addPaletteColors]]|
+|<span>mark as swimlane.md</span>|[[#mark as swimlane]]|
 
 
 
@@ -789,6 +792,14 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <td class="data">
 </td></tr></table>
 
+## addPaletteColors
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/addPaletteColors.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/addPaletteColors.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
 ## align arrows
 
 ```excalidraw-script-install
@@ -876,6 +887,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-drawElementOnCanvasHook.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-drawElementOnCanvasHook.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## autorun-excalidrawExtraColors_Hook
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-excalidrawExtraColors_Hook.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/autorun-excalidrawExtraColors_Hook.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
@@ -1740,6 +1760,15 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/mark%20as%20nobind.md
 ```
 <table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/mark%20as%20nobind.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
+<td class="data">
+</td></tr></table>
+
+## mark as swimlane
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/mark%20as%20swimlane.md
+```
+<table><tr valign='top'><td class="label">Author</td><td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td></tr><tr valign='top'><td class="label">Source</td><td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/Encrypted/mark%20as%20swimlane.md'>File on GitHub</a></td></tr><tr valign='top'><td class="label">Description</td>
 <td class="data">
 </td></tr></table>
 
