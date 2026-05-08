@@ -9,6 +9,7 @@ features:
   - 拦截 `drawElementOnCanvas` 进行离屏 SVG 生成并缓存 (imageCache)
   - 内置 WaveDrom 全量 JS 运行时以支持全离线解析
   - 基于自然长宽比自动校正元素的边界物理尺寸 (width/height)
+  - 支持复杂 Group 分组渲染及 Live Preview 的无损展示
 dependencies:
   - 供 Action-Wavedrom-Manager 唤起面板和输入代码使用
 autorun: true
@@ -31,7 +32,7 @@ var locales = {
     ui_error: "⚠️ 数据结构错误或语法不合法",
     ui_name: "名称",
     ui_wave: "波形 (p.01x)",
-    ui_data: "数据 (空格分隔)",
+    ui_data: "数据 (空格/数组)",
     ui_add_sig: "➕ 新增信号通道"
   },
   en: {
@@ -48,7 +49,7 @@ var locales = {
     ui_error: "⚠️ Invalid data structure or syntax",
     ui_name: "Name",
     ui_wave: "Wave (p.01x)",
-    ui_data: "Data (Space separated)",
+    ui_data: "Data (Space/Array)",
     ui_add_sig: "➕ Add Signal Channel"
   }
 };
@@ -199,7 +200,7 @@ WavedromCore.openEditor = (initialCode, onSave) => {
     rightPanel.style.cssText = `flex:1; display:flex; flex-direction:column; border:1px solid var(--background-modifier-border); border-radius:8px; background:#fff; overflow:hidden;`;
     rightPanel.innerHTML = `<div style="padding:10px; background:#f5f5f5; color:#333; font-weight:bold; text-align:center; border-bottom:1px solid #ddd;">${t("ui_preview")}</div>`;
     const previewDiv = document.createElement('div');
-    previewDiv.style.cssText = `flex:1; overflow:auto; display:flex; align-items:center; justify-content:center; padding:15px;`;
+    previewDiv.style.cssText = `flex:1; overflow:auto; padding:15px; background:var(--background-primary-alt, #fff);`;
     rightPanel.appendChild(previewDiv);
 
     content.appendChild(leftPanel);
@@ -234,9 +235,11 @@ WavedromCore.openEditor = (initialCode, onSave) => {
         previewDiv.innerHTML = "";
         const result = await WavedromCore.generateImageFromCode(state.code, "preview");
         if (result && result.img) {
+            result.img.style.display = "block";
+            result.img.style.margin = "0 auto";
             previewDiv.appendChild(result.img);
         } else {
-            previewDiv.innerHTML = `<div style="color:red; text-align:center;">${t("ui_error")}</div>`;
+            previewDiv.innerHTML = `<div style="color:red; text-align:center; margin-top:20px;">${t("ui_error")}</div>`;
         }
     };
 
@@ -247,12 +250,38 @@ WavedromCore.openEditor = (initialCode, onSave) => {
     };
 
     const syncBuilderToCode = () => {
-        const cleanSignals = state.signals.map(s => {
-            const res = { name: s.name, wave: s.wave };
-            if (s.data && s.data.trim() !== "") res.data = s.data;
-            return res;
-        });
-        state.code = JSON.stringify({ signal: cleanSignals }, null, 2);
+        const cleanArray = (arr) => {
+            return arr.map(s => {
+                if (Array.isArray(s)) return cleanArray(s);
+                if (typeof s === 'string') return s;
+                if (typeof s === 'object' && s !== null) {
+                    if (Object.keys(s).length === 0) return {};
+                    
+                    // 修复2: 解构保留所有隐性属性(如 period/phase/node)，避免直接硬编码覆盖
+                    const res = { ...s };
+                    res.name = res.name || "";
+                    res.wave = res.wave || "";
+                    
+                    // 修复1: 增加类型安全校验，防止从 JSON 解析出来的 data 是数组报错
+                    if (typeof res.data === 'string' && res.data.trim() === "") {
+                        delete res.data;
+                    } else if (Array.isArray(res.data) && res.data.length === 0) {
+                        delete res.data;
+                    }
+                    
+                    return res;
+                }
+                return s;
+            }).filter(Boolean);
+        };
+        
+        let parsed = {};
+        try {
+            parsed = (new Function("return " + state.code))() || {};
+        } catch(e) {}
+        
+        parsed.signal = cleanArray(state.signals);
+        state.code = JSON.stringify(parsed, null, 2);
     };
 
     const parseCodeToSignals = () => {
@@ -278,47 +307,77 @@ WavedromCore.openEditor = (initialCode, onSave) => {
         
         const reRenderList = () => {
             listContainer.innerHTML = "";
+            
+            // 修复：递归渲染元素以支持 Group 分组特性
+            const renderItem = (item, parentArr, index, depth = 0) => {
+                if (Array.isArray(item)) {
+                    // 渲染 Group 标题
+                    const groupName = typeof item[0] === 'string' ? item[0] : 'Group';
+                    const groupHeader = document.createElement('div');
+                    groupHeader.style.cssText = `padding: 4px 8px; background: var(--background-secondary); margin: 8px 0 4px ${depth * 15}px; font-size: 12px; font-weight: bold; border-radius: 4px; border-left: 3px solid var(--interactive-accent);`;
+                    groupHeader.innerText = "📁 " + groupName;
+                    listContainer.appendChild(groupHeader);
+                    
+                    item.forEach((subItem, subIdx) => {
+                        if (subIdx !== 0 || typeof subItem !== 'string') {
+                            renderItem(subItem, item, subIdx, depth + 1);
+                        }
+                    });
+                } else if (typeof item === 'object' && item !== null) {
+                    // 处理空对象（作为空白分隔符）
+                    if (Object.keys(item).length === 0) {
+                        const spacer = document.createElement('div');
+                        spacer.style.cssText = `height: 0px; border-bottom: 1px dashed var(--background-modifier-border); margin: 8px 0 8px ${depth * 15}px;`;
+                        listContainer.appendChild(spacer);
+                        return;
+                    }
+
+                    const row = document.createElement('div');
+                    row.style.cssText = `display:flex; gap:6px; margin-bottom:8px; align-items:center; margin-left: ${depth * 15}px;`;
+
+                    const createInput = (val, flex, placeholder) => {
+                        const inp = document.createElement('input');
+                        inp.type = "text"; inp.value = val || ""; inp.placeholder = placeholder;
+                        inp.style.cssText = `flex:${flex}; padding:6px; border-radius:4px; background:var(--background-modifier-form-field); border:1px solid var(--background-modifier-border); min-width:0;`;
+                        return inp;
+                    };
+
+                    const iName = createInput(item.name, 1, "clk");
+                    iName.oninput = (e) => { item.name = e.target.value; triggerUpdate(); };
+                    
+                    const iWave = createInput(item.wave, 1.5, "p..."); iWave.style.fontFamily = "monospace";
+                    iWave.oninput = (e) => { item.wave = e.target.value; triggerUpdate(); };
+                    
+                    const initDataVal = Array.isArray(item.data) ? item.data.join(' ') : item.data;
+                    const iData = createInput(initDataVal, 1.5, "A B");
+                    iData.oninput = (e) => { item.data = e.target.value; triggerUpdate(); };
+
+                    const btnGroup = document.createElement('div');
+                    btnGroup.style.cssText = `display:flex; gap:2px; width:55px; flex-shrink:0;`;
+                    
+                    const upBtn = document.createElement('button'); upBtn.innerText = "↑";
+                    upBtn.style.cssText = `padding:4px 6px; cursor:pointer; background:none; box-shadow:none; border:1px solid var(--background-modifier-border); border-radius:4px;`;
+                    upBtn.disabled = index === 0 || (depth > 0 && index === 1); // 分组内的第一个元素不能再往上（防止覆盖分组名字）
+                    upBtn.onclick = () => {
+                        [parentArr[index-1], parentArr[index]] = [parentArr[index], parentArr[index-1]];
+                        reRenderList(); triggerUpdate();
+                    };
+
+                    const delBtn = document.createElement('button'); delBtn.innerText = "✕";
+                    delBtn.style.cssText = `padding:4px 6px; cursor:pointer; background:none; box-shadow:none; border:1px solid var(--background-modifier-border); border-radius:4px; color:var(--text-error);`;
+                    delBtn.onclick = () => {
+                        parentArr.splice(index, 1);
+                        reRenderList(); triggerUpdate();
+                    };
+
+                    btnGroup.appendChild(upBtn); btnGroup.appendChild(delBtn);
+                    row.appendChild(iName); row.appendChild(iWave); row.appendChild(iData); row.appendChild(btnGroup);
+                    listContainer.appendChild(row);
+                }
+            };
+
             state.signals.forEach((sig, index) => {
-                const row = document.createElement('div');
-                row.style.cssText = `display:flex; gap:6px; margin-bottom:8px; align-items:center;`;
-
-                const createInput = (val, flex, placeholder) => {
-                    const inp = document.createElement('input');
-                    inp.type = "text"; inp.value = val || ""; inp.placeholder = placeholder;
-                    inp.style.cssText = `flex:${flex}; padding:6px; border-radius:4px; background:var(--background-modifier-form-field); border:1px solid var(--background-modifier-border);`;
-                    return inp;
-                };
-
-                const iName = createInput(sig.name, 1, "clk");
-                iName.oninput = (e) => { sig.name = e.target.value; triggerUpdate(); };
-                
-                const iWave = createInput(sig.wave, 1.5, "p..."); iWave.style.fontFamily = "monospace";
-                iWave.oninput = (e) => { sig.wave = e.target.value; triggerUpdate(); };
-                
-                const iData = createInput(sig.data, 1.5, "A B");
-                iData.oninput = (e) => { sig.data = e.target.value; triggerUpdate(); };
-
-                const btnGroup = document.createElement('div');
-                btnGroup.style.cssText = `display:flex; gap:2px; width:55px;`;
-                
-                const upBtn = document.createElement('button'); upBtn.innerText = "↑";
-                upBtn.style.cssText = `padding:4px 6px; cursor:pointer; background:none; box-shadow:none; border:1px solid var(--background-modifier-border); border-radius:4px;`;
-                upBtn.disabled = index === 0;
-                upBtn.onclick = () => {
-                    [state.signals[index-1], state.signals[index]] = [state.signals[index], state.signals[index-1]];
-                    reRenderList(); triggerUpdate();
-                };
-
-                const delBtn = document.createElement('button'); delBtn.innerText = "✕";
-                delBtn.style.cssText = `padding:4px 6px; cursor:pointer; background:none; box-shadow:none; border:1px solid var(--background-modifier-border); border-radius:4px; color:var(--text-error);`;
-                delBtn.onclick = () => {
-                    state.signals.splice(index, 1);
-                    reRenderList(); triggerUpdate();
-                };
-
-                btnGroup.appendChild(upBtn); btnGroup.appendChild(delBtn);
-                row.appendChild(iName); row.appendChild(iWave); row.appendChild(iData); row.appendChild(btnGroup);
-                listContainer.appendChild(row);
+                renderItem(sig, state.signals, index);
             });
 
             const addBtn = document.createElement('button');

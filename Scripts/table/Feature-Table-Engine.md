@@ -245,24 +245,6 @@ const handleDragSelected = (context) => {
         if (el?.customData?.connectionShape) elementsToUpdate.delete(el);
     });
 
-    const elementsMap = scene?.getNonDeletedElementsMap?.();
-    selectedElements.forEach((el) => {
-        if (el?.customData?.mindmap) {
-            const rootEl = elementsMap?.get(el.customData.mindmap.root);
-            if (rootEl?.customData?.mindmap?.style.arrowType === 'normal') {
-                el.boundElements?.forEach(bound => {
-                    if (bound.type === "arrow") {
-                        const be = elementsMap?.get(bound.id);
-                        if (be?.startBinding?.elementId === el.id || be?.endBinding?.elementId === el.id) {
-                            be.points[1][0] = 0.4 * (be.points[2][0] - be.points[0][0]);
-                            be.points[1][1] = (be.points[2][1] - be.points[0][1]) * 0.8905;
-                        }
-                    }
-                });
-            }
-        }
-    });
-
     if (selectedElements.length === 1 && selectedElements[0]?.customData?.table) return true;
 };
 

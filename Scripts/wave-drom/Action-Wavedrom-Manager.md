@@ -45,6 +45,7 @@ const applyDataToCanvas = async (jsonString, targetEl = null) => {
     ea.clear(); 
 
     let elToUpdate;
+    let isNewElement = false;
 
     if (targetEl) {
         if (targetEl.type === "text") {
@@ -52,16 +53,17 @@ const applyDataToCanvas = async (jsonString, targetEl = null) => {
             ea.deleteViewElements([targetEl]);
             ea.style.strokeColor = "transparent";
             ea.style.backgroundColor = "white";
-            // 继承原有坐标
             const id = ea.addRect(targetEl.x, targetEl.y, targetEl.width, targetEl.height);
             elToUpdate = ea.getElement(id);
         } else {
             // 已经是矩形了，直接更新
-            elToUpdate = targetEl;
-            ea.copyViewElementsToEAforEditing([elToUpdate]);
+            ea.copyViewElementsToEAforEditing([targetEl]);
+            // 【修复核心】：这里必须通过 ea.getElement 获取 EA 内存中的【克隆体】，而不是修改原始 targetEl
+            elToUpdate = ea.getElement(targetEl.id); 
         }
     } else {
         // 新建元素
+        isNewElement = true;
         ea.style.strokeColor = "transparent";
         ea.style.backgroundColor = "transparent";
         
@@ -69,17 +71,19 @@ const applyDataToCanvas = async (jsonString, targetEl = null) => {
         const cx = viewState.scrollX + (viewState.width / 2 / viewState.zoom.value);
         const cy = viewState.scrollY + (viewState.height / 2 / viewState.zoom.value);
         
-        const id = ea.addRect(cx - 200, cy - 100, 400, 200); // 初始默认尺寸，渲染后会自动纠正
+        const id = ea.addRect(cx - 200, cy - 100, 400, 200);
         elToUpdate = ea.getElement(id);
     }
     
-    // 核心改变：将代码塞进 customData，避开文本排版引擎的干扰
+    // 将代码塞进克隆体的 customData 中
     elToUpdate.customData = { ...elToUpdate.customData, wavedrom: true, code: jsonString };
     
-    await ea.addElementsToView(true, false, false);
+    // 提交到画布 (更新时不移动到鼠标位置)
+    await ea.addElementsToView(isNewElement, true, false);
     
+    // 微调 zoom 以触发底层重绘 Hook
     const state = api.getAppState();
-    await ea.viewUpdateScene({ appState: { zoom: { value: state.zoom.value + 0.0001 } } });
+    await ea.viewUpdateScene({ appState: { zoom: { value: state.zoom.value + 0.00001 } } });
 };
 
 // ==========================================
@@ -97,7 +101,7 @@ if (selectedEls.length > 0) {
     }
 }
 
-// 唤起原生 HTML 悬浮面板
+// 唤起引擎面板
 WavedromCore.openEditor(initialCode, (resultCode) => {
     applyDataToCanvas(resultCode, targetEl);
 });

@@ -255,17 +255,17 @@ const toggleSwimlaneCollapse = async (App, container) => {
     });
 
     const childrenToToggle = [];
-    const toggleDescendants = (parentId, hide, ea, api) => {
+    const toggleDescendants = (parentId, hide) => {
         const kids = parentToChildrenMap.get(parentId) || [];
         kids.forEach(kidId => {
             const child = App.scene.getNonDeletedElementsMap().get(kidId);
             if (child) {
                 childrenToToggle.push(child);
-                toggleDescendants(kidId, hide, ea, api);
+                toggleDescendants(kidId, hide);
             }
         });
     };
-    toggleDescendants(container.id, isCollapsing, ea, api);
+    toggleDescendants(container.id, isCollapsing);
 
     const newContainerData = { ...container.customData, isCollapsed: isCollapsing };
     let newHeight = container.height;

@@ -9,7 +9,7 @@ features:
   - 全面劫持和强化原生的 Excalidraw `keydown` 事件
   - 支持按下 Space 键快速进入选中元素的文本编辑状态
   - 支持 Tab / Shift+Tab 快速调整文本元素的 X 轴缩进
-  - 支持 Shift+Enter 快速向下换行新建文本
+  - 支持 Shift+Enter 快速向下换行新建文本 (继承上一个元素的字体样式)
   - 支持 Shift+方向键 快速在文本节点间跳转
 dependencies:
   - 独立运行，无外部依赖
@@ -43,7 +43,7 @@ var locales = {
   }
 };
 
-const SCRIPT_ID = "ymjr.feature.text-shortcuts-engine";
+const SCRIPT_ID = "ymjr.feature.text-shortcuts";
 
 // ==========================================
 // 1. 设置项管理 (全部默认开启)
@@ -104,15 +104,21 @@ const insertNextLine = async (App, isCtrlPressed, sourceElement = null) => {
 
             const latestElements = api.getSceneElements();
             const latestTarget = latestElements.find(el => el.id === targetElement.id) || targetElement;
-            const fontSize = latestTarget.fontSize || state.currentItemFontSize || 20;
+            
+            // 提取上一个元素的样式作为基准（如果缺失则回退到当前全局状态）
+            const targetStrokeColor = latestTarget.strokeColor || state.currentItemStrokeColor;
+            const targetFontSize = latestTarget.fontSize || state.currentItemFontSize || 20;
+            const targetFontFamily = latestTarget.fontFamily || state.currentItemFontFamily;
+            const targetTextAlign = latestTarget.textAlign || state.currentItemTextAlign;
+            const targetOpacity = latestTarget.opacity || state.currentItemOpacity;
 
             if (!isCtrlPressed) {
                 const nextState = {
-                    currentItemStrokeColor: latestTarget.strokeColor || state.currentItemStrokeColor,
-                    currentItemFontSize: latestTarget.fontSize || state.currentItemFontSize,
-                    currentItemFontFamily: latestTarget.fontFamily || state.currentItemFontFamily,
-                    currentItemTextAlign: latestTarget.textAlign || state.currentItemTextAlign,
-                    currentItemOpacity: latestTarget.opacity || state.currentItemOpacity
+                    currentItemStrokeColor: targetStrokeColor,
+                    currentItemFontSize: targetFontSize,
+                    currentItemFontFamily: targetFontFamily,
+                    currentItemTextAlign: targetTextAlign,
+                    currentItemOpacity: targetOpacity
                 };
                 
                 if (activeApp.setState) {
@@ -122,10 +128,18 @@ const insertNextLine = async (App, isCtrlPressed, sourceElement = null) => {
                 }
             }
 
-            const expectedY = latestTarget.y + latestTarget.height + (fontSize / 4);
+            const expectedY = latestTarget.y + latestTarget.height + (targetFontSize / 4);
             const sceneX = latestTarget.x;
 
             ea.clear();
+            
+            // 将 EA 的样式设定为上一个元素的样式
+            ea.style.strokeColor = targetStrokeColor;
+            ea.style.fontSize = targetFontSize;
+            ea.style.fontFamily = targetFontFamily;
+            ea.style.textAlign = targetTextAlign;
+            ea.style.opacity = targetOpacity;
+
             const newElId = ea.addText(sceneX, expectedY, "");
             const newEl = ea.getElement(newElId);
             
