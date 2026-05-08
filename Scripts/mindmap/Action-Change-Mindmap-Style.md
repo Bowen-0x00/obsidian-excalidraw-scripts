@@ -108,9 +108,6 @@ var locales = {
 };
 const { Notice } = ea.obsidian;
 
-// ==========================================
-// 1. 常量与默认数据结构
-// ==========================================
 const DEFAULT_LEVELS = [
     { level: 1, strokeColor: "black", textColor: "#ffffff", fontSize: 24, strokeWidth: 2 },
     { level: 2, strokeColor: "black", textColor: "black", fontSize: 20, strokeWidth: 1 },
@@ -129,9 +126,6 @@ const FALLBACK_SETTINGS = {
     direction: "LR", arrowType: "normal", defaultGap: 15, curveLength: 40, lengthBetweenElAndLine: 100, enableFixedPoint: true, theme: "rainbow"
 };
 
-// ==========================================
-// 2. 数据读取与状态管理
-// ==========================================
 let engineSettings = ExcalidrawAutomate.plugin.settings.scriptEngineSettings["Mindmap_Engine"] || {};
 let mindmapConfig;
 try {
@@ -140,14 +134,10 @@ try {
     } else { mindmapConfig = { themes: FALLBACK_THEMES, defaultSettings: FALLBACK_SETTINGS }; }
 } catch (e) { mindmapConfig = { themes: FALLBACK_THEMES, defaultSettings: FALLBACK_SETTINGS }; }
 
-// 深拷贝一份用于 UI 编辑，防止未保存直接污染全局
 let localConfig = JSON.parse(JSON.stringify(mindmapConfig));
 if (!localConfig.themes) localConfig.themes = JSON.parse(JSON.stringify(FALLBACK_THEMES));
 if (!localConfig.defaultSettings) localConfig.defaultSettings = JSON.parse(JSON.stringify(FALLBACK_SETTINGS));
 
-// ==========================================
-// 3. 样式解析工具函数
-// ==========================================
 function lightenHex(hex, percent) {
     if (!hex || hex === "transparent") return hex;
     let num = parseInt(hex.replace("#",""), 16); if (isNaN(num)) return hex;
@@ -172,9 +162,6 @@ function resolveStyle(level, branchIndex, settings, themesObj) {
     return { backgroundColor: bg, textColor: lvlConfig.textColor, strokeColor: lvlConfig.strokeColor, fontSize: lvlConfig.fontSize, strokeWidth: lvlConfig.strokeWidth };
 }
 
-// ==========================================
-// 4. 环境上下文判断 (选中了元素 vs 全局设置)
-// ==========================================
 const selectedEls = ea.getViewSelectedElements();
 let targetRoot = null;
 if (selectedEls.length > 0 && selectedEls[0]?.customData?.mindmap) {
@@ -191,9 +178,6 @@ if (typeof activeLayoutSettings.enableFixedPoint === 'undefined') {
     activeLayoutSettings.enableFixedPoint = true;
 }
 
-// ==========================================
-// 5. UI 组件生成器与主面板
-// ==========================================
 function createInput(type, value, onChange, width="auto", title="") {
     const inp = document.createElement('input'); inp.type = type; inp.value = value; inp.title = title;
     if (type === "color") {
@@ -222,13 +206,11 @@ function createStylePanel() {
     panel.id = "ea-mindmap-style-panel";
     panel.style.cssText = `position:fixed; top:100px; right:80px; width:380px; max-height:85vh; background:var(--background-primary); border:1px solid var(--background-modifier-border); box-shadow:0 10px 30px rgba(0,0,0,0.3); border-radius:8px; z-index:9999; display:flex; flex-direction:column; overflow:hidden;`;
 
-    // --- Header ---
     const header = document.createElement('div');
     header.style.cssText = `padding:12px 16px; background:var(--background-secondary); cursor:move; border-bottom:1px solid var(--background-modifier-border); display:flex; justify-content:space-between; align-items:center; user-select:none;`;
     header.innerHTML = `<b>${isGlobalMode ? t("ui_title_global") : t("ui_title_current")}</b><button id="close-btn" style="background:none; border:none; cursor:pointer; color:var(--text-muted);">✕</button>`;
     panel.appendChild(header);
 
-    // --- Content Container (Scrollable) ---
     const content = document.createElement('div');
     content.style.cssText = `padding:16px; display:flex; flex-direction:column; gap:20px; overflow-y:auto;`;
 
@@ -238,7 +220,6 @@ function createStylePanel() {
         div.appendChild(lbl); div.appendChild(element); return div;
     };
 
-    // 动态渲染区域容器
     const layoutContainer = document.createElement('div');
     const themeSelectorContainer = document.createElement('div');
     const themeEditorContainer = document.createElement('div');
@@ -246,11 +227,9 @@ function createStylePanel() {
     content.appendChild(themeSelectorContainer);
     if (isGlobalMode) content.appendChild(themeEditorContainer);
 
-    // 渲染排版设置
     const renderLayout = () => {
         layoutContainer.innerHTML = `<div style="font-size:12px; font-weight:bold; color:var(--text-muted); margin-bottom:10px; border-bottom:1px solid var(--background-modifier-border); padding-bottom:4px;">${t("ui_group_layout")}</div>`;
         
-        // 展开方向
         const dirSelect = document.createElement('select'); dirSelect.style.cssText = "width:120px; background:var(--background-modifier-form-field); border-radius:4px; padding:4px; color:var(--text-normal); border:1px solid var(--background-modifier-border);";
         const dirs = { "LR": t("ui_dir_lr"), "RL": t("ui_dir_rl"), "TD": t("ui_dir_td"), "BU": t("ui_dir_bu") };
         Object.entries(dirs).forEach(([val, text]) => {
@@ -260,7 +239,6 @@ function createStylePanel() {
         dirSelect.onchange = e => activeLayoutSettings.direction = e.target.value;
         layoutContainer.appendChild(createRow(t("ui_direction"), dirSelect));
 
-        // 连线样式选择器
         const arrowSelect = document.createElement('select'); arrowSelect.style.cssText = dirSelect.style.cssText;
         const arrowOptions = { "normal": t("ui_arrow_normal"), "elbow": t("ui_arrow_elbow"), "curve": t("ui_arrow_curve") };
         Object.entries(arrowOptions).forEach(([val, text]) => {
@@ -280,7 +258,6 @@ function createStylePanel() {
         layoutContainer.appendChild(createRow(t("ui_line_length"), createInput("number", activeLayoutSettings.lengthBetweenElAndLine, val => activeLayoutSettings.lengthBetweenElAndLine = val, "60px")));
     };
 
-    // 渲染主题下拉选择区
     const renderThemeSelector = () => {
         themeSelectorContainer.innerHTML = `<div style="font-size:12px; font-weight:bold; color:var(--text-muted); margin-bottom:10px; border-bottom:1px solid var(--background-modifier-border); padding-bottom:4px;">${t("ui_group_theme")}</div>`;
         
@@ -317,7 +294,6 @@ function createStylePanel() {
         themeSelectorContainer.appendChild(topRow);
     };
 
-    // 渲染主题细节编辑器（仅全局模式）
     const renderThemeEditor = () => {
         themeEditorContainer.innerHTML = "";
         if (!isGlobalMode || !localConfig.themes[activeThemeKey]) return;
@@ -325,10 +301,8 @@ function createStylePanel() {
 
         const panelWrap = document.createElement('div'); panelWrap.style.cssText = `background:var(--background-secondary-alt); padding:12px; border-radius:6px; border:1px solid var(--background-modifier-border); display:flex; flex-direction:column; gap:12px;`;
         
-        // 根节点背景
         panelWrap.appendChild(createRow(t("ui_root_bg"), createInput("color", currentTheme.rootBg, val => currentTheme.rootBg = val)));
 
-        // 分支颜色管理
         const branchDiv = document.createElement('div');
         const branchHeader = document.createElement('div'); branchHeader.style.cssText = "display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;";
         branchHeader.innerHTML = `<span style="font-size:13px; font-weight:bold; color:var(--text-normal);">${t("ui_branch_colors")}</span>`;
@@ -342,7 +316,6 @@ function createStylePanel() {
         currentTheme.colors.forEach((c, i) => { branchColorsWrap.appendChild(createInput("color", c, val => currentTheme.colors[i] = val)); });
         branchDiv.appendChild(branchColorsWrap); panelWrap.appendChild(branchDiv);
 
-        // 层级管理
         const lvlDiv = document.createElement('div');
         lvlDiv.innerHTML = `<div style="font-size:13px; font-weight:bold; color:var(--text-normal); margin-bottom:8px; margin-top:8px;">${t("ui_level_styles")}</div>`;
         currentTheme.levels.forEach((lvl) => {
@@ -359,11 +332,9 @@ function createStylePanel() {
         themeEditorContainer.appendChild(panelWrap);
     };
 
-    // 初始化渲染
     renderLayout(); renderThemeSelector(); if(isGlobalMode) renderThemeEditor();
     panel.appendChild(content);
 
-    // --- Footer ---
     const footer = document.createElement('div');
     footer.style.cssText = `padding:12px 16px; border-top:1px solid var(--background-modifier-border); display:flex; justify-content:flex-end; gap:10px; background:var(--background-secondary); border-radius: 0 0 8px 8px;`;
     
@@ -432,14 +403,12 @@ function createStylePanel() {
                         
                         const eEl = ea.getElement(el.id);
                         if (eEl && style) {
-                            // 更新节点自身样式
                             eEl.backgroundColor = style.backgroundColor; eEl.strokeColor = style.strokeColor || "black"; eEl.strokeWidth = style.strokeWidth || 1;
                             if (eEl.type === "text") eEl.fontSize = style.fontSize;
                             if (eEl.boundElements) {
                                 eEl.boundElements.forEach(b => { if (b.type === "text") { const t = ea.getElement(b.id); if (t) { t.strokeColor = style.textColor || "black"; t.fontSize = style.fontSize; } } });
                             }
                             
-                            // 更新连入该节点的箭头线条样式 & 加入 curveArrow 属性
                             const incomingArrowId = treeElements.find(a => a.type === "arrow" && a.endBinding && a.endBinding.elementId === el.id)?.id;
                             if(incomingArrowId) {
                                 const arrEl = ea.getElement(incomingArrowId);
@@ -447,12 +416,14 @@ function createStylePanel() {
                                     arrEl.strokeColor = style.strokeColor || "black";
                                     arrEl.strokeWidth = style.strokeWidth || 1;
                                     arrEl.customData = arrEl.customData || {};
+                                    
                                     if (activeLayoutSettings.arrowType === "curve") {
                                         arrEl.customData.curveArrow = true;
                                     } else {
                                         delete arrEl.customData.curveArrow;
                                     }
 
+                                    // 注意：不再这里直接修改 elbowed 属性，而是让后续的引擎 runLayout 来计算和接管！
                                     if (activeLayoutSettings.enableFixedPoint) {
                                         if (arrEl.startBinding) arrEl.startBinding.mode = "inside";
                                         if (arrEl.endBinding) arrEl.endBinding.mode = "inside";
@@ -469,11 +440,13 @@ function createStylePanel() {
                 });
 
                 await ea.addElementsToView(false, false, false);
+                
+                // 将重新排版以及计算箭头 elbowed / points 的工作交给引擎处理
                 setTimeout(async () => {
                     const currentSceneElements = ea.getViewElements();
                     const updatedElementsMap = new Map(currentSceneElements.map(el => [el.id, el]));
                     const updatedTreeElements = elementsToLoad.map(el => updatedElementsMap.get(el.id)).filter(Boolean);
-                    await window.MindmapAPI.runLayout(updatedTreeElements, true);
+                    await window.MindmapAPI.runLayout(updatedTreeElements, true, ea);
                     new Notice(t("notice_applied"));
                 }, 150);
             } else { new Notice(t("notice_no_engine")); }
@@ -485,7 +458,6 @@ function createStylePanel() {
     panel.appendChild(footer); document.body.appendChild(panel);
     header.querySelector('#close-btn').onclick = () => panel.remove();
 
-    // 拖拽逻辑
     let isDragging = false, startX, startY, initLeft, initTop;
     header.onmousedown = (e) => {
         if(e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;

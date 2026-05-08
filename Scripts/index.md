@@ -243,6 +243,7 @@
 |<span>Action-Export-Mindmap-To-Md.md</span>|[[#Action-Export-Mindmap-To-Md]]|
 |<span>Action-Import-Mindmap-From-Clipboard.md</span>|[[#Action-Import-Mindmap-From-Clipboard]]|
 |<span>Feature-Mindmap-Engine.md</span>|[[#Feature-Mindmap-Engine]]|
+|<span>Action-Detach-Mindmap.md</span>|[[#Action-Detach-Mindmap]]|
 
 ## Other
 **Keywords**: Other
@@ -2646,6 +2647,31 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
   </tr>
 </table>
 
+## Action-Detach-Mindmap
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Action-Detach-Mindmap.md
+```
+<table>
+  <tr valign='top'>
+    <td class="label">Author</td>
+    <td class="data"><a href='https://github.com/ymjr'>@ymjr</a></td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Version</td>
+    <td class="data">1.0.2</td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Source</td>
+    <td class="data"><a href='https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Action-Detach-Mindmap.md'>File on GitHub</a></td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Description</td>
+    <td class="data">将选中元素及其子节点从脑图结构中脱离，转换为普通元素，并修复原脑图排版。</td>
+  </tr>
+  
+</table>
+
 ## Action-Export-Mindmap-To-Clipboard
 
 ```excalidraw-script-install
@@ -3741,7 +3767,7 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
   
   <tr valign='top'>
     <td class="label">Features</td>
-    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>全面劫持和强化原生的 Excalidraw `keydown` 事件</li><li>支持按下 Space 键快速进入选中元素的文本编辑状态</li><li>支持 Tab / Shift+Tab 快速调整文本元素的 X 轴缩进</li><li>支持 Shift+Enter 快速向下换行新建文本</li><li>支持 Shift+方向键 快速在文本节点间跳转</li></ul></td>
+    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>全面劫持和强化原生的 Excalidraw `keydown` 事件</li><li>支持按下 Space 键快速进入选中元素的文本编辑状态</li><li>支持 Tab / Shift+Tab 快速调整文本元素的 X 轴缩进</li><li>支持 Shift+Enter 快速向下换行新建文本 (继承上一个元素的字体样式)</li><li>支持 Shift+方向键 快速在文本节点间跳转</li></ul></td>
   </tr>
 </table>
 
@@ -3857,7 +3883,7 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
   
   <tr valign='top'>
     <td class="label">Features</td>
-    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>拦截 `drawElementOnCanvas` 进行离屏 SVG 生成并缓存 (imageCache)</li><li>内置 WaveDrom 全量 JS 运行时以支持全离线解析</li><li>基于自然长宽比自动校正元素的边界物理尺寸 (width/height)</li></ul></td>
+    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>拦截 `drawElementOnCanvas` 进行离屏 SVG 生成并缓存 (imageCache)</li><li>内置 WaveDrom 全量 JS 运行时以支持全离线解析</li><li>基于自然长宽比自动校正元素的边界物理尺寸 (width/height)</li><li>支持复杂 Group 分组渲染及 Live Preview 的无损展示</li></ul></td>
   </tr>
 </table>
 
