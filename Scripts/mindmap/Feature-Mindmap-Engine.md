@@ -867,6 +867,7 @@ const handleKeyDown = (context) => {
         if (selectedEl?.customData?.mindmap) {
             event.preventDefault(); event.stopPropagation();
             (async () => {
+                ea.clear();
                 let mindmap = MindmapState.mindmapPosMap.get(selectedEl.customData.mindmap.root); const rootEl = elementsMap?.get(selectedEl.customData.mindmap.root);
                 if (!mindmap || !(mindmap.NodeMap.get(selectedEl.id)?.children?.length)) {
                     mindmap = new Mindmap(elements, selectedEl); mindmap.setElements(elements, elementsMap); mindmap.buildNodeTree(rootEl, null, 1, null);
