@@ -1119,31 +1119,6 @@ const handleMindmapRender = (contextPayload) => {
     return false; 
 };
 
-const handleModifyElementsToDrag = (context) => {
-    const { ea, api, App, elementsToDrag } = context;
-    if (!ea || !api || !App || !elementsToDrag) return;
-
-    const elementsMap = App.scene.getNonDeletedElementsMap();
-
-    // 修改 elementsToDrag 数组，剔除脑图箭头
-    context.elementsToDrag = elementsToDrag.filter(el => {
-        // 判断是否为箭头或线条
-        if (el.type === "arrow" || el.type === "line") {
-            const startEl = el.startBinding ? elementsMap.get(el.startBinding.elementId) : null;
-            const endEl = el.endBinding ? elementsMap.get(el.endBinding.elementId) : null;
-
-            // 如果该箭头连接的起点或终点是脑图节点，则认定为脑图箭头
-            const isMindmapArrow = (startEl?.customData?.mindmap) || (endEl?.customData?.mindmap);
-            
-            if (isMindmapArrow) {
-                return false; // 返回 false，将其移出拖拽列表
-            }
-        }
-        return true; // 其他元素正常允许拖拽
-    });
-    return false;
-};
-
 async function mountFeature() {
     if (!window.EA_Core) return console.warn(`[${SCRIPT_ID}] EA_Core 未运行`);
     if (typeof ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] === "function") ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`]();
@@ -1154,7 +1129,6 @@ async function mountFeature() {
     window.EA_Core.registerHook(SCRIPT_ID, 'dragSelectedElements', handleElementsDragged, 50);
     window.EA_Core.registerHook(SCRIPT_ID, 'deleteSelectedElements', handleElementsDeleted, 50);
     window.EA_Core.registerHook(SCRIPT_ID, 'renderInteractiveScene', handleMindmapRender, 50);
-    window.EA_Core.registerHook(SCRIPT_ID, 'modifyElementsToDrag', handleModifyElementsToDrag, 50);
 
     ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] = () => {
         if (window.EA_Core) {
