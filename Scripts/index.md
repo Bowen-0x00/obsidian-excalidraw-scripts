@@ -413,7 +413,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/animation/Action-Toggle-Arrow-Animation.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/animation/Action-Toggle-Arrow-Animation.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -442,7 +442,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/animation/Feature-Arrow-Animation-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/animation/Feature-Arrow-Animation-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -467,7 +467,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/arrow/Action-Fixed-Length-Panel.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/arrow/Action-Fixed-Length-Panel.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -496,7 +496,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/arrow/Action-Measure-Panel.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/arrow/Action-Measure-Panel.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -525,7 +525,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/arrow/Action-Toggle-Arrow-Head.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/arrow/Action-Toggle-Arrow-Head.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -554,7 +554,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/arrow/Feature-Arrow-Head-Resize-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/arrow/Feature-Arrow-Head-Resize-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -583,7 +583,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/arrow/Feature-Fixed-Length-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/arrow/Feature-Fixed-Length-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -612,7 +612,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/arrow/Feature-Measure-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/arrow/Feature-Measure-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -641,7 +641,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/attachment/Action-Open-Attachment.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/attachment/Action-Open-Attachment.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -670,7 +670,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Bottom-Brace-Path.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Bottom-Brace-Path.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -699,7 +699,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Bottom-Brace.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Bottom-Brace.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -728,7 +728,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Brace-Shadow.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Brace-Shadow.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -757,7 +757,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Left-Brace-Path.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Left-Brace-Path.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -786,7 +786,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Left-Brace.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Left-Brace.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -815,7 +815,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Right-Brace-Path.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Right-Brace-Path.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -844,7 +844,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Right-Brace.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Right-Brace.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -873,7 +873,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Top-Brace-Path.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Top-Brace-Path.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -902,7 +902,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Top-Brace.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/brace/Action-Add-Top-Brace.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -931,7 +931,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/callout/Action-Create-Callout.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/callout/Action-Create-Callout.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -960,7 +960,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/callout/Action-Toggle-Callout.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/callout/Action-Toggle-Callout.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -989,7 +989,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/callout/Feature-Callout-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/callout/Feature-Callout-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1018,7 +1018,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/checkbox/Action-Toggle-Checkbox.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/checkbox/Action-Toggle-Checkbox.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1043,7 +1043,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/checkbox/Feature-Checkbox-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/checkbox/Feature-Checkbox-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1072,7 +1072,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/clipboard/Feature-Paste-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/clipboard/Feature-Paste-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1101,7 +1101,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/code-highlight/Action-Style-Code-Highlight.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/code-highlight/Action-Style-Code-Highlight.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1130,7 +1130,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/code-highlight/Action-Toggle-Code-Highlight.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/code-highlight/Action-Toggle-Code-Highlight.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1159,7 +1159,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/code-highlight/Feature-Code-Highlight-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/code-highlight/Feature-Code-Highlight-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1188,7 +1188,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/color/Feature-Extra-Colors-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/color/Feature-Extra-Colors-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1217,7 +1217,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/connection/Action-Advanced-Connector.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/connection/Action-Advanced-Connector.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1246,7 +1246,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/connection/Action-Toggle-No-Bind.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/connection/Action-Toggle-No-Bind.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1275,7 +1275,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/Debug/Action-Clear-Custom-Data.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/Debug/Action-Clear-Custom-Data.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1304,7 +1304,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/detail/Action-Toggle-Detail.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/detail/Action-Toggle-Detail.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1333,7 +1333,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/detail/Feature-Detail-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/detail/Feature-Detail-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1362,7 +1362,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/distribute/Action-Distribute-Diagonally.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/distribute/Action-Distribute-Diagonally.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1391,7 +1391,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/distribute/Action-Distribute-Horizontally.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/distribute/Action-Distribute-Horizontally.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1420,7 +1420,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/distribute/Action-Distribute-Text.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/distribute/Action-Distribute-Text.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1449,7 +1449,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/distribute/Action-Distribute-Vertically.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/distribute/Action-Distribute-Vertically.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1478,7 +1478,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/distribute/Feature-Auto-Distribute-Paste-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/distribute/Feature-Auto-Distribute-Paste-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1507,7 +1507,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/echarts/Action-Echarts-Manager.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/echarts/Action-Echarts-Manager.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1536,7 +1536,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/echarts/Feature-Echarts-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/echarts/Feature-Echarts-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1565,7 +1565,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/export/Action-Export-Image-To-Anki.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/export/Action-Export-Image-To-Anki.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1594,7 +1594,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/export/Action-Export-Image-To-Eagle.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/export/Action-Export-Image-To-Eagle.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1623,7 +1623,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/export/Feature-Export-Eagle.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/export/Feature-Export-Eagle.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1652,7 +1652,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/export/Feature-Export-Embeddable.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/export/Feature-Export-Embeddable.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1681,7 +1681,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/follow/Action-Follow-Arrow-Backward.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/follow/Action-Follow-Arrow-Backward.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1710,7 +1710,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/follow/Action-Follow-Arrow-Forward.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/follow/Action-Follow-Arrow-Forward.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1739,7 +1739,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Bullet-Manager.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Bullet-Manager.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1764,7 +1764,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Cuboid.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Cuboid.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1793,7 +1793,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Digital-Clock.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Digital-Clock.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1822,7 +1822,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Digital-SVG.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Digital-SVG.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1851,7 +1851,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Grid-Selected.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Grid-Selected.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1880,7 +1880,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Grid.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Grid.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1909,7 +1909,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Parallelogram.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Parallelogram.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1938,7 +1938,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Polygon.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Polygon.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1967,7 +1967,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Repeat-Selected.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Generate-Repeat-Selected.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -1996,7 +1996,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Feature-Bullet-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Feature-Bullet-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2025,7 +2025,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/gif/Action-Toggle-GIF.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/gif/Action-Toggle-GIF.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2054,7 +2054,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/gif/Feature-GIF-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/gif/Feature-GIF-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2083,7 +2083,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/gradient/Action-Gradient-Silent.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/gradient/Action-Gradient-Silent.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2112,7 +2112,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/gradient/Action-Gradient-UI.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/gradient/Action-Gradient-UI.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2141,7 +2141,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/gradient/Feature-Gradient-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/gradient/Feature-Gradient-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2170,7 +2170,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/hover/Action-Toggle-Hover.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/hover/Action-Toggle-Hover.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2199,7 +2199,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/hover/Feature-Hover-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/hover/Feature-Hover-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2228,7 +2228,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/latex/Action-Convert-Freedraw-To-Latex.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/latex/Action-Convert-Freedraw-To-Latex.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2257,7 +2257,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/latex/Action-Extract-Latex.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/latex/Action-Extract-Latex.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2286,7 +2286,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/layer/Action-Toggle-Layer.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/layer/Action-Toggle-Layer.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2315,7 +2315,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/layer/Feature-Layer-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/layer/Feature-Layer-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2344,7 +2344,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/library/Action-Dynamic-Library.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/library/Action-Dynamic-Library.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2373,7 +2373,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/library/Feature-Calendar-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/library/Feature-Calendar-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2402,7 +2402,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/library/Feature-Library-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/library/Feature-Library-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2431,7 +2431,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/line-highlight/Action-Toggle-Line-Highlight.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/line-highlight/Action-Toggle-Line-Highlight.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2460,7 +2460,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/line-highlight/Feature-Line-Highlight-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/line-highlight/Feature-Line-Highlight-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2489,7 +2489,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/link/Action-Return-Link-Origin.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/link/Action-Return-Link-Origin.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2518,7 +2518,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/link/Feature-Link-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/link/Feature-Link-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2547,7 +2547,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/list/Action-Toggle-List.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/list/Action-Toggle-List.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2576,7 +2576,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/list/Feature-Smart-List-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/list/Feature-Smart-List-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2605,7 +2605,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Change-Mindmap-Style.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Change-Mindmap-Style.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2634,7 +2634,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Create-Mindmap.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Create-Mindmap.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2663,7 +2663,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Detach-Mindmap.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Detach-Mindmap.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2688,7 +2688,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Export-Mindmap-To-Clipboard.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Export-Mindmap-To-Clipboard.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2717,7 +2717,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Export-Mindmap-To-Md.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Export-Mindmap-To-Md.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2746,7 +2746,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Import-Mindmap-From-Clipboard.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Import-Mindmap-From-Clipboard.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2775,7 +2775,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Feature-Mindmap-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Feature-Mindmap-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2804,7 +2804,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/outline/Action-Set-Outline-Level.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/outline/Action-Set-Outline-Level.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2829,7 +2829,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/outline/Action-Toggle-Outline.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/outline/Action-Toggle-Outline.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2854,7 +2854,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/outline/Feature-Outline-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/outline/Feature-Outline-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2883,7 +2883,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/recognize/Action-Recognize-Shape.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/recognize/Action-Recognize-Shape.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2908,7 +2908,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/recognize/Feature-Shape-Recognize-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/recognize/Feature-Shape-Recognize-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2937,7 +2937,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/reminder/Action-Todo-Manager.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/reminder/Action-Todo-Manager.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2966,7 +2966,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/select/Action-Advanced-Select.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/select/Action-Advanced-Select.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -2991,7 +2991,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/shadow/Action-Toggle-Shadow.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/shadow/Action-Toggle-Shadow.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3020,7 +3020,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/shadow/Feature-Shadow-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/shadow/Feature-Shadow-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3049,7 +3049,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/size/Action-Transform-Size.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/size/Action-Transform-Size.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3078,7 +3078,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/smart-art/Action-Link-Smart-Art.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/smart-art/Action-Link-Smart-Art.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3107,7 +3107,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/space/Action-Insert-Vertical-Space.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/space/Action-Insert-Vertical-Space.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3136,7 +3136,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/step-appear/Action-Step-Appear-Setup.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/step-appear/Action-Step-Appear-Setup.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3161,7 +3161,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/step-appear/Feature-Step-Appear-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/step-appear/Feature-Step-Appear-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3190,7 +3190,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/swimlane/Action-Toggle-Swimlane.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/swimlane/Action-Toggle-Swimlane.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3219,7 +3219,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/swimlane/Feature-Swimlane-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/swimlane/Feature-Swimlane-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3248,7 +3248,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/table/Action-Table-Generate.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/table/Action-Table-Generate.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3273,7 +3273,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/table/Action-Table-Modify.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/table/Action-Table-Modify.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3298,7 +3298,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/table/Feature-Table-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/table/Feature-Table-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3327,7 +3327,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/tag/Action-Set-Tags.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/tag/Action-Set-Tags.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3356,7 +3356,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Format-Text-Global-Silent.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Format-Text-Global-Silent.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3385,7 +3385,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Format-Text-Globals.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Format-Text-Globals.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3414,7 +3414,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Format-Text-Partials-Silent.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Format-Text-Partials-Silent.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3443,7 +3443,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Format-Text-Partials.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Format-Text-Partials.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3472,7 +3472,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Highlight-Background-Silent.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Highlight-Background-Silent.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3501,7 +3501,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Highlight-Background-UI.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Highlight-Background-UI.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3530,7 +3530,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Paste-Wrapped-Text.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Paste-Wrapped-Text.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3559,7 +3559,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Split-Text-Segments.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Split-Text-Segments.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3588,7 +3588,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Text-Bold.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Text-Bold.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3613,7 +3613,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Text-Copy-Elements.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Text-Copy-Elements.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3642,7 +3642,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Feature-Input-Emoji-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Feature-Input-Emoji-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3671,7 +3671,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Feature-Markdown-Header-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Feature-Markdown-Header-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3700,7 +3700,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Feature-Template-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Feature-Template-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3729,7 +3729,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Feature-Text-Render-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Feature-Text-Render-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3758,7 +3758,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Feature-Text-Shortcuts-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Feature-Text-Shortcuts-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3787,7 +3787,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/thumbnail/Action-Toggle-Thumbnail.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/thumbnail/Action-Toggle-Thumbnail.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3816,7 +3816,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/thumbnail/Feature-Thumbnail-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/thumbnail/Feature-Thumbnail-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3845,7 +3845,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/wave-drom/Action-Wavedrom-Manager.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/wave-drom/Action-Wavedrom-Manager.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3874,7 +3874,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/wave-drom/Feature-Wavedrom-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/wave-drom/Feature-Wavedrom-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3903,7 +3903,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/zoom/Action-Toggle-Zoom-Hide.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/zoom/Action-Toggle-Zoom-Hide.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
@@ -3932,7 +3932,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/zoom/Feature-Zoom-Hide-Engine.md'>File on GitHub</a></td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/zoom/Feature-Zoom-Hide-Engine.md'>File on GitHub/Gitee</a></td>
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
