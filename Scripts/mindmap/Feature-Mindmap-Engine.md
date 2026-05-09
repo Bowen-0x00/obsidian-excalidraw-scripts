@@ -755,7 +755,7 @@ window.MindmapAPI = {
             direction: rootSettings.direction || "LR", arrowType: rootSettings.arrowType || "normal", enableFixedPoint: rootSettings.enableFixedPoint ?? true,
             defaultGap: Number(rootSettings.defaultGap ?? 10), curveLength: Number(rootSettings.curveLength ?? 40), lengthBetweenElAndLine: Number(rootSettings.lengthBetweenElAndLine ?? 100),
         });
-        layouter.runLayout();
+        layouter.runLayout(sceneElements, commitToHistory, activeEa);
         const changedElements = Array.from(new Set([...layouter.changedElementsSet, ...sceneElements]));
         const notArrowEls = changedElements.filter((el) => el.type !== "arrow");
         const arrowEls = changedElements.filter((el) => el.type === "arrow");

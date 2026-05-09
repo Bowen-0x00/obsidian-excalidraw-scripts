@@ -303,7 +303,7 @@ if (window.MindmapAPI && window.MindmapAPI.runLayout) {
                 }
             }
         });
-        await window.MindmapAPI.runLayout(allTreeEls, true);
+        await window.MindmapAPI.runLayout(allTreeEls, true, ea);
     }, 150);
 } else {
     new Notice(t("notice_no_engine"));
