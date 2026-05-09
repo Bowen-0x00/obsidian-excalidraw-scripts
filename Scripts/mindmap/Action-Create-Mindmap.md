@@ -165,7 +165,8 @@ function getMindmapSettingsViaUI() {
 
         const themeSelect = document.createElement('select'); themeSelect.style.width = "120px";
         Object.keys(THEMES).forEach(k => {
-            const o = document.createElement('option'); o.value = k; o.innerText = THEMES[k].name;
+            const o = document.createElement('option'); o.value = k; 
+            o.innerText = ["rainbow", "morandi", "business", "custom"].includes(k) ? t("theme_" + k) : THEMES[k].name;
             if (pluginSettings.theme === k) o.selected = true; themeSelect.appendChild(o);
         });
         content.appendChild(createRow(t("ui_theme"), themeSelect));
