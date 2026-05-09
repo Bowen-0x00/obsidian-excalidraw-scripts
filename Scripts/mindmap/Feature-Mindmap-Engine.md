@@ -486,8 +486,13 @@ class Mindmap {
         }
         
         element?.customData?.mindmap && (element.customData.mindmap.status = status);
-        if (status == "close") {
-            childrenEls.forEach((el) => { el = this.elementsMap?.get(el.id); el?.customData?.mindmap && (el.customData.mindmap.status = status); });
+        if (status === "close" || (status === "open" && recursion)) {
+            childrenEls.forEach((el) => { 
+                el = this.elementsMap?.get(el.id); 
+                if (el?.customData?.mindmap) {
+                    el.customData.mindmap.status = status; 
+                }
+            });
         }
         ea.clear();
         let changedVisiableEls = [...new Set([...childrenEls, ...groupElements, ...arrowEls, ...boundElements])];
@@ -806,16 +811,18 @@ const handlePointerUp = async (context) => {
         else {
             const targetEl = allElements.find(el => el.id !== draggedEl.id && el.customData?.mindmap && checkOverlap(draggedEl, el) && !isDescendant(draggedEl.id, el.id, elementsMap) );
             if (targetEl) {
-                if (event && typeof event.preventDefault === "function") { event.preventDefault(); event.stopPropagation(); }
                 const rootId = targetEl.customData?.mindmap?.root || targetEl.id; const rootEl = elementsMap.get(rootId);
                 const direction = rootEl?.customData?.mindmap?.settings?.direction || "LR";
                 const dropZone = getDropZone(draggedEl, targetEl, direction);
 
-                ea.viewUpdateScene({ appState: { selectedElementIds: {}, selectedGroupIds: {}, editingGroupId: null, activeEmbeddable: null, selectedElementsAreBeingDragged: false, draggingElement: null, cursorButton: "up" }, captureUpdate: "NEVER" });
                 if (App.interactiveCanvas) App.interactiveCanvas.style.cursor = "";
 
-                setTimeout(async () => { await attachNodeToMindmap(draggedEl, targetEl, dropZone, App, ea); if (App.interactiveCanvas) App.interactiveCanvas.style.cursor = ""; }, 10);
-                return true;
+                setTimeout(async () => { 
+                    await attachNodeToMindmap(draggedEl, targetEl, dropZone, App, ea); 
+                    if (App.interactiveCanvas) App.interactiveCanvas.style.cursor = ""; 
+                }, 50);
+                
+                return false; 
             }
         }
     }

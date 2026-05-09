@@ -274,7 +274,7 @@ function getMindmapSettingsViaUI() {
     if (window.MindmapAPI && window.MindmapAPI.runLayout) {
         setTimeout(async () => {
             const updatedEls = ea.getViewElements().filter(el => el.customData?.mindmap?.root === rootEl.id || (el.type === "arrow" && el.startBinding));
-            await window.MindmapAPI.runLayout(updatedEls);
+            await window.MindmapAPI.runLayout(updatedEls, true, ea);
         }, 100);
     } else { new Notice(t("notice_no_engine")); }
 })();
