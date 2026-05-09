@@ -192,7 +192,21 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
     if (!newParentId) newParentId = targetEl.id; 
     
     const newParentEl = elementsMap.get(newParentId);
-    const shouldHide = newParentEl?.customData?.hide || newParentEl?.customData?.mindmap?.status === "close";
+    let shouldHide = newParentEl?.customData?.hide; 
+    if (dropZone === "child") {
+        // 如果是放入作为子节点，强制打开目标节点，避免因为节点之前处于close态而导致拖入后折叠
+        if (!ea.getElement(newParentId)) ea.copyViewElementsToEAforEditing([newParentEl]);
+        const eaParent = ea.getElement(newParentId);
+        if (eaParent) {
+            eaParent.customData = {
+                ...eaParent.customData,
+                mindmap: { ...(eaParent.customData?.mindmap || {}), status: "open" }
+            };
+        }
+        shouldHide = newParentEl?.customData?.hide; // 子节点只需判断父节点本身是否被物理隐藏
+    } else {
+        shouldHide = newParentEl?.customData?.hide || newParentEl?.customData?.mindmap?.status === "close";
+    }
     const newLevel = (newParentEl?.customData?.mindmap?.level || 0) + 1;
 
     let branchRootId = draggedEl.id;
@@ -318,19 +332,30 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
     await ea.addElementsToView(false, false, true);
 
     setTimeout(async () => {
-        const updatedElementsMap = App.scene.getNonDeletedElementsMap(); const updatedElements = App.scene.getNonDeletedElements();
-        const freshRootEl = updatedElementsMap.get(rootId); if (!freshRootEl) return;
-        const mindmap = new Mindmap(updatedElements, freshRootEl);
-        mindmap.setElements(updatedElements, updatedElementsMap); mindmap.buildNodeTree(freshRootEl, null, 1, null);
-        MindmapState.mindmapPosMap.set(rootId, mindmap);
-        const rootNode = mindmap.NodeMap.get(rootId); if (!rootNode) return;
-        const [children, arrows] = mindmap.getChildren(rootNode, ea, true, (el) => updatedElementsMap.get(el.id)?.customData?.hide);
-        const freshArrow = updatedElementsMap.get(arrowId);
-        const descendantEls = descendantUpdates.map(d => updatedElementsMap.get(d.child.id));
-        const extraItems = [draggedEl, freshArrow, ...descendantEls].filter(Boolean);
-        const rawItems = [...new Set([...children, ...arrows, rootNode, ...extraItems])];
-        const treeElements = getExpandedTreeElements(rawItems, updatedElementsMap, updatedElements);
-        mindmap.clearElements(); await window.MindmapAPI.runLayout(treeElements, true, ea);
+        try {
+            const updatedElementsMap = App.scene.getNonDeletedElementsMap(); 
+            const updatedElements = App.scene.getNonDeletedElements();
+            const freshRootEl = updatedElementsMap.get(rootId); if (!freshRootEl) return;
+            
+            const mindmap = new Mindmap(updatedElements, freshRootEl);
+            mindmap.setElements(updatedElements, updatedElementsMap); mindmap.buildNodeTree(freshRootEl, null, 1, null);
+            MindmapState.mindmapPosMap.set(rootId, mindmap);
+            
+            const rootNode = mindmap.NodeMap.get(rootId); if (!rootNode) return;
+            const [children, arrows] = mindmap.getChildren(rootNode, ea, true, (el) => updatedElementsMap.get(el.id)?.customData?.hide);
+            
+            const freshDragged = updatedElementsMap.get(draggedEl.id);
+            const freshArrow = updatedElementsMap.get(arrowId);
+            const descendantEls = descendantUpdates.map(d => updatedElementsMap.get(d.child.id));
+            
+            const extraItems = [freshDragged, freshArrow, ...descendantEls].filter(Boolean);
+            const rawItems = [...new Set([...children, ...arrows, rootNode, ...extraItems])];
+            
+            const treeElements = getExpandedTreeElements(rawItems, updatedElementsMap, updatedElements);
+            mindmap.clearElements(); await window.MindmapAPI.runLayout(treeElements, true, ea);
+        } catch(e) {
+            console.error("Mindmap auto-layout failed:", e);
+        }
     }, 100);
 };
 
@@ -927,35 +952,25 @@ const handlePointerDown = (context) => {
 };
 
 const handleElementsDragged = (context) => {
-    // 增加 elementsToUpdate 参数的解构
     const { ea, api, selectedElements, scene, elementsToUpdate } = context;
     if (!ea || !api) return;
     const elementsMap = scene?.getNonDeletedElementsMap?.();
 
-    // ===================================================================
-    // 新增逻辑：拦截单个脑图箭头的拖拽与解绑
-    // ===================================================================
     if (selectedElements.length === 1 && selectedElements[0].type === "arrow") {
         const arrowEl = selectedElements[0];
-        // 获取箭头两端绑定的元素
         const startTarget = arrowEl.startBinding?.elementId ? elementsMap.get(arrowEl.startBinding.elementId) : null;
         const endTarget = arrowEl.endBinding?.elementId ? elementsMap.get(arrowEl.endBinding.elementId) : null;
         
-        // 判断两端任意一端是否是脑图节点
         const isMindmapArrow = startTarget?.customData?.mindmap || endTarget?.customData?.mindmap;
         
         if (isMindmapArrow) {
-            // 1. 从更新列表中剔除该箭头，防止触发坐标计算和解绑逻辑
             if (elementsToUpdate && elementsToUpdate.has(arrowEl)) {
                 elementsToUpdate.delete(arrowEl);
             }
-            // 2. 返回 true 通知底层的 `dragSelectedElements` Hook 提前中止执行
             return true;
         }
     }
-    // ===================================================================
 
-    // 原有的箭头弯曲排版逻辑保持不变
     selectedElements.forEach((el) => {
         if (el?.customData?.mindmap) {
             const rootEl = elementsMap?.get(el.customData.mindmap.root);
