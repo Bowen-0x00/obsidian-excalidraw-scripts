@@ -341,6 +341,8 @@
 |<span>Action-Table-Generate.md</span>|[[#Action-Table-Generate]]|
 |<span>Action-Table-Modify.md</span>|[[#Action-Table-Modify]]|
 |<span>Feature-Table-Engine.md</span>|[[#Feature-Table-Engine]]|
+|<span>Feature-Table-Paste-MD.md</span>|[[#Feature-Table-Paste-MD]]|
+
 
 ## Tag
 **Keywords**: Tag
@@ -3302,12 +3304,41 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
-    <td class="data">后台引擎：提供表格行列拖拽大小同步、边界约束、文本换行自适应及 Tab 键快速切换单元格功能。</td>
+    <td class="data">后台引擎：提供表格行列拖拽大小同步、边界约束、文本换行自适应及 Tab/方向键快速切换单元格功能。支持免编组(Group)全局识别。</td>
   </tr>
   
   <tr valign='top'>
     <td class="label">Features</td>
-    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>拦截 handleTextWysiwyg 监听输入，实现单元格文本换行时整行高度自适应及下方行自动排版</li><li>拦截 afterTransformElements 实现表格宽高联动</li><li>拦截 dragSelectedElements 限制特定连线行为并支持绑定框拖拽</li><li>拦截 onKeyDown 实现 Tab/Shift+Tab 在表格单元格间光标穿梭</li></ul></td>
+    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>拦截 handleTextWysiwyg 监听输入，实现单元格文本换行时整行高度自适应及下方行自动排版</li><li>拦截 afterTransformElements 实现表格宽高联动</li><li>拦截 dragSelectedElements 限制特定连线行为并支持绑定框拖拽</li><li>拦截 onKeyDown 实现 Tab/Shift+Tab 以及 上下左右方向键 在表格单元格间光标穿梭</li></ul></td>
+  </tr>
+</table>
+
+## Feature-Table-Paste-MD
+
+```excalidraw-script-install
+https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/table/Feature-Table-Paste-MD.md
+```
+<table>
+  <tr valign='top'>
+    <td class="label">Author</td>
+    <td class="data"><a href='https://github.com/ymjr'>@ymjr</a></td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Version</td>
+    <td class="data">1.2.0</td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Source</td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/table/Feature-Table-Paste-MD.md'>File on GitHub/Gitee</a></td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Description</td>
+    <td class="data">后台引擎：拦截并解析粘贴板中的 Markdown 表格，自动转化为支持行列拖拽与内容自适应的 Excalidraw 模拟表格元素。</td>
+  </tr>
+  
+  <tr valign='top'>
+    <td class="label">Features</td>
+    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>采用“二次排版扫描”，先让原生引擎计算真实容器高度，再执行二次校准，彻底解决文本换行导致的重叠错位问题。</li><li>自动剔除 Markdown 干扰符号。</li></ul></td>
   </tr>
 </table>
 

@@ -44,9 +44,9 @@ const GRID_Y = 120;
 const getQuadBezierPoints = (p0, p1, p2, segments = 10) => {
     const points = [];
     for (let i = 0; i <= segments; i++) {
-        const t = i / segments;
-        const x = (1 - t) * (1 - t) * p0[0] + 2 * (1 - t) * t * p1[0] + t * t * p2[0];
-        const y = (1 - t) * (1 - t) * p0[1] + 2 * (1 - t) * t * p1[1] + t * t * p2[1];
+        const th = i / segments;
+        const x = (1 - th) * (1 - th) * p0[0] + 2 * (1 - th) * th * p1[0] + th * th * p2[0];
+        const y = (1 - th) * (1 - th) * p0[1] + 2 * (1 - th) * th * p1[1] + th * th * p2[1];
         points.push([x, y]);
     }
     return points;

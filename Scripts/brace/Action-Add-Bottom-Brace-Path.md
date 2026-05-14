@@ -37,9 +37,9 @@ const centerX = width / 2;
 
 // 2. 形状参数
 const h = Math.min(20, width * 0.15); // 臂高
-const t = Math.min(15, width * 0.1);  // 尖高
+const th = Math.min(15, width * 0.1);  // 尖高
 const q = Math.min(25, width * 0.2);  // 弯曲缓冲
-const totalHeight = h + t;
+const totalHeight = h + th;
 
 // 3. SVG Path (起点已经是 0,0，向下画进入正数 Y 轴)
 const pathData = [

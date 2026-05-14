@@ -22,16 +22,6 @@ var locales = {
     }
 };
 
-const getLang = () => {
-    try {
-        const lang = window.moment?.locale() || window.localStorage?.getItem('language') || 'en';
-        return lang.startsWith('zh') ? 'zh' : 'en';
-    } catch (e) {
-        return 'en';
-    }
-};
-const currentLang = getLang();
-const t = (key) => locales[currentLang][key] || locales['en'][key] || key;
 
 const SCRIPT_ID = "ymjr.feature.animation-engine";
 

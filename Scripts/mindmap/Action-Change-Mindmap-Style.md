@@ -387,7 +387,7 @@ function createStylePanel() {
                     rEl.backgroundColor = rootStyle.backgroundColor; rEl.strokeColor = rootStyle.strokeColor || "black"; rEl.strokeWidth = rootStyle.strokeWidth || 1;
                     if (rEl.type === "text") rEl.fontSize = rootStyle.fontSize;
                     if (rEl.boundElements) {
-                        rEl.boundElements.forEach(b => { if (b.type === "text") { const t = ea.getElement(b.id); if (t) { t.strokeColor = rootStyle.textColor || "black"; t.fontSize = rootStyle.fontSize; } } });
+                        rEl.boundElements.forEach(b => { if (b.type === "text") { const text = ea.getElement(b.id); if (text) { text.strokeColor = rootStyle.textColor || "black"; text.fontSize = rootStyle.fontSize; } } });
                     }
                 }
 
@@ -406,7 +406,7 @@ function createStylePanel() {
                             eEl.backgroundColor = style.backgroundColor; eEl.strokeColor = style.strokeColor || "black"; eEl.strokeWidth = style.strokeWidth || 1;
                             if (eEl.type === "text") eEl.fontSize = style.fontSize;
                             if (eEl.boundElements) {
-                                eEl.boundElements.forEach(b => { if (b.type === "text") { const t = ea.getElement(b.id); if (t) { t.strokeColor = style.textColor || "black"; t.fontSize = style.fontSize; } } });
+                                eEl.boundElements.forEach(b => { if (b.type === "text") { const text = ea.getElement(b.id); if (text) { text.strokeColor = style.textColor || "black"; text.fontSize = style.fontSize; } } });
                             }
                             
                             const incomingArrowId = treeElements.find(a => a.type === "arrow" && a.endBinding && a.endBinding.elementId === el.id)?.id;

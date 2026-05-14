@@ -1,6 +1,6 @@
 ---
 name: 模拟表格核心引擎
-description: 后台引擎：提供表格行列拖拽大小同步、边界约束、文本换行自适应及 Tab 键快速切换单元格功能。
+description: 后台引擎：提供表格行列拖拽大小同步、边界约束、文本换行自适应及 Tab/方向键快速切换单元格功能。支持免编组(Group)全局识别。
 author: ymjr
 version: 1.0.0
 license: MIT
@@ -9,7 +9,7 @@ features:
   - 拦截 handleTextWysiwyg 监听输入，实现单元格文本换行时整行高度自适应及下方行自动排版
   - 拦截 afterTransformElements 实现表格宽高联动
   - 拦截 dragSelectedElements 限制特定连线行为并支持绑定框拖拽
-  - 拦截 onKeyDown 实现 Tab/Shift+Tab 在表格单元格间光标穿梭
+  - 拦截 onKeyDown 实现 Tab/Shift+Tab 以及 上下左右方向键 在表格单元格间光标穿梭
 dependencies:
   - 无
 autorun: true
@@ -31,6 +31,74 @@ var locales = {
 const SCRIPT_ID = "ymjr.feature.table-engine";
 
 // ==========================================
+// 工具函数：全局获取同属一个表格的单元格
+// ==========================================
+const getGlobalTableElements = (elements, referenceData) => {
+    return elements.filter(el => {
+        const tData = el?.customData?.table;
+        if (!tData) return false;
+        if (referenceData.id && tData.id) {
+            return tData.id === referenceData.id;
+        }
+        return true; 
+    });
+};
+
+// ==========================================
+// 工具函数：强制提升元素版本以打破 Excalidraw 缓存渲染机制 (核心修复点)
+// ==========================================
+const bumpVersion = (el) => {
+    el.version = (el.version || 0) + 1;
+    el.versionNonce = Math.floor(Math.random() * 1000000000);
+    return el;
+};
+
+// ==========================================
+// 工具函数：同步更新容器内绑定的文本位置
+// ==========================================
+const updateBoundTextElements = (container, elements, changedElsMapOrArray) => {
+    if (!container.boundElements || container.boundElements.length === 0) return;
+    
+    container.boundElements.forEach(bound => {
+        if (bound.type === "text") {
+            let textEl = elements.find(e => e.id === bound.id);
+            if (textEl) {
+                textEl = JSON.parse(JSON.stringify(textEl));
+                
+                const padding = 5;
+
+                // 1. 水平对齐计算
+                if (textEl.textAlign === "left") {
+                    textEl.x = container.x + padding;
+                } else if (textEl.textAlign === "right") {
+                    textEl.x = container.x + container.width - textEl.width - padding;
+                } else { 
+                    textEl.x = container.x + container.width / 2 - textEl.width / 2;
+                }
+
+                // 2. 垂直对齐计算
+                if (textEl.verticalAlign === "top") {
+                    textEl.y = container.y + padding;
+                } else if (textEl.verticalAlign === "bottom") {
+                    textEl.y = container.y + container.height - textEl.height - padding;
+                } else { 
+                    textEl.y = container.y + container.height / 2 - textEl.height / 2;
+                }
+
+                // ⭐️ 核心修复：更新坐标后必须提升版本，否则 Excalidraw 渲染引擎会无视更改
+                bumpVersion(textEl);
+
+                if (changedElsMapOrArray instanceof Map) {
+                    changedElsMapOrArray.set(textEl.id, textEl);
+                } else if (Array.isArray(changedElsMapOrArray)) {
+                    changedElsMapOrArray.push(textEl);
+                }
+            }
+        }
+    });
+};
+
+// ==========================================
 // 1. 核心布局算法：处理输入换行时的高度同步
 // ==========================================
 const syncTableLayout = (triggerContainerId, api, ea, captureHistory = false) => {
@@ -38,13 +106,12 @@ const syncTableLayout = (triggerContainerId, api, ea, captureHistory = false) =>
     const triggerEl = elements.find(e => e.id === triggerContainerId);
     if (!triggerEl || !triggerEl.customData?.table) return;
 
-    let tableEls = ea.getElementsInTheSameGroupWithElement(triggerEl, elements).filter(el => el?.customData?.table);
+    let tableEls = getGlobalTableElements(elements, triggerEl.customData.table);
     if (tableEls.length === 0) return;
 
     let changedEls = new Map();
     let rows = {};
 
-    // 按行进行分组
     tableEls.forEach(el => {
         const r = el.customData.table.row;
         if (!rows[r]) rows[r] = [];
@@ -54,22 +121,20 @@ const syncTableLayout = (triggerContainerId, api, ea, captureHistory = false) =>
     const editedRowIndex = triggerEl.customData.table.row;
     if (!rows[editedRowIndex]) return;
 
-    // 1. 获取当前行被文本撑开的最大高度
     let maxHeight = 0;
     rows[editedRowIndex].forEach(el => {
-        // Excalidraw 已经原生更新了 triggerEl 的高度，找到当前行的最大值
         if (el.height > maxHeight) maxHeight = el.height;
     });
 
-    // 2. 同步当前行的所有单元格高度
     rows[editedRowIndex].forEach(el => {
         if (Math.abs(el.height - maxHeight) > 0.5) {
             el.height = maxHeight;
+            bumpVersion(el); // 提升容器版本
             changedEls.set(el.id, el);
+            updateBoundTextElements(el, elements, changedEls);
         }
     });
 
-    // 3. 将受影响的下方所有行按新高度依次向下推演
     const totalRows = triggerEl.customData.table.rowNum;
     for (let r = editedRowIndex + 1; r < totalRows; r++) {
         if (!rows[r] || !rows[r - 1]) continue;
@@ -80,21 +145,21 @@ const syncTableLayout = (triggerContainerId, api, ea, captureHistory = false) =>
         rows[r].forEach(el => {
             if (Math.abs(el.y - expectedY) > 0.5) {
                 el.y = expectedY;
+                bumpVersion(el); // 提升容器版本
                 changedEls.set(el.id, el);
+                updateBoundTextElements(el, elements, changedEls);
             }
         });
     }
 
-    // 4. 提交视图更新
     if (changedEls.size > 0) {
         const newElements = elements.map(el => changedEls.has(el.id) ? changedEls.get(el.id) : el);
-        // 输入过程中使用 "none" 避免撤销栈爆炸，失焦时才 capture
         api.updateScene({ elements: newElements, storeAction: captureHistory ? "capture" : "none" });
     }
 };
 
 // ==========================================
-// 2. 文本编辑 Hook (监听输入动态排版)
+// 2. 文本编辑 Hook
 // ==========================================
 const handleTextWysiwyg = (context) => {
     const { ea, api, element } = context;
@@ -103,7 +168,6 @@ const handleTextWysiwyg = (context) => {
     const textarea = ea.targetView?.contentEl?.querySelector('textarea.excalidraw-wysiwyg');
     if (!textarea) return;
 
-    // 获取正在编辑的文本元素绑定的单元格容器 ID
     const containerId = element?.containerId;
     if (!containerId) return;
 
@@ -113,15 +177,12 @@ const handleTextWysiwyg = (context) => {
 
     if (!textarea._hasTableSyncListener) {
         const syncFn = (capture) => {
-            // 设置微小延迟，确保 Excalidraw 原生引擎已完成本轮高度计算
             setTimeout(() => {
                 syncTableLayout(containerId, api, ea, capture);
             }, 50);
         };
 
-        // 监听实时打字换行
         textarea.addEventListener('input', () => syncFn(false));
-        // 监听结束编辑完成
         textarea.addEventListener('blur', () => syncFn(true));
         
         textarea._hasTableSyncListener = true;
@@ -137,33 +198,33 @@ const handleAfterTransform = async (context) => {
 
     let selectedElement = selectedElements[0];
 
-    // 表格行列大小同步逻辑
     if (selectedElement?.customData?.table && ['n', 's', 'w', 'e'].includes(transformHandleType)) {
         const elements = api.getSceneElements();
-        let tableEls = ea.getElementsInTheSameGroupWithElement(selectedElement, elements).filter(el => el?.customData?.table);
+        let tableEls = getGlobalTableElements(elements, selectedElement.customData.table);
         
         let changedEls = [];
         let elsToModify = tableEls.map(el => JSON.parse(JSON.stringify(el)));
 
         elsToModify.forEach((el) => {
+            let isModified = false;
             switch(transformHandleType) {
                 case "n":
                 case "s": {
                     if (el.customData.table.row === selectedElement.customData.table.row) {
                         el.y = selectedElement.y;
                         el.height = selectedElement.height;
-                        changedEls.push(el);
+                        isModified = true;
                     }
                     if (transformHandleType === "n") {
                         if (selectedElement.customData.table.row > 0 && el.customData.table.row === selectedElement.customData.table.row - 1) {
                             el.height = selectedElement.y - el.y;
-                            changedEls.push(el);
+                            isModified = true;
                         }
                     } else {
                         if (selectedElement.customData.table.row < selectedElement.customData.table.rowNum - 1 && el.customData.table.row === selectedElement.customData.table.row + 1) {
                             el.height = el.y + el.height - (selectedElement.y + selectedElement.height);
                             el.y = selectedElement.y + selectedElement.height;
-                            changedEls.push(el);
+                            isModified = true;
                         }
                     }
                     break;
@@ -173,33 +234,45 @@ const handleAfterTransform = async (context) => {
                     if (el.customData.table.col === selectedElement.customData.table.col) { 
                         el.x = selectedElement.x;
                         el.width = selectedElement.width;
-                        changedEls.push(el);
+                        isModified = true;
                     }
                     if (transformHandleType === "e") {
                         if (selectedElement.customData.table.col < selectedElement.customData.table.colNum - 1 && el.customData.table.col === selectedElement.customData.table.col + 1) {
                             el.width = el.x + el.width - (selectedElement.x + selectedElement.width);
                             el.x = selectedElement.x + selectedElement.width;
-                            changedEls.push(el);
+                            isModified = true;
                         }
                     } else {
                         if (selectedElement.customData.table.col > 0 && el.customData.table.col === selectedElement.customData.table.col - 1) {
                             el.width = selectedElement.x - el.x;
-                            changedEls.push(el);
+                            isModified = true;
                         }
                     }
                     break;
                 }
             }
+
+            // ⭐️ 如果容器被改变了尺寸/坐标，推入数组前先提升版本
+            if (isModified) {
+                bumpVersion(el);
+                changedEls.push(el);
+            }
         });
 
         if (changedEls.length > 0) {
+            const textUpdates = [];
+            changedEls.forEach(container => {
+                updateBoundTextElements(container, elements, textUpdates);
+            });
+            changedEls.push(...textUpdates);
+            
             const idsMap = Object.fromEntries(changedEls.map(el => [el.id, el]));
             const newElements = elements.map(el => idsMap[el.id] ? idsMap[el.id] : el);
             await api.updateScene({ elements: newElements, storeAction: "capture" });
         }
     }
 
-    // 边界框 (Bound) 调整逻辑
+    // 边界框 (Bound) 调整逻辑略 (保持不变)
     if (selectedElements.some(el => el?.customData?.bound)) {
         let elements = api.getSceneElements();
         let containerEl = elements.find(el => el.id === selectedElement?.customData?.bound.id);
@@ -228,6 +301,8 @@ const handleAfterTransform = async (context) => {
         containerEl.width = (maxX - minX) + 20;
         containerEl.height = (maxY - minY) + 20;
         containerEl.angle = selectedElement.angle;
+        
+        bumpVersion(containerEl); // ⭐️ 边界框也顺手升个级
 
         const newElements = elements.map(el => el.id === containerEl.id ? containerEl : el);
         await api.updateScene({ elements: newElements });
@@ -235,7 +310,7 @@ const handleAfterTransform = async (context) => {
 };
 
 // ==========================================
-// 4. 拖拽 Hook (特定属性与绑定约束)
+// 4. 拖拽 Hook 和 5. 按键 Hook 保持原样
 // ==========================================
 const handleDragSelected = (context) => {
     const { ea, api, selectedElements, elementsToUpdate, scene } = context;
@@ -248,28 +323,51 @@ const handleDragSelected = (context) => {
     if (selectedElements.length === 1 && selectedElements[0]?.customData?.table) return true;
 };
 
-// ==========================================
-// 5. 按键 Hook (Tab键在单元格间穿梭)
-// ==========================================
 const handleTableKeyDown = (context) => {
     const { App, event, ea, api } = context;
     if (!ea || !api || !event || !App) return false;
 
-    // 当且仅当在表格单元格内编辑文本时，按下 Tab 键拦截跳跃
-    if (event.code === "Tab" && App.state?.editingTextElement) {
-        const currentEl = App.state.editingTextElement;
-        const currentTableData = currentEl?.customData?.table;
-        if (!currentTableData) return false;
+    const isEditing = !!App.state?.editingTextElement;
+    const elements = api.getSceneElements();
 
-        event.preventDefault(); // 阻止原生行为
-        
-        const elements = api.getSceneElements();
-        const tableGroup = ea.getElementsInTheSameGroupWithElement(currentEl, elements).filter(el => el?.customData?.table);
+    let tableContainer = null;
+    
+    if (isEditing) {
+        const editingEl = App.state.editingTextElement;
+        tableContainer = editingEl.containerId ? elements.find(e => e.id === editingEl.containerId) : editingEl;
+    } else {
+        const selectedEls = ea.getViewSelectedElements();
+        if (selectedEls.length > 0) {
+            tableContainer = selectedEls.find(el => el?.customData?.table);
+            
+            if (!tableContainer) {
+                const boundEl = selectedEls.find(el => el.containerId);
+                if (boundEl) {
+                    tableContainer = elements.find(e => e.id === boundEl.containerId && e?.customData?.table);
+                }
+            }
+            
+            if (!tableContainer) {
+                const groupIds = selectedEls.flatMap(el => el.groupIds || []);
+                if (groupIds.length > 0) {
+                    tableContainer = elements.find(el => el?.customData?.table && (el.groupIds || []).some(id => groupIds.includes(id)));
+                }
+            }
+        }
+    }
+
+    if (!tableContainer || !tableContainer.customData?.table) return false;
+    const currentTableData = tableContainer.customData.table;
+
+    const tableGroup = getGlobalTableElements(elements, currentTableData);
+
+    if (event.code === "Tab") {
+        event.preventDefault(); 
+        event.stopPropagation();
         
         let nextRow = currentTableData.row;
         let nextCol = currentTableData.col + (event.shiftKey ? -1 : 1);
 
-        // 自动换行或换列
         if (nextCol >= currentTableData.colNum) {
             nextCol = 0;
             nextRow = (nextRow + 1) % currentTableData.rowNum;
@@ -281,18 +379,44 @@ const handleTableKeyDown = (context) => {
         const nextEl = tableGroup.find(el => el.customData.table.row === nextRow && el.customData.table.col === nextCol);
         
         if (nextEl) {
-            // 退出当前编辑，焦点转移到下一个单元格
-            const textEditorContainer = ea.targetView?.contentEl?.querySelector(".excalidraw-textEditorContainer");
-            const editable = textEditorContainer?.firstChild;
-            if (editable && typeof editable.onblur === 'function') editable.onblur();
+            if (isEditing) {
+                const textEditorContainer = ea.targetView?.contentEl?.querySelector(".excalidraw-textEditorContainer");
+                const editable = textEditorContainer?.firstChild;
+                if (editable && typeof editable.onblur === 'function') editable.onblur();
 
-            setTimeout(() => {
-                ea.selectElementsInView([nextEl]);
-                App.startTextEditing({ sceneX: 0, sceneY: 0, container: nextEl });
-            }, 50);
+                setTimeout(() => {
+                    ea.selectElementsInView([nextEl]);
+                    App.startTextEditing({ sceneX: 0, sceneY: 0, container: nextEl });
+                }, 50);
+            } else {
+                ea.viewUpdateScene({ appState: { selectedElementIds: { [nextEl.id]: true } } });
+            }
             return true;
         }
     }
+
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.code) && !isEditing) {
+        event.preventDefault();  
+        event.stopPropagation();
+        
+        let nextRow = currentTableData.row;
+        let nextCol = currentTableData.col;
+
+        if (event.code === "ArrowUp") nextRow -= 1;
+        else if (event.code === "ArrowDown") nextRow += 1;
+        else if (event.code === "ArrowLeft") nextCol -= 1;
+        else if (event.code === "ArrowRight") nextCol += 1;
+
+        if (nextRow >= 0 && nextRow < currentTableData.rowNum && nextCol >= 0 && nextCol < currentTableData.colNum) {
+            const nextEl = tableGroup.find(el => el.customData.table.row === nextRow && el.customData.table.col === nextCol);
+            if (nextEl) {
+                ea.viewUpdateScene({ appState: { selectedElementIds: { [nextEl.id]: true } } });
+                return true;
+            }
+        }
+        return true;
+    }
+
     return false;
 };
 

@@ -277,7 +277,7 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
             if (eaDragged.type === "text") eaDragged.fontSize = style.fontSize;
             if (eaDragged.boundElements) {
                 eaDragged.boundElements.forEach(b => {
-                    if (b.type === "text") { const t = ea.getElement(b.id); if (t) { t.strokeColor = style.textColor || "black"; t.fontSize = style.fontSize; } }
+                    if (b.type === "text") { const text = ea.getElement(b.id); if (text) { text.strokeColor = style.textColor || "black"; text.fontSize = style.fontSize; } }
                 });
             }
         }
@@ -293,7 +293,7 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
                 if (eaChild.type === "text") eaChild.fontSize = style.fontSize;
                 if (eaChild.boundElements) {
                     eaChild.boundElements.forEach(b => {
-                        if (b.type === "text") { const t = ea.getElement(b.id); if (t) { t.strokeColor = style.textColor || "black"; t.fontSize = style.fontSize; } }
+                        if (b.type === "text") { const text = ea.getElement(b.id); if (text) { text.strokeColor = style.textColor || "black"; text.fontSize = style.fontSize; } }
                     });
                 }
             }

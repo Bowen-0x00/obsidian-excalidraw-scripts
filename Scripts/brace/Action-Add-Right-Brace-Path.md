@@ -44,7 +44,7 @@ const centerY = height / 2;
 
 // 2. 定义形状参数
 const w = Math.min(20, height * 0.15); 
-const t = Math.min(15, height * 0.1);  
+const th = Math.min(15, height * 0.1);  
 const q = Math.min(25, height * 0.2);  
 
 // 3. 生成 SVG Path (起点已经是 0,0，无需负数偏移)
@@ -52,7 +52,7 @@ const pathData = [
   `M 0 0`, 
   `Q ${w} 0, ${w} ${q}`,
   `L ${w} ${centerY - q}`,
-  `Q ${w} ${centerY}, ${w + t} ${centerY}`, // 尖嘴上半部 (锐利)
+  `Q ${w} ${centerY}, ${w + th} ${centerY}`, // 尖嘴上半部 (锐利)
   `Q ${w} ${centerY}, ${w} ${centerY + q}`, // 尖嘴下半部 (锐利)
   `L ${w} ${height - q}`,
   `Q ${w} ${height}, 0 ${height}`
@@ -63,7 +63,7 @@ const points = [
   [0, 0],
   [w, q],
   [w, centerY - q],
-  [w + t, centerY], // 尖端
+  [w + th, centerY], // 尖端
   [w, centerY + q],
   [w, height - q],
   [0, height]
