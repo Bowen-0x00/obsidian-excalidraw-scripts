@@ -37,17 +37,12 @@ const SCRIPT_ID = "ymjr.feature.paste-engine";
 // 核心逻辑：粘贴事件拦截与解析
 // ==========================================
 const handlePaste = async (contextPayload) => {
-    const { ea, api } = contextPayload;
+    const { ea, api, payload, event } = contextPayload;
     if (!ea || !api) return;
-
-    const {  payload, event, excalidrawFile, view, pointerPosition } = contextPayload;
-    
     if (!payload || typeof payload.text !== "string") {
         return false;
     }
 
-    if (!api) return false;
-    
     const state = api.getAppState();
     let text = payload.text;
 
@@ -63,7 +58,7 @@ const handlePaste = async (contextPayload) => {
     if (text.includes('<font') || text.includes('</font')) {
         text = text.replace(/<font.*?>/g, '').replaceAll('</font>', '');
     }
-    // 同步修改回 payload 供后续可能需要的逻辑使用
+    // 同步修改回 payload
     payload.text = text;
 
     // ------------------------------------------
@@ -72,6 +67,8 @@ const handlePaste = async (contextPayload) => {
     if (text.includes('(bookxnotepro://')) {
         let image_paths = text.match(/!\[\[.*\]\]/g);
         if (image_paths?.length) {
+            contextPayload.intercepted = true; // 同步拦截信号
+            
             let links = text.match(/bookxnotepro:\/\/[^\)]*/g);
             
             // 处理引用块文本
@@ -86,7 +83,7 @@ const handlePaste = async (contextPayload) => {
                     const el = ea.getElement(id);
                     if (links && links[0]) el.link = links[0];
                     await ea.addElementsToView(true, false, false);
-                    return true; // 返回 true 代表已拦截处理完毕
+                    return true; 
                 }
             }
             
@@ -111,11 +108,12 @@ const handlePaste = async (contextPayload) => {
     if (text.includes('[pdf](zotero://')) {
         let image_paths = text.match(/!\[\[.*\]\]/g);
         if (image_paths?.length) {
-            let links = text.match(/zotero:\/\/[^\)]*/g);
-
+            contextPayload.intercepted = true; // 同步拦截信号
             payload.text = '';
+            
+            let links = text.match(/zotero:\/\/[^\)]*/g);
             ea.clear();
-            let y = 0; // 修复了原代码缺少 let 的问题
+            let y = 0; 
             for (let i = 0; i < image_paths.length; i++) {
                 let image_path = image_paths[i];
                 let link = links ? links[i] : null;
@@ -134,10 +132,11 @@ const handlePaste = async (contextPayload) => {
     // ------------------------------------------
     if (text.includes('obsidian://bookmaster')) {
         let image_paths = text.match(/!\[\[.*\]\]/g);
-        let links = text.match(/obsidian:\/\/bookmaster[^\)]*/g);
-
         if (image_paths && image_paths.length > 0) {
+            contextPayload.intercepted = true; // 同步拦截信号
             payload.text = '';
+            
+            let links = text.match(/obsidian:\/\/bookmaster[^\)]*/g);
             ea.clear();
             let y = 0;
             for (let i = 0; i < image_paths.length; i++) {
@@ -160,10 +159,11 @@ const handlePaste = async (contextPayload) => {
     // ------------------------------------------
     if (text.includes('obsidian://booknote')) {
         let image_paths = text.match(/!\[\[.*\]\]/g);
-        let links = text.match(/obsidian:\/\/booknote[^\)]*/g);
-
         if (image_paths && image_paths.length > 0) {
+            contextPayload.intercepted = true; // 同步拦截信号
             payload.text = '';
+            
+            let links = text.match(/obsidian:\/\/booknote[^\)]*/g);
             ea.clear();
             let y = 0;
             for (let i = 0; i < image_paths.length; i++) {
@@ -187,7 +187,9 @@ const handlePaste = async (contextPayload) => {
     if (text.match(/!\[(.*?)\]\((.*?)\)/)) {
         const match = text.match(/!\[(.*?)\]\((.*?)\)/);
         if (match) {
+            contextPayload.intercepted = true; // 同步拦截信号
             payload.text = '';
+            
             ea.clear();
             const id = await ea.addImage(0, 0, match[2], true);
             const el = ea.getElement(id);
@@ -203,9 +205,16 @@ const handlePaste = async (contextPayload) => {
     // 7. 解析：YMJR 自定义协议
     // ------------------------------------------
     if (text.startsWith("ymjr:")) {
-        const jsonStr = text.substring("ymjr:".length);
+        // 【关键修复点】：通知 Core 取消原生粘贴动作，并在进入异步执行前立刻清空剪贴板缓存
+        contextPayload.intercepted = true;
         payload.text = '';
+        if (event && typeof event.preventDefault === "function") {
+            event.preventDefault(); // 直接终止原生 DOM 的 Paste 事件
+        }
+
+        const jsonStr = text.substring("ymjr:".length);
         ea.clear();
+        
         try {
             const obj = JSON.parse(jsonStr);
             if (obj?.type === 'image' || obj?.type === 'image_path') {
@@ -225,7 +234,7 @@ const handlePaste = async (contextPayload) => {
                 ea.style.strokeColor = state.currentItemStrokeColor;
                 ea.style.fontSize    = state.currentItemFontSize;
                 ea.style.fontFamily  = state.currentItemFontFamily;
-                const id = await ea.addText(0, 0, obj.data, { wrapAt: 100 }); // 修复了原代码非法的赋值表达式
+                const id = await ea.addText(0, 0, obj.data, { wrapAt: 100 }); 
                 const el = ea.getElement(id);
                 el.link = obj.link;
                 await ea.addElementsToView(true, false, false);
@@ -234,7 +243,7 @@ const handlePaste = async (contextPayload) => {
             } else if (obj?.type === 'code') {
                 const id = await ea.addText(0, 0, obj.text.replaceAll('\r\n', '\n'));
                 const el = ea.getElement(id);
-                el.fontFamily = 3; // code font
+                el.fontFamily = 3; 
                 el.link = `ymjr://open?app=code&folder=${encodeURI(obj.folderPath)}&file=${encodeURI(obj.filePath)}&line=${obj.lineNum}`;
                 el.customData = {
                     codeHighlight: {
@@ -252,7 +261,6 @@ const handlePaste = async (contextPayload) => {
         }
     }
 
-    // 如果都不匹配，返回 false，交由 Excalidraw 原生或其他插件进行默认的粘贴处理
     return false;
 };
 
@@ -264,7 +272,7 @@ async function mountFeature() {
     if (!window.EA_Core) return console.warn(t("log_no_core"));
     if (typeof ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] === "function") ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`]();
 
-    // 因为需要等待图片上传生成元素等异步操作，Hook Engine 使用 dispatchAsync，所以这里用 async 函数
+    // 正常挂载。这里的 dispatchSync 底层已修改，即使 handlePaste 有 await 也能实现同步拦截的传导
     window.EA_Core.registerHook(SCRIPT_ID, 'onPaste', handlePaste, 50);
     
     ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] = () => {

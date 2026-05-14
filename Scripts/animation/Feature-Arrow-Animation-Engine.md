@@ -10,9 +10,28 @@ autorun: true
 ```javascript
 */
 var locales = {
-    zh: { log_mounted: "[动画引擎] 🚀 挂载完毕", log_unmounted: "[动画引擎] 🔌 已卸载" },
-    en: { log_mounted: "[Anim Engine] 🚀 Mounted", log_unmounted: "[Anim Engine] 🔌 Unmounted" }
+    zh: { 
+        log_mounted: "[动画引擎] 🚀 挂载完毕", 
+        log_unmounted: "[动画引擎] 🔌 已卸载",
+        err_ea_core: "[动画引擎] EA_Core 未运行，无法挂载核心 Hook"
+    },
+    en: { 
+        log_mounted: "[Anim Engine] 🚀 Mounted", 
+        log_unmounted: "[Anim Engine] 🔌 Unmounted",
+        err_ea_core: "[Anim Engine] EA_Core is not running, cannot mount core Hook"
+    }
 };
+
+const getLang = () => {
+    try {
+        const lang = window.moment?.locale() || window.localStorage?.getItem('language') || 'en';
+        return lang.startsWith('zh') ? 'zh' : 'en';
+    } catch (e) {
+        return 'en';
+    }
+};
+const currentLang = getLang();
+const t = (key) => locales[currentLang][key] || locales['en'][key] || key;
 
 const SCRIPT_ID = "ymjr.feature.animation-engine";
 
@@ -26,14 +45,10 @@ if (!ExcalidrawAutomate.plugin._ymjr_animation_engine) {
 }
 const state = ExcalidrawAutomate.plugin._ymjr_animation_engine;
 
-// ==========================================
-// 拦截主画布渲染：仅处理 dash 动画的底层透明化
-// ==========================================
 const handleDrawElement = (payload) => {
     const { element, context, renderConfig, rc } = payload;
     const anim = element.customData?.animation;
     
-    // 🚀 核心修复 1：只拦截 dash。arrow 和 flow 保持原生渲染，保留最鲜艳的颜色！
     if (anim && anim.type === "dash") {
         if (['text', 'image', 'iframe', 'embeddable'].includes(element.type)) return false;
 
@@ -52,7 +67,6 @@ const handleDrawElement = (payload) => {
         shapeArr.forEach((shape, index) => {
             if (typeof shape !== "string" && shape && shape.options) {
                 const clonedShape = JSON.parse(JSON.stringify(shape));
-                // 仅对 dash 动画让底色透明，因为我们要画流动的虚线
                 clonedShape.options.stroke = "transparent"; 
                 rc.draw(clonedShape);
             }
@@ -61,12 +75,9 @@ const handleDrawElement = (payload) => {
 
         return true; 
     }
-    return false; // arrow 和 flow 返回 false，让 Excalidraw 原生画出鲜艳的底线！
+    return false;
 };
 
-// ==========================================
-// 核心：视觉特效绘制 (仅在 Overlay 上绘制增量动画)
-// ==========================================
 function drawAnimationEffects(ctx, pathStr, el, anim) {
     const color = el.strokeColor;
     const speedRatio = (anim.speed || 40) / 40;
@@ -78,7 +89,6 @@ function drawAnimationEffects(ctx, pathStr, el, anim) {
 
     switch (anim.type) {
         case "flow":
-            // 高亮流光拖尾 (底层已有实线，这里只画发光部分)
             ctx.globalAlpha = 1.0;
             ctx.lineWidth = el.strokeWidth + 2;
             ctx.shadowColor = color;
@@ -88,7 +98,6 @@ function drawAnimationEffects(ctx, pathStr, el, anim) {
             ctx.lineDashOffset = offset * 2;
             ctx.stroke(path2d);
 
-            // 白色核心
             ctx.lineWidth = Math.max(1, el.strokeWidth - 1);
             ctx.strokeStyle = "#FFFFFF";
             ctx.shadowBlur = 0;
@@ -108,10 +117,9 @@ function drawAnimationEffects(ctx, pathStr, el, anim) {
             break;
 
         case "arrow":
-            // 1. 利用 SVG 节点缓存提升计算性能
             let cache = state.pathCache.get(el.id);
             if (!cache || cache.pathStr !== pathStr) {
-                const tempPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                const tempPath = document.createElementNS("[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)", "path");
                 tempPath.setAttribute("d", pathStr);
                 cache = { pathStr, domPath: tempPath, length: tempPath.getTotalLength() };
                 state.pathCache.set(el.id, cache);
@@ -120,17 +128,14 @@ function drawAnimationEffects(ctx, pathStr, el, anim) {
             const pathLen = cache.length;
             if (pathLen === 0) break;
 
-            // 2. 计算当前运动点距和坐标
             const travelSpeed = (anim.speed || 40) * 1.5; 
             const currentDist = (state.globalOffset * travelSpeed) % pathLen;
             const pt = cache.domPath.getPointAtLength(currentDist);
             
-            // 计算切线角度
             const delta = Math.min(currentDist + 1, pathLen);
             const ptNext = cache.domPath.getPointAtLength(delta);
             const angle = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x);
 
-            // 3. 绘制飞行的自适应箭头 (底层已有实线，这里只画飞行的头部)
             ctx.save();
             ctx.translate(pt.x, pt.y);
             ctx.rotate(angle);
@@ -196,9 +201,6 @@ function drawAnimationEffects(ctx, pathStr, el, anim) {
     }
 }
 
-// ==========================================
-// Overlay 画布刷新机制 (带 Z-index 橡皮擦修复)
-// ==========================================
 function processOverlayCanvasForView(view) {
     if (!view || !view.excalidrawAPI) return;
     const api = view.excalidrawAPI;
@@ -208,7 +210,6 @@ function processOverlayCanvasForView(view) {
     const activeView = app.workspace.getActiveFileView();
     if (view !== activeView || activeView.getViewType() !== "excalidraw") return; 
 
-    // 获取所有元素，保持原生的层级顺序
     const elements = Array.from(elementsMap.values());
     const animEls = elements.filter(el => el.customData?.animation);
     const wrapper = view.contentEl.querySelector('.excalidraw') || view.contentEl;
@@ -248,7 +249,6 @@ function processOverlayCanvasForView(view) {
     ctx.scale(appState.zoom.value, appState.zoom.value);
     ctx.translate(appState.scrollX, appState.scrollY);
 
-    // 🚀 核心修复 2：按层级顺序遍历所有元素
     for (const el of elements) {
         const anim = el.customData?.animation;
         
@@ -261,7 +261,6 @@ function processOverlayCanvasForView(view) {
         ctx.translate(el.x, el.y);
 
         if (anim) {
-            // 绘制动画层
             ctx.globalCompositeOperation = 'source-over';
             const shapes = api.ShapeCache.generateElementShape(el, null);
             if (shapes) {
@@ -284,28 +283,23 @@ function processOverlayCanvasForView(view) {
                 }
             }
         } else {
-            // 🚀 核心修复 3：普通元素作为橡皮擦，抠出透明区域，完美还原遮挡关系
             ctx.globalCompositeOperation = 'destination-out';
             ctx.fillStyle = "rgba(0,0,0,1)";
             ctx.strokeStyle = "rgba(0,0,0,1)";
             ctx.lineWidth = el.strokeWidth || 2;
             
             if (el.type === "text" || el.type === "image") {
-                // 文字和图片直接用包围盒擦除
                 ctx.fillRect(0, 0, el.width, el.height);
             } else {
-                // 形状元素按真实路径擦除
                 const shapes = api.ShapeCache.generateElementShape(el, null);
                 if (shapes) {
                     const shapeArr = Array.isArray(shapes) ? shapes : [shapes];
                     shapeArr.forEach(shape => {
                         if (shape.svgPathStr) {
                             const p2d = new Path2D(shape.svgPathStr);
-                            // 如果元素有背景填充色，则擦除内部区域
                             if (el.backgroundColor && el.backgroundColor !== "transparent") {
                                 ctx.fill(p2d);
                             }
-                            // 擦除边框区域
                             ctx.stroke(p2d);
                         }
                     });
@@ -332,7 +326,7 @@ function animationLoop() {
 }
 
 async function mountFeature() {
-    if (!window.EA_Core) return console.warn("EA_Core 未运行，无法挂载核心 Hook");
+    if (!window.EA_Core) return console.warn(t("err_ea_core"));
 
     if (typeof ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] === "function") {
         ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`]();
@@ -342,7 +336,7 @@ async function mountFeature() {
 
     state.lastTime = performance.now();
     animationLoop();
-    console.log(locales.zh.log_mounted);
+    console.log(t("log_mounted"));
 
     ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] = () => {
         if (state.loopId) {
@@ -352,7 +346,7 @@ async function mountFeature() {
         if (state.pathCache) state.pathCache.clear();
         if (window.EA_Core) window.EA_Core.unregisterHook(SCRIPT_ID);
         document.querySelectorAll('.ymjr-anim-overlay').forEach(el => el.remove());
-        console.log(locales.zh.log_unmounted);
+        console.log(t("log_unmounted"));
     };
 }
 
