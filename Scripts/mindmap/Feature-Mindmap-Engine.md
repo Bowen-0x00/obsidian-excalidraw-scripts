@@ -7,7 +7,7 @@ license: MIT
 usage: 后台常驻引擎，为带有 customData.mindmap 的元素提供折叠展开的右上角图标绘制，实现回车和 Tab 键的快捷节点生成与连线，实现方向键导航节点，以及监听节点的增删实现自动排版。
 features:
   - 拦截 handleCanvasPointerDown/Up 实现点击展开/折叠按钮
-  - 拦截 onKeyDown 实现键盘方向键漫游脑图、Tab/Enter 快速新建节点、/键 折叠展开
+  - 拦截 onKeyDown 实现键盘方向键漫游脑图、Tab/Enter 快速新建节点、/键 折叠展开、空格键开始编辑
   - 拦截 _renderInteractiveScene 在脑图根节点与父节点上绘制圆圈数字图标
   - 提供 window.MindmapAPI 供脑图动作脚本调用进行连线刷新与布局重排
 dependencies:
@@ -194,7 +194,6 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
     const newParentEl = elementsMap.get(newParentId);
     let shouldHide = newParentEl?.customData?.hide; 
     if (dropZone === "child") {
-        // 如果是放入作为子节点，强制打开目标节点，避免因为节点之前处于close态而导致拖入后折叠
         if (!ea.getElement(newParentId)) ea.copyViewElementsToEAforEditing([newParentEl]);
         const eaParent = ea.getElement(newParentId);
         if (eaParent) {
@@ -203,7 +202,7 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
                 mindmap: { ...(eaParent.customData?.mindmap || {}), status: "open" }
             };
         }
-        shouldHide = newParentEl?.customData?.hide; // 子节点只需判断父节点本身是否被物理隐藏
+        shouldHide = newParentEl?.customData?.hide; 
     } else {
         shouldHide = newParentEl?.customData?.hide || newParentEl?.customData?.mindmap?.status === "close";
     }
@@ -868,6 +867,31 @@ const handleKeyDown = (context) => {
     if (!selectedEls.length) return false;
     const selectedEl = selectedEls.find(el => !el.containerId) || selectedEls[0];
 
+    // =============== 新增：空格键触发文字编辑逻辑 ===============
+    if (event.code === "Space" && selectedEl.customData?.mindmap) {
+        const isTextNode = selectedEl.type === "text";
+        const hasBoundText = selectedEl.boundElements?.some(b => b.type === "text");
+        
+        if (isTextNode || hasBoundText) {
+            // 阻止空格键引起页面滚动和其他默认行为
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // 触发进入编辑状态
+            setTimeout(() => {
+                const payload = { sceneX: 0, sceneY: 0 };
+                if (isTextNode) {
+                    payload.textElement = selectedEl;
+                } else {
+                    payload.container = selectedEl;
+                }
+                App.startTextEditing(payload);
+            }, 0);
+            return true;
+        }
+    }
+    // ============================================================
+
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.code) && selectedEl.customData?.mindmap) {
         const elementsMap = App.scene.getNonDeletedElementsMap(); const elements = App.scene.getNonDeletedElements();
         const mindmap = new Mindmap(elements, selectedEl); const rootEl = elementsMap.get(selectedEl.customData.mindmap.root);
@@ -886,6 +910,16 @@ const handleKeyDown = (context) => {
                 const idx = sameLevelNodes.findIndex(s => s.id === node.id);
                 if (event.code === "ArrowUp" && idx > 0) targetNode = sameLevelNodes[idx - 1];
                 if (event.code === "ArrowDown" && idx < sameLevelNodes.length - 1) targetNode = sameLevelNodes[idx + 1];
+            }
+        } else if (direction === "TD" || direction === "BU") {
+            if (event.code === "ArrowUp") targetNode = direction === "TD" ? node.parent : node.children.find(c => !elementsMap.get(c.id)?.customData?.hide);
+            if (event.code === "ArrowDown") targetNode = direction === "TD" ? node.children.find(c => !elementsMap.get(c.id)?.customData?.hide) : node.parent;
+            if (event.code === "ArrowLeft" || event.code === "ArrowRight") {
+                let sameLevelNodes = Array.from(mindmap.NodeMap.values()).filter(n => { const el = elementsMap.get(n.id); return n.level === node.level && el && !el.customData?.hide; });
+                sameLevelNodes.sort((a, b) => { const elA = elementsMap.get(a.id); const elB = elementsMap.get(b.id); return (elA ? elA.x + elA.width / 2 : 0) - (elB ? elB.x + elB.width / 2 : 0); });
+                const idx = sameLevelNodes.findIndex(s => s.id === node.id);
+                if (event.code === "ArrowLeft" && idx > 0) targetNode = sameLevelNodes[idx - 1];
+                if (event.code === "ArrowRight" && idx < sameLevelNodes.length - 1) targetNode = sameLevelNodes[idx + 1];
             }
         }
         event.preventDefault(); event.stopPropagation();

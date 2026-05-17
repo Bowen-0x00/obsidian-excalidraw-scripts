@@ -2786,7 +2786,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   
   <tr valign='top'>
     <td class="label">Features</td>
-    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>拦截 handleCanvasPointerDown/Up 实现点击展开/折叠按钮</li><li>拦截 onKeyDown 实现键盘方向键漫游脑图、Tab/Enter 快速新建节点、/键 折叠展开</li><li>拦截 _renderInteractiveScene 在脑图根节点与父节点上绘制圆圈数字图标</li><li>提供 window.MindmapAPI 供脑图动作脚本调用进行连线刷新与布局重排</li></ul></td>
+    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>拦截 handleCanvasPointerDown/Up 实现点击展开/折叠按钮</li><li>拦截 onKeyDown 实现键盘方向键漫游脑图、Tab/Enter 快速新建节点、/键 折叠展开、空格键开始编辑</li><li>拦截 _renderInteractiveScene 在脑图根节点与父节点上绘制圆圈数字图标</li><li>提供 window.MindmapAPI 供脑图动作脚本调用进行连线刷新与布局重排</li></ul></td>
   </tr>
 </table>
 
