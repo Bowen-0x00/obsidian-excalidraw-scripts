@@ -18,13 +18,13 @@ autorun: true
 */
 var locales = {
   zh: {
-    log_batched_update: "[CodeHighlight] 批量更新所有代码块。",
+    log_batched_update: "[CodeHighlight] 触发代码块重绘。",
     log_mount_failed: "[Feature] {id} 挂载失败: 找不到全局 window.EA_Core",
     log_unmounted: "[{id}] 🔌 已卸载",
     log_mounted: "[{id}] 🚀 挂载完毕"
   },
   en: {
-    log_batched_update: "[CodeHighlight] Batched updating ALL code blocks.",
+    log_batched_update: "[CodeHighlight] Triggered canvas redraw.",
     log_mount_failed: "[Feature] {id} mount failed: Global window.EA_Core not found",
     log_unmounted: "[{id}] 🔌 Unmounted",
     log_mounted: "[{id}] 🚀 Mounted successfully"
@@ -32,9 +32,14 @@ var locales = {
 };
 const SCRIPT_ID = "ymjr.feature.codehighlight";
 
+// 修复点：严格使用 window.ExcalidrawAutomate，防止闭包引起的 ea 丢失
 const getCodeMap = () => {
-  ExcalidrawAutomate.plugin._ymjr_codeMap = ea?.plugin?._ymjr_codeMap || new Map();
-    return ExcalidrawAutomate.plugin._ymjr_codeMap;
+    const plugin = window.ExcalidrawAutomate?.plugin;
+    if (!plugin) return new Map();
+    if (!plugin._ymjr_codeMap) {
+        plugin._ymjr_codeMap = new Map();
+    }
+    return plugin._ymjr_codeMap;
 };
 
 const codeHighlightStyle = { 
@@ -46,42 +51,25 @@ const codeHighlightStyle = {
 
 const svgToBase64 = (svg) => `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg.replaceAll("&nbsp;", " "))))}`;
 
-function hasPropertiesChanged(a, b) {
-  return Math.abs(a.width - b.width) > 0.5 || 
-         Math.abs(a.height - b.height) > 0.5 || 
-         a.text !== b.text || 
-         JSON.stringify(a?.customData?.codeHighlight) !== JSON.stringify(b?.customData?.codeHighlight);
+function hasPropertiesChanged(snapshot, b) {
+  if (!snapshot || !b) return true;
+  return Math.abs(snapshot.width - b.width) > 0.5 || 
+         Math.abs(snapshot.height - b.height) > 0.5 || 
+         snapshot.text !== b.text || 
+         snapshot.fontFamily !== b.fontFamily ||
+         snapshot.fontSize !== b.fontSize ||
+         snapshot.codeHighlightStr !== JSON.stringify(b?.customData?.codeHighlight);
 }
 
-let _codeBlockUpdateTimer = null;
-const forceUpdateAllCodeBlocks = () => {
-  if (_codeBlockUpdateTimer) clearTimeout(_codeBlockUpdateTimer);
-  
-  _codeBlockUpdateTimer = setTimeout(() => {
-    if (!ea) return;
-    const api = ea.getExcalidrawAPI();
+// 修复点：不再暴力修改元素的 version，而是通过微小的缩放变化强制 Excalidraw 重新走一遍渲染管线
+const triggerRedraw = () => {
+  if (window._codeBlockUpdateTimer) clearTimeout(window._codeBlockUpdateTimer);
+  window._codeBlockUpdateTimer = setTimeout(() => {
+    const api = window.ExcalidrawAutomate?.getExcalidrawAPI();
     if (!api) return;
-
-    const elements = api.getSceneElements();
-    let hasChanges = false;
-    
-    const nextElements = elements.map(el => {
-      if (el?.customData?.codeHighlight) {
-        hasChanges = true;
-        return { 
-          ...el, 
-          version: (el.version || 0) + 1, 
-          versionNonce: Math.floor(Math.random() * 1000000000) 
-        };
-      }
-      return el;
-    });
-
-    if (hasChanges) {
-      console.log(t("log_batched_update"));
-      api.updateScene({ elements: nextElements });
-    }
-  }, 100);
+    const zoom = api.getAppState().zoom.value;
+    api.updateScene({ appState: { zoom: { value: zoom + 0.0000001 } } });
+  }, 50);
 };
 
 function loadHljs() {
@@ -109,31 +97,36 @@ function loadHljs() {
   }
   
   window._hljs_loaded = true;
-  forceUpdateAllCodeBlocks();
+  triggerRedraw();
 }
 
 const handleDraw = (hookPayload) => {
     const { ea, api } = hookPayload;
     if (!ea || !api) return;
 
-    const { element, context, renderConfig, rc } = hookPayload;
+    const { element, context } = hookPayload;
     if (!element?.customData?.codeHighlight) return false;
 
     if (typeof hljs === "undefined") {
       loadHljs();
       return false; 
-  }
+    }
 
     const codeMap = getCodeMap();
     const cache = codeMap.get(element.id);
     let image;
 
-    if (!cache || hasPropertiesChanged(cache.element, element)) {
+    if (!cache || hasPropertiesChanged(cache.snapshot, element)) {
       const lines = element.text.split("\n");
       const codes = [];
       const language = element.customData.codeHighlight.language;
+      
       lines.forEach(line => {
-        codes.push(hljs.highlight(line, {language: language}));
+        try {
+          codes.push(hljs.highlight(line, {language: language, ignoreIllegals: true}));
+        } catch(e) {
+          codes.push({ value: line.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") });
+        }
       });
 
       var div = document.createElement('div');
@@ -166,12 +159,26 @@ const handleDraw = (hookPayload) => {
       
       const base64 = svgToBase64(svg);
       image = new Image();
-      image.onload = () => {
-        forceUpdateAllCodeBlocks();
+
+      const stateSnapshot = {
+          width: element.width,
+          height: element.height,
+          text: element.text,
+          fontFamily: element.fontFamily,
+          fontSize: element.fontSize,
+          codeHighlightStr: JSON.stringify(element?.customData?.codeHighlight)
       };
-      image.src = base64;
       
-      codeMap.set(element.id, { element, svg, image });
+      image.onload = () => {
+        if (api.ShapeCache) {
+            const el = api.getSceneElements().find(e => e.id === element.id);
+            if (el) api?.ShapeCache?.cache?.delete(el);
+        }
+        triggerRedraw();
+      };
+      
+      image.src = base64;
+      codeMap.set(element.id, { snapshot: stateSnapshot, svg, image });
       
       if (!image.complete) {
           return false;
@@ -200,7 +207,7 @@ const handleRenderSvg = (context) => {
     if (!cache?.svg) return;
 
     const dom = new DOMParser().parseFromString(cache.svg, 'image/svg+xml');
-    const svgNode = dom.documentElement; // image/svg+xml 解析出的直接就是 svg 根节点
+    const svgNode = dom.documentElement; 
     if (!svgNode || svgNode.nodeName === "parsererror") return;
 
     const gElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -267,8 +274,7 @@ async function mountFeature() {
 }
 
 mountFeature();
-
-forceUpdateAllCodeBlocks();
+triggerRedraw();
 
 
 

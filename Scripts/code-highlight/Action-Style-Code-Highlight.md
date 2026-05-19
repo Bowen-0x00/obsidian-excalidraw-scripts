@@ -75,11 +75,18 @@ async function applyToSelected() {
         el.fontFamily = currentSettings.fontFamily;
         el.fontSize = currentSettings.fontSize;
         api.ShapeCache?.cache?.delete(el);
-        el.customData.codeHighlight.style = currentSettings.theme;
-        el.customData.codeHighlight.embedFont = currentSettings.embedFont;
-        // 新增：将修改后的语言写入元素数据
-        el.customData.codeHighlight.language = currentSettings.language;
+        
+        el.customData = {
+            ...el.customData,
+            codeHighlight: {
+                ...el.customData?.codeHighlight,
+                style: currentSettings.theme,
+                embedFont: currentSettings.embedFont,
+                language: currentSettings.language
+            }
+        };
     });
+    
     ea.copyViewElementsToEAforEditing(selectedEls);
     await ea.addElementsToView();
     await ea.viewUpdateScene({ appState: { zoom: { value: api.getAppState().zoom.value + 0.00001 } } });

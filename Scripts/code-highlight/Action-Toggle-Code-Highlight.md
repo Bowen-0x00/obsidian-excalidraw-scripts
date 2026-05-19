@@ -126,8 +126,8 @@ selectedEls.forEach((el) => {
     };
 });
 
-ea.copyViewElementsToEAforEditing(selectedEls);
-ea.addElementsToView();
+await ea.copyViewElementsToEAforEditing(selectedEls);
+await ea.addElementsToView();
 setTimeout(() => {
     ea.viewUpdateScene({ appState: { zoom: { value: api.getAppState().zoom.value + 0.00001 } } });
 }, 0);
