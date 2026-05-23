@@ -2,7 +2,7 @@
 name: 脑图核心引擎
 description: 后台引擎：提供脑图折叠、排版、快捷键创建节点及实时高亮渲染。
 author: ymjr
-version: 1.0.0
+version: 1.0.1
 license: MIT
 usage: 后台常驻引擎，为带有 customData.mindmap 的元素提供折叠展开的右上角图标绘制，实现回车和 Tab 键的快捷节点生成与连线，实现方向键导航节点，以及监听节点的增删实现自动排版。
 features:
@@ -58,7 +58,6 @@ const FALLBACK_SETTINGS = {
     customTheme: { rootBg: FALLBACK_THEMES["custom"].rootBg, colors: [...FALLBACK_THEMES["custom"].colors], levels: JSON.parse(JSON.stringify(DEFAULT_LEVELS)) }
 };
 
-// --- Settings Initialization (跨脚本共享存储) ---
 let engineSettings = ExcalidrawAutomate.plugin.settings.scriptEngineSettings["Mindmap_Engine"] || {};
 if (!engineSettings["Mindmap Configuration"]) {
     engineSettings["Mindmap Configuration"] = {
@@ -112,7 +111,7 @@ function resolveStyle(level, branchIndex, settings) {
     return { backgroundColor: bg, textColor: lvlConfig.textColor, strokeColor: lvlConfig.strokeColor, fontSize: lvlConfig.fontSize, strokeWidth: lvlConfig.strokeWidth };
 }
 
-const MindmapState = { mindmapPosMap: new Map(), treeElements: [], hoveredMindmapElement: null };
+const MindmapState = { mindmapPosMap: new Map(), treeElements: [], hoveredMindmapElement: null, isRealDragging: false };
 
 const getExpandedTreeElements = (baseItems, elementsMap, allElements) => {
     const expandedMap = new Map();
@@ -157,8 +156,14 @@ const checkOverlap = (el1, el2) => {
 
 const isDescendant = (potentialParentId, targetId, elementsMap) => {
     let current = elementsMap.get(targetId);
+    const visited = new Set();
     while (current?.customData?.mindmap?.parent) {
         if (current.customData.mindmap.parent === potentialParentId) return true;
+        
+        if (current.customData.mindmap.parent === current.id || visited.has(current.id)) {
+            break;
+        }
+        visited.add(current.id);
         current = elementsMap.get(current.customData.mindmap.parent);
     }
     return false;
@@ -189,7 +194,7 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
     const direction = rootSettings.direction || "LR";
 
     let newParentId = dropZone === "child" ? targetEl.id : targetEl.customData.mindmap.parent;
-    if (!newParentId) newParentId = targetEl.id; 
+    if (!newParentId || newParentId === rootId) newParentId = targetEl.id; 
     
     const newParentEl = elementsMap.get(newParentId);
     let shouldHide = newParentEl?.customData?.hide; 
@@ -211,7 +216,12 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
     let branchRootId = draggedEl.id;
     if (newLevel > 1) {
         let p = newParentEl;
-        while(p && p.customData?.mindmap?.level > 2) { p = elementsMap.get(p.customData.mindmap.parent); }
+        const pathVisited = new Set();
+        while(p && p.customData?.mindmap?.level > 2) { 
+            if (pathVisited.has(p.id) || p.customData.mindmap.parent === p.id) break;
+            pathVisited.add(p.id);
+            p = elementsMap.get(p.customData.mindmap.parent); 
+        }
         if (p && p.customData?.mindmap?.level === 2) branchRootId = p.id;
     }
     
@@ -230,7 +240,10 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
 
     const oldParentId = draggedEl.customData?.mindmap?.parent;
     const descendantUpdates = [];
+    const visitedDescendants = new Set();
     const findDescendants = (parentId, currentLevel) => {
+        if (visitedDescendants.has(parentId)) return;
+        visitedDescendants.add(parentId);
         for (let i = 0; i < allElements.length; i++) {
             const child = allElements[i];
             if (child.customData?.mindmap?.parent === parentId) {
@@ -421,18 +434,27 @@ class MindmapNode {
 }
 
 class Mindmap {
-    constructor(elements, element) { this.rootId = element.customData.mindmap.root; this.NodeMap = new Map(); }
+    constructor(elements, element) { 
+        this.rootId = element.customData.mindmap.root; 
+        this.NodeMap = new Map(); 
+        this.visitedNodes = new Set();
+    }
     clearElements() { this.elements = []; this.elementsMap = []; this.arrowElements = []; }
     setElements(elements, elementsMap) { this.elements = elements; this.elementsMap = elementsMap; this.arrowElements = elements.filter((el) => el.type == "arrow"); }
     buildNodeTree(element, parentNode, level, arrow) {
+        if (!element || this.visitedNodes.has(element.id)) return;
+        this.visitedNodes.add(element.id);
+
         let startArrowElements = this.arrowElements.filter((el) => el.startBinding && el.startBinding.elementId == element.id);
         let node = new MindmapNode(element, this.rootId, parentNode?.id, (parentNode?.level || 0) + 1);
         if (level == 1) this.rootNode = node;
         this.NodeMap.set(node.id, node); node.parent = parentNode;
         parentNode && parentNode?.children.push(node); node.parentArrow = arrow;
         startArrowElements.forEach((el) => {
-            node.childrenArrow.push(el);
-            let child = this.elementsMap?.get(el.endBinding.elementId); this.buildNodeTree(child, node, level+1, el);
+            if (el.endBinding?.elementId) {
+                node.childrenArrow.push(el);
+                let child = this.elementsMap?.get(el.endBinding.elementId); this.buildNodeTree(child, node, level+1, el);
+            }
         });
     }
     getChildren(node, ea, recursion=true, filter=undefined) {
@@ -546,7 +568,12 @@ class Mindmap {
             branchIndex = rootChildren.length;
         } else {
             let pNode = parentNode; let targetId = pos === "same" ? currentNode.id : parentNode.id;
-            while(pNode && pNode.level > 2) { targetId = pNode.id; pNode = pNode.parent; }
+            const ancestorVisited = new Set();
+            while(pNode && pNode.level > 2) { 
+                if (ancestorVisited.has(pNode.id)) break;
+                ancestorVisited.add(pNode.id);
+                targetId = pNode.id; pNode = pNode.parent; 
+            }
             if(pNode && pNode.level === 2) targetId = pNode.id;
             branchIndex = rootChildren.findIndex(n => n.id === targetId);
             if(branchIndex === -1) branchIndex = rootChildren.length;
@@ -755,23 +782,24 @@ window.MindmapAPI = {
         const rootEl = sceneElements.find(el => el.customData?.mindmap?.root === el.id);
         const rootSettings = rootEl?.customData?.mindmap?.settings || DEFAULT_SETTINGS;
 
-        const layouter = new MindMapLayouter(sceneElements, {
+        const notArrowEls = sceneElements.filter((el) => el.type !== "arrow");
+        const arrowEls = sceneElements.filter((el) => el.type === "arrow");
+        
+        activeEa.clear();
+        if (notArrowEls.length > 0) activeEa.copyViewElementsToEAforEditing(notArrowEls);
+        if (arrowEls.length > 0) activeEa.copyViewElementsToEAforEditing(arrowEls);
+
+        const eaElements = activeEa.getElements();
+
+        const layouter = new MindMapLayouter(eaElements, {
             direction: rootSettings.direction || "LR", arrowType: rootSettings.arrowType || "normal", enableFixedPoint: rootSettings.enableFixedPoint ?? true,
             defaultGap: Number(rootSettings.defaultGap ?? 10), curveLength: Number(rootSettings.curveLength ?? 40), lengthBetweenElAndLine: Number(rootSettings.lengthBetweenElAndLine ?? 100),
         });
-        layouter.runLayout(sceneElements, commitToHistory, activeEa);
-        const changedElements = Array.from(new Set([...layouter.changedElementsSet, ...sceneElements]));
-        const notArrowEls = changedElements.filter((el) => el.type !== "arrow");
-        const arrowEls = changedElements.filter((el) => el.type === "arrow");
         
-        if (notArrowEls.length > 0) {
-            activeEa.clear(); activeEa.copyViewElementsToEAforEditing(notArrowEls);
-            await activeEa.addElementsToView(false, false, commitToHistory, false, "EVENTUALLY");
-        }
-        if (arrowEls.length > 0) {
-            activeEa.clear(); activeEa.copyViewElementsToEAforEditing(arrowEls);
-            await activeEa.addElementsToView(false, false, commitToHistory, false, "EVENTUALLY"); activeEa.clear();
-        }
+        layouter.runLayout();
+        
+        await activeEa.addElementsToView(false, false, commitToHistory, false, "EVENTUALLY");
+        activeEa.clear();
     }
 };
 
@@ -805,10 +833,10 @@ const handlePointerUp = async (context) => {
         }, mainSelectedEls[0]);
     }
 
-    if (draggedEl) {
+    if (draggedEl && MindmapState.isRealDragging) {
         if (draggedEl.customData?.mindmap && draggedEl.customData.mindmap.root === draggedEl.id) { } 
         else {
-            const targetEl = allElements.find(el => el.id !== draggedEl.id && el.customData?.mindmap && checkOverlap(draggedEl, el) && !isDescendant(draggedEl.id, el.id, elementsMap) );
+            const targetEl = allElements.find(el => el.id !== draggedEl.id && el.customData?.mindmap && !el.customData?.hide && checkOverlap(draggedEl, el) && !isDescendant(draggedEl.id, el.id, elementsMap) );
             if (targetEl) {
                 const rootId = targetEl.customData?.mindmap?.root || targetEl.id; const rootEl = elementsMap.get(rootId);
                 const direction = rootEl?.customData?.mindmap?.settings?.direction || "LR";
@@ -821,10 +849,13 @@ const handlePointerUp = async (context) => {
                     if (App.interactiveCanvas) App.interactiveCanvas.style.cursor = ""; 
                 }, 50);
                 
+                MindmapState.isRealDragging = false;
                 return false; 
             }
         }
     }
+
+    MindmapState.isRealDragging = false;
 
     const targetElement = findHitMindmapElement(App, scenePointer) || MindmapState.hoveredMindmapElement;
     if (ea?.plugin?.settings?.mindmapHandle && targetElement) {
@@ -867,17 +898,14 @@ const handleKeyDown = (context) => {
     if (!selectedEls.length) return false;
     const selectedEl = selectedEls.find(el => !el.containerId) || selectedEls[0];
 
-    // =============== 新增：空格键触发文字编辑逻辑 ===============
     if (event.code === "Space" && selectedEl.customData?.mindmap) {
         const isTextNode = selectedEl.type === "text";
         const hasBoundText = selectedEl.boundElements?.some(b => b.type === "text");
         
         if (isTextNode || hasBoundText) {
-            // 阻止空格键引起页面滚动和其他默认行为
             event.preventDefault();
             event.stopPropagation();
             
-            // 触发进入编辑状态
             setTimeout(() => {
                 const payload = { sceneX: 0, sceneY: 0 };
                 if (isTextNode) {
@@ -890,7 +918,6 @@ const handleKeyDown = (context) => {
             return true;
         }
     }
-    // ============================================================
 
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.code) && selectedEl.customData?.mindmap) {
         const elementsMap = App.scene.getNonDeletedElementsMap(); const elements = App.scene.getNonDeletedElements();
@@ -995,6 +1022,9 @@ const handlePointerDown = (context) => {
 const handleElementsDragged = (context) => {
     const { ea, api, selectedElements, scene, elementsToUpdate } = context;
     if (!ea || !api) return;
+    
+    MindmapState.isRealDragging = true;
+    
     const elementsMap = scene?.getNonDeletedElementsMap?.();
 
     if (selectedElements.length === 1 && selectedElements[0].type === "arrow") {
@@ -1230,6 +1260,5 @@ async function mountFeature() {
 
     console.log(t("log_mounted", { id: SCRIPT_ID }));
 }
-
 
 mountFeature();

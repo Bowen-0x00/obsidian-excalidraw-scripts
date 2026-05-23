@@ -244,6 +244,7 @@
 |<span>Action-Import-Mindmap-From-Clipboard.md</span>|[[#Action-Import-Mindmap-From-Clipboard]]|
 |<span>Feature-Mindmap-Engine.md</span>|[[#Feature-Mindmap-Engine]]|
 |<span>Action-Detach-Mindmap.md</span>|[[#Action-Detach-Mindmap]]|
+|<span>Action-Rescue-And-Show-Mindmap.md</span>|[[#Action-Rescue-And-Show-Mindmap]]|
 
 ## Other
 **Keywords**: Other
@@ -2761,6 +2762,35 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
 </table>
 
+## Action-Rescue-And-Show-Mindmap
+
+```excalidraw-script-install
+https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Rescue-And-Show-Mindmap.md
+```
+<table>
+  <tr valign='top'>
+    <td class="label">Author</td>
+    <td class="data"><a href='https://github.com/ymjr'>@ymjr</a></td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Version</td>
+    <td class="data">1.1.0</td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Source</td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/mindmap/Action-Rescue-And-Show-Mindmap.md'>File on GitHub/Gitee</a></td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Description</td>
+    <td class="data">动作脚本：一键清除选中节点的附加数据，并全图深度扫描恢复所有隐形脑图节点、同组元素、绑定元素的可见性。</td>
+  </tr>
+  
+  <tr valign='top'>
+    <td class="label">Features</td>
+    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>深度联动扫描：自动将脑图节点、其内部文本、同组(Group)的所有图元、绑定的所有线缆和图形全部解除隐藏</li><li>清除当前选中元素的所有 `customData` 状态，解除引擎绑定</li></ul></td>
+  </tr>
+</table>
+
 ## Feature-Mindmap-Engine
 
 ```excalidraw-script-install
@@ -2773,7 +2803,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Version</td>
-    <td class="data">1.0.0</td>
+    <td class="data">1.0.1</td>
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
