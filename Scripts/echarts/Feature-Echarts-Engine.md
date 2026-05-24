@@ -119,9 +119,6 @@ EchartsCore.parseTextToData = (text) => {
     return validCount >= 2 ? { labels, values } : null;
 };
 
-// ==========================================
-// 3. 高级 UI：双向绑定且包含丰富配置的 Modal
-// ==========================================
 const { Modal, Setting } = ea.obsidian;
 
 class EchartsEditorModal extends Modal {
@@ -133,9 +130,8 @@ class EchartsEditorModal extends Modal {
         this.currentType = this.initialData.type;
         this.labels = [...this.initialData.labels];
         this.values = [...this.initialData.values];
-        this.colors = [...(this.initialData.colors || [])]; // 每个数据的独立颜色
+        this.colors = [...(this.initialData.colors || [])];
         
-        // 扩展配置项状态
         this.chartTitle = this.initialData.chartTitle || "";
         this.themeColor = this.initialData.themeColor || "#5470c6";
         this.showLabel = this.initialData.showLabel || false;
@@ -154,7 +150,6 @@ class EchartsEditorModal extends Modal {
 
         contentEl.createEl("h2", { text: t("ui_title") });
 
-        // 图表类型与标题设置 (并排提升空间利用率)
         const headerPanel = contentEl.createDiv({ style: "display: flex; gap: 20px; align-items: center; margin-bottom: 15px;" });
         
         const typeContainer = headerPanel.createDiv({ style: "flex: 1;" });
@@ -183,15 +178,12 @@ class EchartsEditorModal extends Modal {
                     .onChange(val => { this.chartTitle = val; });
             });
 
-        // 样式配置面板容器
         this.stylePanel = contentEl.createDiv({ style: "background: var(--background-secondary-alt); padding: 5px 15px; border-radius: 8px;" });
         this.renderStyleSettings();
 
-        // 数据编辑区容器
         this.editorContainer = contentEl.createDiv({ style: "display: flex; gap: 15px; margin-top: 15px;" });
         this.renderEditor();
 
-        // 底部按钮
         const footer = contentEl.createDiv({ style: "display: flex; justify-content: flex-end; margin-top: 20px; gap: 10px;" });
         const cancelBtn = footer.createEl("button", { text: t("ui_cancel") });
         cancelBtn.onclick = () => this.close();
@@ -206,7 +198,7 @@ class EchartsEditorModal extends Modal {
                     chartTitle: this.chartTitle,
                     labels: this.labels, 
                     values: this.values,
-                    colors: this.colors, // 提交独立色彩
+                    colors: this.colors,
                     themeColor: this.themeColor,
                     showLabel: this.showLabel,
                     showLegend: this.showLegend,
@@ -228,13 +220,11 @@ class EchartsEditorModal extends Modal {
 
         const flexRow = this.stylePanel.createDiv({ style: "display: flex; flex-wrap: wrap; gap: 10px; align-items: center;" });
 
-        // 主题色
         const colorDiv = flexRow.createDiv({ style: "display: flex; align-items: center; gap: 5px; margin-right: 15px;" });
         colorDiv.createEl("span", { text: t("ui_theme_color") });
         const colorPicker = colorDiv.createEl("input", { type: "color", value: this.themeColor });
         colorPicker.onchange = (e) => { this.themeColor = e.target.value; };
 
-        // Toggle 开关组
         const createToggle = (parent, label, value, onChange) => {
             const wrap = parent.createDiv({ style: "display: flex; align-items: center; gap: 5px; margin-right: 15px;" });
             wrap.createEl("span", { text: label });
@@ -245,12 +235,10 @@ class EchartsEditorModal extends Modal {
         createToggle(flexRow, t("ui_show_legend"), this.showLegend, (v) => this.showLegend = v);
         createToggle(flexRow, t("ui_show_labels"), this.showLabel, (v) => this.showLabel = v);
 
-        // 折线图特有
         if (this.currentType === 'line') {
             createToggle(flexRow, t("ui_smooth_line"), this.smoothLine, (v) => this.smoothLine = v);
         }
 
-        // 节点图标
         if (this.currentType === 'line' || this.currentType === 'scatter') {
             const symDiv = flexRow.createDiv({ style: "display: flex; align-items: center; gap: 5px;" });
             symDiv.createEl("span", { text: t("ui_symbol_shape") });
@@ -277,7 +265,6 @@ class EchartsEditorModal extends Modal {
             return;
         }
 
-        // --- 标准模式：双向绑定视图 ---
         const leftPanel = this.editorContainer.createDiv({ style: "flex: 1; display: flex; flex-direction: column;" });
         leftPanel.createEl("b", { text: t("ui_text_input_label"), style: "margin-bottom: 5px;" });
         const rawTextArea = leftPanel.createEl("textarea", {
@@ -303,7 +290,6 @@ class EchartsEditorModal extends Modal {
                 const valueInput = row.createEl("input", { type: "number", value: this.values[i], style: "flex: 2;", title: t("ui_value") });
                 valueInput.onchange = (e) => { this.values[i] = parseFloat(e.target.value) || 0; updateTextArea(); };
                 
-                // 独立颜色开关与选择器
                 const colorDiv = row.createDiv({ style: "display: flex; align-items: center; gap: 2px; flex: 1;" });
                 const hasCustomColor = !!this.colors[i];
                 const colorCheckbox = colorDiv.createEl("input", { type: "checkbox", checked: hasCustomColor, title: t("ui_checkbox_color_title") });
@@ -344,7 +330,6 @@ class EchartsEditorModal extends Modal {
             if (parsed) {
                 this.labels = parsed.labels;
                 this.values = parsed.values;
-                // 同步扩充或裁剪颜色数组
                 this.colors = this.labels.map((_, i) => this.colors[i]);
                 renderTable(); 
             }
@@ -353,9 +338,6 @@ class EchartsEditorModal extends Modal {
 }
 EchartsCore.EchartsEditorModal = EchartsEditorModal;
 
-// ==========================================
-// 4. Echarts 配置生成器 (支持微观控制)
-// ==========================================
 EchartsCore.generateEchartsOptions = (data) => {
     if (data.type === 'custom') return data.customOptions;
 
@@ -382,11 +364,10 @@ EchartsCore.generateEchartsOptions = (data) => {
 
     const labelConfig = { show: data.showLabel, position: data.type === 'pie' ? 'outside' : 'top' };
 
-    // 将独立色彩数据装配到 series.data 中
     const seriesData = data.values.map((val, i) => {
         const item = { value: val, name: data.labels[i] };
         if (data.colors && data.colors[i]) {
-            item.itemStyle = { color: data.colors[i] }; // 覆盖此节点的颜色
+            item.itemStyle = { color: data.colors[i] };
         }
         return item;
     });
@@ -420,9 +401,6 @@ EchartsCore.generateEchartsOptions = (data) => {
     });
 };
 
-// ==========================================
-// 5. Hooks: 粘贴拦截
-// ==========================================
 const handlePaste = async (context) => {
     const { ea, api } = context;
     if (!ea || !api) return;
@@ -445,7 +423,6 @@ const handlePaste = async (context) => {
             new EchartsCore.EchartsEditorModal(app, { type: 'bar', ...parsedData }, async (result) => {
                 const finalOptions = EchartsCore.generateEchartsOptions(result);
                 
-                // 【Bug 修复】必须先清空 EA 单例状态
                 ea.clear(); 
 
                 ea.style.backgroundColor = "transparent";
@@ -455,7 +432,7 @@ const handlePaste = async (context) => {
                 
                 el.customData = { ...el.customData, echarts: { type: result.type, value: finalOptions } };
                 
-                payload.text = ''; // 拦截文本
+                payload.text = '';
                 ea.copyViewElementsToEAforEditing([el]);
                 await ea.addElementsToView(true, false, false);
                 new Notice(t("notice_success"));
@@ -466,10 +443,7 @@ const handlePaste = async (context) => {
     return false;
 };
 
-// ... 此处保留原有的 handleSvgRender 和 setupCustomDocumentRenderer ...
-// ==========================================
-// 6. SVG 导出渲染 Hook
-// ==========================================
+
 const handleSvgRender = async (contextPayload) => {
     const { ea, api } = contextPayload;
     if (!ea || !api) return;
@@ -506,9 +480,6 @@ const handleSvgRender = async (contextPayload) => {
     return false;
 };
 
-// ==========================================
-// 7. 画板内联 HTML/Iframe 渲染覆盖
-// ==========================================
 const setupCustomDocumentRenderer = () => {
     const echartContent = getEcharts(); 
 
@@ -534,7 +505,6 @@ const setupCustomDocumentRenderer = () => {
         });
     };
 
-    // 注册到 ExcalidrawAutomate.plugin 命名空间，并保留 window 兼容 (如果你的 React 源码已经写死了 window 访问)
     const renderCustomDocument = function(element, appState) {
         if (element?.customData?.document) {
             return renderWebViewByData(element.customData.document, ea.targetView, element.id, appState);
@@ -546,7 +516,6 @@ const setupCustomDocumentRenderer = () => {
             const echartsData = element.customData.echarts;
             let optionStr = echartsData.value;
 
-            // 兼容老版本只存了文本格式的数据
             if (!optionStr.startsWith("{")) {
                 const legacyData = EchartsCore.parseTextToData(optionStr);
                 if (legacyData) optionStr = EchartsCore.generateEchartsOptions({type: echartsData.type, ...legacyData});
@@ -575,17 +544,32 @@ const setupCustomDocumentRenderer = () => {
     };
 
     EchartsCore.renderCustomDocument = renderCustomDocument;
-    window.renderCustomDocument = renderCustomDocument; // 保留供 Excalidraw 原生调用的入口
+
+    return renderCustomDocument;
+};
+
+const handleCustomDocumentRender = (context) => {
+    if (!context) return;
+    const { element, appState } = context;
+    
+    const component = EchartsCore.renderCustomDocument?.(element, appState);
+    
+    if (component) {
+        context.component = component;
+        return true;
+    }
 };
 
 async function mountFeature() {
     if (!window.EA_Core) return console.warn(t("log_no_core"));
     if (typeof ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] === "function") ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`]();
 
+    setupCustomDocumentRenderer();
+
     window.EA_Core.registerHook(SCRIPT_ID, 'onPaste', handlePaste, 50); 
     window.EA_Core.registerHook(SCRIPT_ID, 'renderElementToSvg', handleSvgRender, 60);
     
-    setupCustomDocumentRenderer();
+    window.EA_Core.registerHook(SCRIPT_ID, 'renderCustomDocument', handleCustomDocumentRender, 50);
 
     ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] = () => {
         if (window.EA_Core) window.EA_Core.unregisterHook(SCRIPT_ID);

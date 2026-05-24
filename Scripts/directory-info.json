@@ -135,9 +135,14 @@
     "mtime": 1779162499263.4631
   },
   {
+    "fname": "Action-Extra-Colors-Manager.md",
+    "relativePath": "color\\Action-Extra-Colors-Manager.md",
+    "mtime": 1779630346366.5132
+  },
+  {
     "fname": "Feature-Extra-Colors-Engine.md",
     "relativePath": "color\\Feature-Extra-Colors-Engine.md",
-    "mtime": 1779627761082.7112
+    "mtime": 1779631335092.43
   },
   {
     "fname": "Action-Advanced-Connector.md",
@@ -197,7 +202,7 @@
   {
     "fname": "Feature-Echarts-Engine.md",
     "relativePath": "echarts\\Feature-Echarts-Engine.md",
-    "mtime": 1778241862355.6108
+    "mtime": 1779631361156.8535
   },
   {
     "fname": "Action-Export-Image-To-Anki.md",
@@ -367,7 +372,7 @@
   {
     "fname": "Feature-Link-Engine.md",
     "relativePath": "link\\Feature-Link-Engine.md",
-    "mtime": 1778241860794.249
+    "mtime": 1779631369914.2212
   },
   {
     "fname": "Action-Toggle-List.md",
@@ -563,11 +568,6 @@
     "fname": "Action-Split-Text-Segments.md",
     "relativePath": "text\\Action-Split-Text-Segments.md",
     "mtime": 1778241860780.827
-  },
-  {
-    "fname": "Action-Text-Bold.md",
-    "relativePath": "text\\Action-Text-Bold.md",
-    "mtime": 1777479605722.622
   },
   {
     "fname": "Action-Text-Copy-Elements.md",

@@ -88,6 +88,7 @@
 |    |     |
 |----|-----|
 |<span>Feature-Extra-Colors-Engine.md</span>|[[#Feature-Extra-Colors-Engine]]|
+|<span>Action-Extra-Colors-Manager.md</span>|[[#Action-Extra-Colors-Manager]]|
 
 ## Connection
 **Keywords**: Connection
@@ -365,7 +366,6 @@
 |<span>Action-Highlight-Background-UI.md</span>|[[#Action-Highlight-Background-UI]]|
 |<span>Action-Paste-Wrapped-Text.md</span>|[[#Action-Paste-Wrapped-Text]]|
 |<span>Action-Split-Text-Segments.md</span>|[[#Action-Split-Text-Segments]]|
-|<span>Action-Text-Bold.md</span>|[[#Action-Text-Bold]]|
 |<span>Action-Text-Copy-Elements.md</span>|[[#Action-Text-Copy-Elements]]|
 |<span>Feature-Input-Emoji-Engine.md</span>|[[#Feature-Input-Emoji-Engine]]|
 |<span>Feature-Markdown-Header-Engine.md</span>|[[#Feature-Markdown-Header-Engine]]|
@@ -1175,6 +1175,35 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
 </table>
 
+## Action-Extra-Colors-Manager
+
+```excalidraw-script-install
+https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/color/Action-Extra-Colors-Manager.md
+```
+<table>
+  <tr valign='top'>
+    <td class="label">Author</td>
+    <td class="data"><a href='https://github.com/ymjr'>@ymjr</a></td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Version</td>
+    <td class="data">2.1.0</td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Source</td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/color/Action-Extra-Colors-Manager.md'>File on GitHub/Gitee</a></td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Description</td>
+    <td class="data">弹出一个可视化的色彩管理面板，支持创建色组、添加/修改/删除颜色，并将配置自动保存为标准的国际化 JSON 格式。</td>
+  </tr>
+  
+  <tr valign='top'>
+    <td class="label">Features</td>
+    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>完美支持多分组，每组可容纳任意数量的颜色</li><li>支持中英双语自适应显示与编辑，不破坏异国语言数据</li><li>组内支持颜色名即时输入、可视化颜色拾取器更改 Hex、单色删除</li><li>自动序列化为标准的国际化 JSON 结构保存至插件后台</li></ul></td>
+  </tr>
+</table>
+
 ## Feature-Extra-Colors-Engine
 
 ```excalidraw-script-install
@@ -1187,7 +1216,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Version</td>
-    <td class="data">1.0.0</td>
+    <td class="data">1.0.1</td>
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
@@ -1195,12 +1224,12 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Description</td>
-    <td class="data">后台引擎：提供自定义颜色面板配置解析与全局色彩注入支持。</td>
+    <td class="data">后台引擎：提供自定义颜色面板配置的 JSON 解析与全局色彩注入支持，完美支持中英双语国际化切换。</td>
   </tr>
   
   <tr valign='top'>
     <td class="label">Features</td>
-    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>拦截 excalidrawExtraColors 钩子</li><li>从设置中读取 "Palette List" 字符串并解析为色值对象</li><li>将莫兰迪等自定义色系动态注入全局 Excalidraw UI</li></ul></td>
+    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>拦截 excalidrawExtraColors 钩子</li><li>支持组名与颜色名称</li><li>自动侦测 Obsidian 系统语言并实时切换 UI 显示</li><li>自动为每个不规则分组进行 5列网格末尾占位补齐</li></ul></td>
   </tr>
 </table>
 
@@ -2803,7 +2832,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Version</td>
-    <td class="data">1.0.1</td>
+    <td class="data">1.0.2</td>
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
@@ -3631,31 +3660,6 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
     <td class="label">Features</td>
     <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>完美继承原文本的样式、字体和颜色</li><li>利用 Canvas 原生 measureText 精准计算并保持拆分后文本的排版位置</li></ul></td>
   </tr>
-</table>
-
-## Action-Text-Bold
-
-```excalidraw-script-install
-https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Text-Bold.md
-```
-<table>
-  <tr valign='top'>
-    <td class="label">Author</td>
-    <td class="data"><a href='https://github.com/Bowen-0x00'>@Bowen-0x00</a></td>
-  </tr>
-  <tr valign='top'>
-    <td class="label">Version</td>
-    <td class="data">N/A</td>
-  </tr>
-  <tr valign='top'>
-    <td class="label">Source</td>
-    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/text/Action-Text-Bold.md'>File on GitHub/Gitee</a></td>
-  </tr>
-  <tr valign='top'>
-    <td class="label">Description</td>
-    <td class="data">暂无描述</td>
-  </tr>
-  
 </table>
 
 ## Action-Text-Copy-Elements

@@ -38,40 +38,24 @@ const handleLinkClick = async (contextPayload) => {
     const { ea, api } = contextPayload;
     if (!ea || !api) return;
 
-    const { element, link: linkText, event, view, subpath, file } = contextPayload;
+    const { element, link: linkText, event, view, subpath, file, keys } = contextPayload;
 
-    // ==========================================
-    // 1. 放行解析阶段
-    // ==========================================
-    // 如果 file 为空，说明当前是第一次拦截（还在获取链接指向的真实文件）。
-    // 必须放行 (return false)，让底层去把链接解析出真正的 target file。
     if (!file) {
         return false;
     }
 
     if (!api) return false;
 
-    // ==========================================
-    // 2. 核心防抖 (Debounce)
-    // ==========================================
-    // Excalidraw 底层可能会因为原生事件 + 插件合成事件在 100ms 内连续触发 2~3 次。
-    // 我们在这里做 500 毫秒的时空防抖，直接拦截掉多余的重复调用。
     const now = Date.now();
     const targetId = file.path + (subpath || "");
     const lastClick = ExcalidrawAutomate.plugin._ymjr_lastLinkClick;
     
     if (lastClick && (now - lastClick.time < 500) && lastClick.target === targetId) {
-        // 发现是短时间内的重复调用！
-        // 💡 关键：返回 true 告诉底层“我已经处理过了，请立刻停止默认打开文件的行为！”
         return true; 
     }
-    // 记录本次有效的点击
     ExcalidrawAutomate.plugin._ymjr_lastLinkClick = { time: now, target: targetId };
 
 
-    // ==========================================
-    // 3. 历史记录系统
-    // ==========================================
     if (!ExcalidrawAutomate.plugin._ymjr_linkOrigin) {
         ExcalidrawAutomate.plugin._ymjr_linkOrigin = [];
     }
@@ -81,13 +65,9 @@ const handleLinkClick = async (contextPayload) => {
     });
 
 
-    // ==========================================
-    // 4. 场景 A：同文件内的块/组引用跳转
-    // ==========================================
     if (view.file.path === file.path) {
-        if (!subpath) return true; // 如果同文件但没有 subpath，就停在原地拦截
+        if (!subpath) return true;
 
-        // 优化正则：使用非捕获组 (?:) 提取真正的 ID
         const match = subpath.match(/#\^(?:group=)*([\w-]+)/);
         if (!match) return true;
 
@@ -99,19 +79,15 @@ const handleLinkClick = async (contextPayload) => {
             const groupElements = ea.getElementsInTheSameGroupWithElement(targetElement, elements);
             const elementsToZoom = groupElements.length > 0 ? groupElements : [targetElement];
             
-            // 执行平滑缩放
             ea.viewZoomToElements(false, elementsToZoom);
         } else {
             new Notice(t("notice_not_found"));
         }
         
-        return true; // 返回 true 成功熔断拦截底层的打开动作！
+        return true;
     }
 
 
-    // ==========================================
-    // 5. 场景 B：跨文件跳转
-    // ==========================================
     const hoverEditorPlugin = app.plugins.plugins['obsidian-hover-editor'];
     const hasHoverEditor = hoverEditorPlugin?.activePopovers?.length > 0;
 
@@ -142,12 +118,9 @@ const handleLinkClick = async (contextPayload) => {
         await targetLeaf.openFile(file, { active: true, eState: { subpath } });
     }
 
-    return true; // 返回 true 成功熔断！
+    return true;
 };
 
-// ==========================================
-// 生命周期挂载与卸载
-// ==========================================
 async function mountFeature() {
     if (!window.EA_Core) return console.warn(t("log_no_core"));
     if (typeof ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] === "function") ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`]();
