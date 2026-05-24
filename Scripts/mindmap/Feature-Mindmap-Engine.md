@@ -2,7 +2,7 @@
 name: 脑图核心引擎
 description: 后台引擎：提供脑图折叠、排版、快捷键创建节点及实时高亮渲染。
 author: ymjr
-version: 1.0.1
+version: 1.0.2
 license: MIT
 usage: 后台常驻引擎，为带有 customData.mindmap 的元素提供折叠展开的右上角图标绘制，实现回车和 Tab 键的快捷节点生成与连线，实现方向键导航节点，以及监听节点的增删实现自动排版。
 features:
@@ -194,7 +194,7 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
     const direction = rootSettings.direction || "LR";
 
     let newParentId = dropZone === "child" ? targetEl.id : targetEl.customData.mindmap.parent;
-    if (!newParentId || newParentId === rootId) newParentId = targetEl.id; 
+    if (!newParentId) newParentId = rootId; 
     
     const newParentEl = elementsMap.get(newParentId);
     let shouldHide = newParentEl?.customData?.hide; 
@@ -212,23 +212,6 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
         shouldHide = newParentEl?.customData?.hide || newParentEl?.customData?.mindmap?.status === "close";
     }
     const newLevel = (newParentEl?.customData?.mindmap?.level || 0) + 1;
-
-    let branchRootId = draggedEl.id;
-    if (newLevel > 1) {
-        let p = newParentEl;
-        const pathVisited = new Set();
-        while(p && p.customData?.mindmap?.level > 2) { 
-            if (pathVisited.has(p.id) || p.customData.mindmap.parent === p.id) break;
-            pathVisited.add(p.id);
-            p = elementsMap.get(p.customData.mindmap.parent); 
-        }
-        if (p && p.customData?.mindmap?.level === 2) branchRootId = p.id;
-    }
-    
-    const rootChildren = allElements.filter(e => e.customData?.mindmap?.parent === rootId && e.id !== rootId && e.id !== draggedEl.id);
-    rootChildren.sort((a,b) => a.y - b.y);
-    let tempBranchIndex = rootChildren.findIndex(e => e.id === branchRootId);
-    if (tempBranchIndex === -1) tempBranchIndex = rootChildren.length;
 
     let arrowIdsToDelete = [];
     for(let i = 0; i < allElements.length; i++){
@@ -283,32 +266,30 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
     
     const eaDragged = ea.getElement(draggedEl.id);
     if (eaDragged) {
-        const style = resolveStyle(newLevel, tempBranchIndex, rootSettings);
-        if (style) {
-            eaDragged.backgroundColor = style.backgroundColor; eaDragged.strokeColor = style.strokeColor || "black"; eaDragged.strokeWidth = style.strokeWidth || 1;
-            if (eaDragged.type === "text") eaDragged.fontSize = style.fontSize;
-            if (eaDragged.boundElements) {
-                eaDragged.boundElements.forEach(b => {
-                    if (b.type === "text") { const text = ea.getElement(b.id); if (text) { text.strokeColor = style.textColor || "black"; text.fontSize = style.fontSize; } }
-                });
+        if (dropZone === "sibling-before") {
+            if (direction === "LR" || direction === "RL") {
+                eaDragged.y = targetEl.y - eaDragged.height / 2;
+                eaDragged.x = targetEl.x;
+            } else {
+                eaDragged.x = targetEl.x - eaDragged.width / 2;
+                eaDragged.y = targetEl.y;
+            }
+        } else if (dropZone === "sibling-after") {
+            if (direction === "LR" || direction === "RL") {
+                eaDragged.y = targetEl.y + targetEl.height + eaDragged.height / 2;
+                eaDragged.x = targetEl.x;
+            } else {
+                eaDragged.x = targetEl.x + targetEl.width + eaDragged.width / 2;
+                eaDragged.y = targetEl.y;
             }
         }
+        // 注意：无需在此再做复杂的 branchIndex 推算，排版引擎会全局修正
         eaDragged.customData = { ...eaDragged.customData, mindmap: { ...(eaDragged.customData?.mindmap || {}), status: eaDragged.customData?.mindmap?.status || "open", root: rootId, parent: newParentId, level: newLevel } };
     }
 
     descendantUpdates.forEach(d => {
         const eaChild = ea.getElement(d.child.id);
         if (eaChild) {
-            const style = resolveStyle(d.level, tempBranchIndex, rootSettings);
-            if (style) {
-                eaChild.backgroundColor = style.backgroundColor; eaChild.strokeColor = style.strokeColor || "black"; eaChild.strokeWidth = style.strokeWidth || 1;
-                if (eaChild.type === "text") eaChild.fontSize = style.fontSize;
-                if (eaChild.boundElements) {
-                    eaChild.boundElements.forEach(b => {
-                        if (b.type === "text") { const text = ea.getElement(b.id); if (text) { text.strokeColor = style.textColor || "black"; text.fontSize = style.fontSize; } }
-                    });
-                }
-            }
             eaChild.customData = { ...eaChild.customData, mindmap: { ...(eaChild.customData?.mindmap || {}), root: rootId, level: d.level } };
         }
     });
@@ -321,7 +302,13 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
     else if (direction === "BU") { startPort = "top"; endPort = "bottom"; }
 
     const arrowId = ea.connectObjects(newParentId, startPort, draggedEl.id, endPort, { startArrowHead: null });
-    if (shouldHide) { const eaArrow = ea.getElement(arrowId); if (eaArrow) eaArrow.customData = { ...(eaArrow.customData || {}), hide: true }; }
+    const eaArrow = ea.getElement(arrowId);
+    if (eaArrow) {
+        eaArrow.strokeWidth = rootSettings.strokeWidth || 1.5;
+        eaArrow.roughness = rootEl?.roughness ?? 0;
+        eaArrow.roundness = rootEl?.roundness;
+        if (shouldHide) eaArrow.customData = { ...(eaArrow.customData || {}), hide: true };
+    }
 
     if (oldParentId) {
         let eaOldParent = ea.getElement(oldParentId);
@@ -562,44 +549,16 @@ class Mindmap {
 
         let parentEl = this.elementsMap?.get(parentNode.id);
 
-        let branchIndex = 0;
-        const rootChildren = this.rootNode.children;
-        if (level === 2 && pos === "next") {
-            branchIndex = rootChildren.length;
-        } else {
-            let pNode = parentNode; let targetId = pos === "same" ? currentNode.id : parentNode.id;
-            const ancestorVisited = new Set();
-            while(pNode && pNode.level > 2) { 
-                if (ancestorVisited.has(pNode.id)) break;
-                ancestorVisited.add(pNode.id);
-                targetId = pNode.id; pNode = pNode.parent; 
-            }
-            if(pNode && pNode.level === 2) targetId = pNode.id;
-            branchIndex = rootChildren.findIndex(n => n.id === targetId);
-            if(branchIndex === -1) branchIndex = rootChildren.length;
-        }
-
-        const targetStyle = resolveStyle(level, branchIndex, rootSettings);
-
         ea.style.opacity = parentEl?.opacity || 100; ea.style.roughness = element.roughness || 0;
         ea.style.fillStyle = element.fillStyle || "solid"; ea.style.roundness = element.roundness; ea.style.fontFamily  = state.currentItemFontFamily;
 
-        if (targetStyle) {
-            ea.style.backgroundColor = targetStyle.backgroundColor;
-            ea.style.strokeColor = targetStyle.strokeColor || "black";
-            ea.style.fontSize = targetStyle.fontSize;
-            ea.style.strokeWidth = targetStyle.strokeWidth || 1;
-        }
-
-        const newElId = ea.addText(newElX, newElY, "new element", {box:true, textAlign: "center", textVerticalAlign: "middle", boxStrokeColor: ea.style.strokeColor});
+        const newElId = ea.addText(newElX, newElY, "new element", {box:true, textAlign: "center", textVerticalAlign: "middle", boxStrokeColor: "transparent"});
         const newEl = ea.getElement(newElId); 
-        newEl.strokeColor = targetStyle.strokeColor || "black";
         
         this.elementsMap.set(newEl.id, newEl); this.elements.push(newEl);
         const boundElId = newEl.boundElements[0].id; 
         const boundElement = ea.getElement(boundElId);
 
-        boundElement.strokeColor = targetStyle.textColor || "black";
         this.elementsMap.set(boundElId, boundElement); this.elements.push(boundElement);
         
         if(pos == "same") { newEl.width = element.width; newEl.height = element.height; }
@@ -643,13 +602,34 @@ class MindMapLayouter {
         for (let i = 0; i < roots.length; i++) {
             const rootNode = roots[i];
             this.visited.clear(); this.calculateDimensions(rootNode);   
+
+            // [新增]: 全局结构排序及颜色动态指派
+            const sortAndColor = (node, level, branchIndex) => {
+                node.level = level;
+                node.branchIndex = branchIndex;
+                
+                // 必须在对当前节点处理样式前，先基于物理坐标流式排序它的子节点
+                node.children.sort((a, b) => this.isHorizontal() ? ((a.el.y + a.el.height / 2) - (b.el.y + b.el.height / 2)) : ((a.el.x + a.el.width / 2) - (b.el.x + b.el.width / 2)));
+                
+                // 应用全局严格推算的样式结构
+                const style = resolveStyle(level, branchIndex, this.config);
+                this.updateNodeStyle(node, style);
+                
+                // 向下递归传递该基准分支对应的 branchIndex
+                node.children.forEach((child, idx) => {
+                    const childBranchIdx = (level === 1) ? idx : branchIndex;
+                    sortAndColor(child, level + 1, childBranchIdx);
+                });
+            };
+            sortAndColor(rootNode, 1, 0);
+
             let startX = rootNode.el.x; let startY = rootNode.el.y;
             if (this.isHorizontal()) { startY = rootNode.el.y + rootNode.el.height / 2 - rootNode.totalHeight / 2; } 
             else { startX = rootNode.el.x + rootNode.el.width / 2 - rootNode.totalWidth / 2; }
             this.assignPositions(rootNode, startX, startY);    
         }
     }
-    createNode(el) { return { el, parent: null, children: [], linkChildrensLines: [], totalHeight: 0, totalWidth: 0, childrenTotalHeight: 0, childrenTotalWidth: 0 }; }
+    createNode(el) { return { el, parent: null, children: [], linkChildrensLines: [], totalHeight: 0, totalWidth: 0, childrenTotalHeight: 0, childrenTotalWidth: 0, level: 1, branchIndex: 0 }; }
     isHorizontal() { return ["LR", "RL"].includes(this.config.direction); }
     calculateDimensions(node) {
         if (this.visited.has(node.el.id)) return;
@@ -677,6 +657,33 @@ class MindMapLayouter {
         if (this.isHorizontal()) { node.totalHeight = Math.max(node.el.height + this.config.defaultGap, sumH); } 
         else { node.totalWidth = Math.max(node.el.width + this.config.defaultGap, sumW); }
     }
+    
+    updateNodeStyle(node, style) {
+        if (!style || node.el.type === "arrow" || node.el.type === "line") return;
+        
+        if (node.el.customData && node.el.customData.mindmap) {
+            if (node.el.customData.mindmap.level !== node.level) {
+                node.el.customData = { ...node.el.customData, mindmap: { ...node.el.customData.mindmap, level: node.level } };
+                this.changedElementsSet.add(node.el);
+            }
+        }
+        if (node.el.backgroundColor !== style.backgroundColor) { node.el.backgroundColor = style.backgroundColor; this.changedElementsSet.add(node.el); }
+        if (node.el.strokeColor !== style.strokeColor && style.strokeColor) { node.el.strokeColor = style.strokeColor; this.changedElementsSet.add(node.el); }
+        if (node.el.strokeWidth !== style.strokeWidth && style.strokeWidth) { node.el.strokeWidth = style.strokeWidth; this.changedElementsSet.add(node.el); }
+        if (node.el.type === "text" && node.el.fontSize !== style.fontSize) { node.el.fontSize = style.fontSize; this.changedElementsSet.add(node.el); }
+        if (node.el.boundElements) {
+            node.el.boundElements.forEach(b => {
+                if (b.type === "text") {
+                    const textEl = this.elIdMap.get(b.id);
+                    if (textEl) {
+                        if (textEl.strokeColor !== style.textColor && style.textColor) { textEl.strokeColor = style.textColor; this.changedElementsSet.add(textEl); }
+                        if (textEl.fontSize !== style.fontSize) { textEl.fontSize = style.fontSize; this.changedElementsSet.add(textEl); }
+                    }
+                }
+            });
+        }
+    }
+
     assignPositions(node, bboxX, bboxY) {
         node.children.sort((a, b) => this.isHorizontal() ? ((a.el.y + a.el.height / 2) - (b.el.y + b.el.height / 2)) : ((a.el.x + a.el.width / 2) - (b.el.x + b.el.width / 2)));
         const sortedLines = [];
@@ -768,6 +775,12 @@ class MindMapLayouter {
                 else { line.points = [ [0, 0], [dx * 0.8905, dy * 0.4], [dx, dy] ]; }
             }
         }
+        
+        const style = resolveStyle(childNode.level, childNode.branchIndex, this.config);
+        if (style) {
+            if (line.strokeColor !== style.strokeColor && style.strokeColor) { line.strokeColor = style.strokeColor; this.changedElementsSet.add(line); }
+            if (line.strokeWidth !== style.strokeWidth && style.strokeWidth) { line.strokeWidth = style.strokeWidth; this.changedElementsSet.add(line); }
+        }
         this.changedElementsSet.add(line);
     }
 }
@@ -794,6 +807,8 @@ window.MindmapAPI = {
         const layouter = new MindMapLayouter(eaElements, {
             direction: rootSettings.direction || "LR", arrowType: rootSettings.arrowType || "normal", enableFixedPoint: rootSettings.enableFixedPoint ?? true,
             defaultGap: Number(rootSettings.defaultGap ?? 10), curveLength: Number(rootSettings.curveLength ?? 40), lengthBetweenElAndLine: Number(rootSettings.lengthBetweenElAndLine ?? 100),
+            theme: rootSettings.theme,
+            customTheme: rootSettings.customTheme
         });
         
         layouter.runLayout();
