@@ -1768,7 +1768,7 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
   <tr valign='top'>
     <td class="label">Version</td>
-    <td class="data">1.0.0</td>
+    <td class="data">1.0.1</td>
   </tr>
   <tr valign='top'>
     <td class="label">Source</td>
