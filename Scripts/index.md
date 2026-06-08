@@ -14,6 +14,7 @@
 |----|-----|
 |<span>Action-Toggle-Arrow-Animation.md</span>|[[#Action-Toggle-Arrow-Animation]]|
 |<span>Feature-Arrow-Animation-Engine.md</span>|[[#Feature-Arrow-Animation-Engine]]|
+|<span>Action-Progressive-Drawing-Animator.md</span>|[[#Action-Progressive-Drawing-Animator]]|
 
 ## Arrow
 **Keywords**: Arrow
@@ -401,6 +402,35 @@
 
 
 # Description and Installation
+## Action-Progressive-Drawing-Animator
+
+```excalidraw-script-install
+https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/animation/Action-Progressive-Drawing-Animator.md
+```
+<table>
+  <tr valign='top'>
+    <td class="label">Author</td>
+    <td class="data"><a href='https://github.com/ymjr'>@ymjr</a></td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Version</td>
+    <td class="data">1.1.1</td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Source</td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/animation/Action-Progressive-Drawing-Animator.md'>File on GitHub/Gitee</a></td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Description</td>
+    <td class="data">完美模拟手绘与打字过程。提供可拖拽的悬浮面板，支持滑动条与输入框双向绑定，方便实时调试参数。</td>
+  </tr>
+  
+  <tr valign='top'>
+    <td class="label">Features</td>
+    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>可拖拽的悬浮 UI 控制台，沉浸式调试不打断工作流</li><li>参数支持 Slider + Number Input 双向绑定同步</li><li>支持后台反复重启运行，无需反复开关面板</li><li>动态克隆元素强制绕过渲染缓存，实现完美打字机</li><li>支持全局动画与仅选中元素动画切换</li><li>修复文字动画重叠问题，打字机效果独立排期</li></ul></td>
+  </tr>
+</table>
+
 ## Action-Toggle-Arrow-Animation
 
 ```excalidraw-script-install
