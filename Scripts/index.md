@@ -158,6 +158,7 @@
 |<span>Action-Generate-Polygon.md</span>|[[#Action-Generate-Polygon]]|
 |<span>Action-Generate-Repeat-Selected.md</span>|[[#Action-Generate-Repeat-Selected]]|
 |<span>Feature-Bullet-Engine.md</span>|[[#Feature-Bullet-Engine]]|
+|<span>Action-Boolean-Operations.md</span>|[[#Action-Boolean-Operations]]|
 
 ## Gif
 **Keywords**: Gif
@@ -1755,6 +1756,34 @@ https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main
   </tr>
 </table>
 
+## Action-Boolean-Operations
+
+```excalidraw-script-install
+https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Boolean-Operations.md
+```
+<table>
+  <tr valign='top'>
+    <td class="label">Author</td>
+    <td class="data"><a href='https://github.com/ymjr'>@ymjr</a></td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Version</td>
+    <td class="data">1.0.0</td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Source</td>
+    <td class="data"><a href='https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/generate/Action-Boolean-Operations.md'>File on GitHub/Gitee</a></td>
+  </tr>
+  <tr valign='top'>
+    <td class="label">Description</td>
+    <td class="data">基于渲染缓存的布尔运算工具，支持合并、相交、差集等操作，完美保留自定义箭头的轮廓。</td>
+  </tr>
+  
+  <tr valign='top'>
+    <td class="label">Features</td>
+    <td class="data"><ul style="margin: 0; padding-left: 20px;"><li>路径精准提取：绕过 Rough.js 的混乱描边，提取底层的填充轮廓或渲染缓存，确保几何准确</li><li>智能几何生成：对原生图形采用纯数学多边形生成，杜绝草图交叉线导致的布尔崩溃</li><li>SVG 路径输出：布尔结果转化为轻量化 SVG Path (M...Z)，极大优化渲染性能并消除内部拼接缝隙</li><li>多语言支持：自动跟随 Obsidian 环境切换中英文提示</li></ul></td>
+  </tr>
+</table>
 ## Action-Bullet-Manager
 
 ```excalidraw-script-install
