@@ -2,7 +2,7 @@
 name: 复制脑图为Markdown
 description: 将选中的脑图导出为层级结构的 Markdown 列表文本，并复制到剪贴板。
 author: ymjr
-version: 1.1.1
+version: 1.1.2
 license: MIT
 usage: 选中脑图节点，运行此脚本即可将整棵树导出为 Markdown 文本到剪贴板。
 features:
