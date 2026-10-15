@@ -2,6 +2,7 @@
 !/Scripts/get_json.js
 *.py
 !/.github/scripts/notify_skill.py
+!/.github/scripts/notify_vault.py
 
 # Private maintenance instructions and credentials.
 /prompt
