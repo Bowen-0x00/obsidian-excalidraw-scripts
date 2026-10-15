@@ -1,841 +1,1516 @@
 ---
 name: 脑图核心引擎
-description: 脑图折叠、排版与触控操作；按视图隔离，安全处理深层树和无效连线。
+description: 后台引擎：提供脑图折叠、排版、快捷键创建节点及实时高亮渲染。
 author: ymjr
-version: 1.1.1
+version: 1.1.2
 license: MIT
-usage: 选中脑图节点，通过键盘或移动端操作条新增、编辑和折叠。根节点不支持新增同级节点。无效的循环或多父结构会提示错误，不修改画布。
+usage: 后台常驻引擎，为带有 customData.mindmap 的元素提供折叠展开的右上角图标绘制，实现回车和 Tab 键的快捷节点生成与连线，实现方向键导航节点，以及监听节点的增删实现自动排版。
 features:
-  - 按视图串行处理修改，切换文件或卸载后取消过期操作
-  - 迭代布局与树遍历，支持深层树并检测循环和多父节点
-  - 触控操作条、缩放补偿、拖挂预览及多指防误触
-  - 提供 window.MindmapAPI 供动作脚本调用
-  - 保留双击编辑与长按菜单；不抢占宿主手势
+  - 拦截 handleCanvasPointerDown/Up 实现点击展开/折叠按钮
+  - 拦截 onKeyDown 实现键盘方向键漫游脑图、Tab/Enter 快速新建节点、/键 折叠展开、空格键开始编辑
+  - 拦截 _renderInteractiveScene 在脑图根节点与父节点上绘制圆圈数字图标
+  - 提供 window.MindmapAPI 供脑图动作脚本调用进行连线刷新与布局重排
 dependencies:
-  - EA_Core Hook 系统
+  - 被所有脑图相关的 Action 脚本依赖
 autorun: true
 ---
 /*
 ```javascript
 */
-/** View-scoped controller and iterative forest model. No live scene objects are mutated. */
+
 var locales = {
   zh: {
-    tb_child: "子节点", tb_sibling: "同级", tb_fold: "折叠", tb_unfold: "展开", tb_edit: "编辑",
-    edit_text: "编辑节点文字", new_text: "新节点", error: "脑图操作失败：{message}",
-    stale: "画布已关闭、切换文件或引擎已停止，请重新操作。",
-    invalid: "脑图包含循环、重复父节点或断开的节点，请修复连线，或运行脑图恢复/解绑脚本。",
-    readonly: "当前画布为只读模式。", empty: "节点文字不能为空。",
-    settings: "请通过“修改脑图样式”脚本配置脑图。", mounted: "脑图引擎已启动", stopped: "脑图引擎已停止"
+    setting_desc: "⚠️ 请不要在此直接修改 JSON 代码。请运行 'Change Mindmap Style' 样式脚本，通过可视化 UI 面板修改脑图全局默认设置。",
+    log_parse_fail: "解析脑图配置失败，将使用默认回退配置",
+    notice_success: "✨ 解析生成完成，正在自动排版...",
+    notice_no_engine: "⚠️ 脑图核心引擎未运行，无法自动排版，请手动开启 Engine 脚本！",
+    log_unmounted: "[{id}] 🔌 已卸载",
+    log_mounted: "[{id}] 🚀 挂载完毕",
+    tb_child: "子节点",
+    tb_sibling: "同级",
+    tb_fold: "折叠",
+    tb_unfold: "展开",
+    tb_edit: "编辑"
   },
   en: {
-    tb_child: "Child", tb_sibling: "Sibling", tb_fold: "Fold", tb_unfold: "Unfold", tb_edit: "Edit",
-    edit_text: "Edit node text", new_text: "New node", error: "Mindmap action failed: {message}",
-    stale: "The drawing changed, closed, or the engine stopped. Please try again.",
-    invalid: "The mindmap contains a cycle, multiple parents, or disconnected nodes. Repair its connectors or run the rescue/detach script.",
-    readonly: "The drawing is read-only.", empty: "Node text cannot be empty.",
-    settings: "Use Change Mindmap Style to configure the mindmap.", mounted: "Mindmap engine started", stopped: "Mindmap engine stopped"
+    setting_desc: "⚠️ Do not modify JSON directly. Use 'Change Mindmap Style' script UI to update global defaults.",
+    log_parse_fail: "Failed to parse mindmap configuration, using fallback defaults.",
+    notice_success: "✨ Parse complete, re-layout in progress...",
+    notice_no_engine: "⚠️ Mindmap engine not running, layout skipped. Enable Engine script!",
+    log_unmounted: "[{id}] 🔌 Unmounted",
+    log_mounted: "[{id}] 🚀 Mounted successfully",
+    tb_child: "Child",
+    tb_sibling: "Sibling",
+    tb_fold: "Fold",
+    tb_unfold: "Unfold",
+    tb_edit: "Edit"
   }
 };
 locales["zh-cn"] = locales.zh;
-locales["zh-tw"] = { ...locales.zh, tb_child: "子節點", tb_sibling: "同級", tb_fold: "摺疊", tb_unfold: "展開", tb_edit: "編輯", edit_text: "編輯節點文字", new_text: "新節點", error: "腦圖操作失敗：{message}", stale: "畫布已關閉、切換檔案或引擎已停止，請重新操作。", invalid: "腦圖包含循環、重複父節點或斷開的節點，請修復連線，或執行腦圖恢復/解綁腳本。", readonly: "目前畫布為唯讀模式。", empty: "節點文字不能為空。", settings: "請透過修改腦圖樣式腳本設定腦圖。", mounted: "腦圖引擎已啟動", stopped: "腦圖引擎已停止" };
+locales["zh-tw"] = locales.zh;
 const SCRIPT_ID = "ymjr.feature.mindmap-engine";
-const plugin = ExcalidrawAutomate.plugin;
-const hostWindow = plugin.app.workspace.containerEl.ownerDocument.defaultView;
-const core = hostWindow.EA_Core;
-if (!core) throw new Error("EA_Core is not running");
-plugin[`disable_${SCRIPT_ID}`]?.();
-const LEVELS = [
-  { level: 1, strokeColor: "black", textColor: "#ffffff", fontSize: 24, strokeWidth: 2 },
-  { level: 2, strokeColor: "black", textColor: "black", fontSize: 20, strokeWidth: 1 },
-  { level: 3, strokeColor: "black", textColor: "black", fontSize: 16, strokeWidth: 1 },
-  { level: 4, strokeColor: "black", textColor: "black", fontSize: 14, strokeWidth: 1 }
+
+const DEFAULT_LEVELS = [
+    { level: 1, strokeColor: "black", textColor: "#ffffff", fontSize: 24, strokeWidth: 2 },
+    { level: 2, strokeColor: "black", textColor: "black", fontSize: 20, strokeWidth: 1 },
+    { level: 3, strokeColor: "black", textColor: "black", fontSize: 16, strokeWidth: 1 },
+    { level: 4, strokeColor: "black", textColor: "black", fontSize: 14, strokeWidth: 1 }
 ];
-const THEMES = {
-  rainbow: { name: "🌈 Rainbow", rootBg: "#343a40", colors: ["#e03131", "#1971c2", "#099268", "#e8590c", "#9c36b5", "#fcc419", "#3bc9db"], levels: LEVELS },
-  morandi: { name: "Morandi", rootBg: "#495057", colors: ["#5c7a82", "#b38269", "#788560", "#a68894", "#7a6c5d"], levels: LEVELS },
-  business: { name: "Business", rootBg: "#0b2545", colors: ["#1864ab", "#0b7285", "#087f5b", "#5f3dc4", "#c92a2a"], levels: LEVELS },
-  custom: { name: "Custom", rootBg: "#1e1e1e", colors: ["#e03131", "#1971c2", "#099268"], levels: LEVELS }
+
+const FALLBACK_THEMES = {
+    "rainbow": { name: "🌈 彩虹分枝", rootBg: "#343a40", colors: ["#e03131", "#1971c2", "#099268", "#e8590c", "#9c36b5", "#fcc419", "#3bc9db"], levels: DEFAULT_LEVELS },
+    "morandi": { name: "🎨 莫兰迪色", rootBg: "#495057", colors: ["#5c7a82", "#b38269", "#788560", "#a68894", "#7a6c5d"], levels: DEFAULT_LEVELS },
+    "business": { name: "💼 商务蓝调", rootBg: "#0b2545", colors: ["#1864ab", "#0b7285", "#087f5b", "#5f3dc4", "#c92a2a"], levels: DEFAULT_LEVELS },
+    "custom": { name: "⚙️ 自定义色", rootBg: "#1e1e1e", colors: ["#e03131", "#1971c2", "#099268", "#e8590c", "#9c36b5", "#fcc419"], levels: DEFAULT_LEVELS }
 };
-const DEFAULTS = { direction: "LR", arrowType: "normal", defaultGap: 15, curveLength: 40, lengthBetweenElAndLine: 100, enableFixedPoint: true, theme: "rainbow" };
-const finite = (value, fallback, min = 0, max = 10000) => Number.isFinite(Number(value)) ? Math.min(max, Math.max(min, Number(value))) : fallback;
-const clone = value => JSON.parse(JSON.stringify(value));
-const append = (map, key, value) => { if (!map.has(key)) map.set(key, []); map.get(key).push(value); };
-const isNode = el => el && !el.isDeleted && !el.containerId && !["arrow", "line"].includes(el.type);
-const report = error => { console.error(`[${SCRIPT_ID}]`, error); new ea.obsidian.Notice(t("error", { message: error.message || String(error) })); };
-/** Reads live settings, including changes saved after engine startup. */
-function getConfiguration() {
-  let config;
-  try { config = JSON.parse(plugin.settings.scriptEngineSettings?.Mindmap_Engine?.["Mindmap Configuration"]?.value || "{}"); } catch { config = {}; }
-  if (!config || typeof config !== "object") config = {};
-  const storedThemes = config.themes && typeof config.themes === "object" && Object.keys(config.themes).length ? config.themes : THEMES;
-  const themes = {};
-  for (const [key, value] of Object.entries(storedThemes)) {
-    const base = THEMES[key] || THEMES.rainbow;
-    const theme = { ...base, ...(value && typeof value === "object" ? value : {}) };
-    if (!Array.isArray(theme.colors) || !theme.colors.length) theme.colors = base.colors;
-    if (!Array.isArray(theme.levels) || !theme.levels.length) theme.levels = base.levels;
-    themes[key] = theme;
-  }
-  const defaultSettings = normalizeSettings(config.defaultSettings);
-  if (!themes[defaultSettings.theme]) defaultSettings.theme = Object.keys(themes)[0];
-  return { ...config, themes, defaultSettings };
-}
-function normalizeSettings(value) {
-  const s = { ...DEFAULTS, ...(value && typeof value === "object" ? value : {}) };
-  s.direction = ["LR", "RL", "TD", "BU"].includes(s.direction) ? s.direction : "LR";
-  s.arrowType = ["normal", "elbow", "curve"].includes(s.arrowType) ? s.arrowType : "normal";
-  for (const key of ["defaultGap", "curveLength", "lengthBetweenElAndLine"]) s[key] = finite(s[key], DEFAULTS[key]);
-  s.enableFixedPoint = s.enableFixedPoint !== false;
-  return s;
-}
-function styleAt(level, branch, settings, themes) {
-  const base = themes[settings.theme] || THEMES.rainbow;
-  const theme = { ...THEMES.rainbow, ...(base && typeof base === "object" ? base : {}), ...(settings.theme === "custom" && settings.customTheme || {}) };
-  const levels = Array.isArray(theme.levels) && theme.levels.length ? theme.levels : LEVELS;
-  const conf = { ...LEVELS[Math.min(level - 1, LEVELS.length - 1)], ...levels[Math.min(level - 1, levels.length - 1)] };
-  const colors = Array.isArray(theme.colors) && theme.colors.length ? theme.colors : THEMES.rainbow.colors;
-  let backgroundColor = level === 1 ? theme.rootBg : colors[branch % colors.length];
-  if (level > 2 && /^#[\da-f]{6}$/i.test(backgroundColor)) {
-    const delta = Math.round(2.55 * Math.min((level - 2) * 15, 60));
-    backgroundColor = "#" + backgroundColor.slice(1).match(/../g).map(c => Math.min(255, parseInt(c, 16) + delta).toString(16).padStart(2, "0")).join("");
-  }
-  return { backgroundColor, strokeColor: conf.strokeColor || "black", textColor: conf.textColor || "black", fontSize: finite(conf.fontSize, 20, 8, 200), strokeWidth: finite(conf.strokeWidth, 1, 0.1, 20) };
-}
-/** Index once; bound text, groups, frames and swimlane attachments are never independent tree nodes. */
-function indexScene(elements) {
-  const map = new Map(), groups = new Map(), attachments = new Map();
-  for (const el of elements) {
-    if (!el || el.isDeleted) continue;
-    map.set(el.id, el);
-    for (const group of el.groupIds || []) append(groups, group, el);
-    if (el.containerId) append(attachments, el.containerId, el);
-    if (el.frameId) append(attachments, el.frameId, el);
-    if (el.customData?.parent) append(attachments, el.customData.parent, el);
-  }
-  return { map, groups, attachments };
-}
-function related(index, nodes) {
-  const result = new Map();
-  const nodeIds = new Set(nodes.map(n => n.id));
-  for (const node of nodes) {
-    result.set(node.id, node);
-    const add = el => { if (el && (!el.customData?.mindmap || nodeIds.has(el.id)) && !el.customData?.zoomHide) result.set(el.id, el); };
-    for (const bound of node.boundElements || []) if (bound.type !== "arrow") add(index.map.get(bound.id));
-    for (const group of node.groupIds || []) for (const el of index.groups.get(group) || []) add(el);
-    for (const el of index.attachments.get(node.id) || []) add(el);
-  }
-  return [...result.values()];
-}
-/** Validates all edges before mutation. Iteration is bounded by nodes + edges even for corrupt scenes. */
-function buildForest(elements, initialize = false) {
-  const index = indexScene(elements), nodes = new Map(), arrows = [];
-  for (const el of index.map.values()) if (isNode(el) && (initialize || el.customData?.mindmap)) nodes.set(el.id, { el, parent: null, children: [], arrow: null, level: 1, branch: 0 });
-  for (const el of index.map.values()) {
-    if (!["arrow", "line"].includes(el.type)) continue;
-    const a = nodes.get(el.startBinding?.elementId), b = nodes.get(el.endBinding?.elementId);
-    if (!a || !b) continue;
-    if (!initialize && a.el.customData.mindmap.root !== b.el.customData.mindmap.root) continue;
-    if (a === b || b.parent) throw new Error(t("invalid"));
-    b.parent = a; b.arrow = el; a.children.push(b); arrows.push(el);
-  }
-  const roots = [...nodes.values()].filter(n => !n.parent), order = [], stack = [...roots].reverse();
-  while (stack.length) {
-    const node = stack.pop(); order.push(node);
-    node.level = node.parent ? node.parent.level + 1 : 1;
-    for (let i = node.children.length - 1; i >= 0; i--) stack.push(node.children[i]);
-  }
-  if (order.length !== nodes.size) throw new Error(t("invalid"));
-  if (!initialize) for (const node of order) {
-    const mm = node.el.customData.mindmap;
-    if ((!node.parent && mm.root !== node.el.id) || (node.parent && mm.parent !== node.parent.el.id)) throw new Error(t("invalid"));
-  }
-  return { ...index, nodes, roots, order, arrows };
-}
-function descendants(node, includeSelf = false) {
-  const result = [], stack = includeSelf ? [node] : [...node.children].reverse();
-  while (stack.length) { const n = stack.pop(); result.push(n); for (let i = n.children.length - 1; i >= 0; i--) stack.push(n.children[i]); }
-  return result;
-}
-function treeElements(elements, rootId) {
-  const index = indexScene(elements), nodes = [...index.map.values()].filter(el => isNode(el) && el.customData?.mindmap?.root === rootId);
-  const ids = new Set(nodes.map(el => el.id));
-  const result = related(index, nodes);
-  for (const el of index.map.values()) if (["arrow", "line"].includes(el.type) && ids.has(el.startBinding?.elementId) && ids.has(el.endBinding?.elementId)) result.push(el);
-  return result;
-}
-function updateLine(parent, child, settings, style) {
-  const line = child.arrow, a = parent.el, b = child.el;
-  if (!line) return;
-  const ports = { LR: [[1, .5], [0, .5]], RL: [[0, .5], [1, .5]], TD: [[.5, 1], [.5, 0]], BU: [[.5, 0], [.5, 1]] }[settings.direction];
-  line.x = a.x + a.width * ports[0][0]; line.y = a.y + a.height * ports[0][1];
-  const dx = b.x + b.width * ports[1][0] - line.x, dy = b.y + b.height * ports[1][1] - line.y;
-  line.angle = 0;
-  for (const [key, node, port] of [["startBinding", a, ports[0]], ["endBinding", b, ports[1]]]) {
-    line[key] = { ...line[key], elementId: node.id, focus: 0, gap: 1 };
-    if (settings.enableFixedPoint) { line[key].fixedPoint = port; line[key].mode = "inside"; }
-    else { delete line[key].fixedPoint; delete line[key].mode; }
-  }
-  const horizontal = ["LR", "RL"].includes(settings.direction);
-  line.elbowed = settings.arrowType === "elbow";
-  line.customData = { ...line.customData };
-  if (settings.arrowType === "curve") line.customData.curveArrow = true; else delete line.customData.curveArrow;
-  if (line.elbowed) line.points = horizontal ? [[0, 0], [dx / 2, 0], [dx / 2, dy], [dx, dy]] : [[0, 0], [0, dy / 2], [dx, dy / 2], [dx, dy]];
-  else if (line.customData.curveArrow || parent.children.length === 1 || (horizontal ? Math.abs(dy) : Math.abs(dx)) < 1) line.points = [[0, 0], [dx, dy]];
-  else line.points = horizontal ? [[0, 0], [dx * .4, dy * .8905], [dx, dy]] : [[0, 0], [dx * .8905, dy * .4], [dx, dy]];
-  line.width = Math.abs(dx); line.height = Math.abs(dy);
-  line.strokeColor = style.strokeColor; line.strokeWidth = style.strokeWidth;
-}
-/** Two iterative passes (postorder dimensions, preorder coordinates); move each attachment once. */
-function layoutCopies(elements, workingEA) {
-  const forest = buildForest(elements), config = getConfiguration(), attached = new Set();
-  for (const root of forest.roots) {
-    const settings = normalizeSettings(root.el.customData.mindmap.settings || config.defaultSettings);
-    const horizontal = ["LR", "RL"].includes(settings.direction), order = [], stack = [root];
-    while (stack.length) {
-      const node = stack.pop(); order.push(node);
-      node.children.sort((a, b) => horizontal ? a.el.y + a.el.height / 2 - b.el.y - b.el.height / 2 : a.el.x + a.el.width / 2 - b.el.x - b.el.width / 2);
-      node.level = node.parent ? node.parent.level + 1 : 1;
-      node.el.customData.mindmap.level = node.level;
-      const style = styleAt(node.level, node.branch, settings, config.themes);
-      Object.assign(node.el, { backgroundColor: style.backgroundColor, strokeColor: style.strokeColor, strokeWidth: style.strokeWidth });
-      if (node.el.type === "text") { node.el.strokeColor = style.textColor; node.el.fontSize = style.fontSize; }
-      for (const bound of node.el.boundElements || []) {
-        const text = forest.map.get(bound.id);
-        if (text?.type === "text") { text.strokeColor = style.textColor; text.fontSize = style.fontSize; }
-      }
-      // Native measurements account for changed font sizes before calculating subtree dimensions.
-      if (workingEA) for (const el of [node.el, ...(node.el.boundElements || []).filter(b => b.type === "text").map(b => forest.map.get(b.id))]) {
-        if (el?.type !== "text") continue;
-        workingEA.style.fontSize = el.fontSize; workingEA.style.fontFamily = el.fontFamily;
-        const measure = workingEA.measureText(el.originalText || el.text || " ");
-        if (!el.containerId) { el.width = measure.width; el.height = measure.height; }
-        else { node.el.width = Math.max(node.el.width, measure.width + 20); node.el.height = Math.max(node.el.height, measure.height + 20); }
-      }
-      for (const value of [node.el.x, node.el.y, node.el.width, node.el.height]) if (!Number.isFinite(value)) throw new Error(t("invalid"));
-      for (let i = node.children.length - 1; i >= 0; i--) { node.children[i].branch = node.level === 1 ? i : node.branch; stack.push(node.children[i]); }
-    }
-    for (let i = order.length - 1; i >= 0; i--) {
-      const n = order[i]; n.childrenSpan = n.children.reduce((sum, child) => sum + child.span, 0);
-      n.span = n.el.customData?.hide ? 0 : Math.max((horizontal ? n.el.height : n.el.width) + settings.defaultGap, n.childrenSpan);
-    }
-    root.cross = (horizontal ? root.el.y + root.el.height / 2 : root.el.x + root.el.width / 2) - root.span / 2;
-    for (const n of order) {
-      if (!n.parent) { n.x = n.el.x; n.y = n.el.y; }
-      else if (horizontal) { n.x = n.along; n.y = n.cross + n.span / 2 - n.el.height / 2; }
-      else { n.x = n.cross + n.span / 2 - n.el.width / 2; n.y = n.along; }
-      const dx = n.x - n.el.x, dy = n.y - n.el.y;
-      n.el.x = n.x; n.el.y = n.y;
-      for (const extra of related(forest, [n.el])) {
-        if (extra.id === n.el.id || forest.nodes.has(extra.id) || attached.has(extra.id)) continue;
-        extra.x += dx; extra.y += dy; attached.add(extra.id);
-      }
-      let cross = n.cross + (n.span - n.childrenSpan) / 2;
-      const gap = settings.lengthBetweenElAndLine + settings.curveLength;
-      for (const child of n.children) {
-        child.cross = cross; cross += child.span;
-        child.along = settings.direction === "LR" ? n.x + n.el.width + gap : settings.direction === "RL" ? n.x - gap - child.el.width : settings.direction === "TD" ? n.y + n.el.height + gap : n.y - gap - child.el.height;
-      }
-      if (n.parent) updateLine(n.parent, n, settings, styleAt(n.level, n.branch, settings, config.themes));
-    }
-  }
-  return forest;
-}
-let stopped = false;
-const controllers = new Map();
-function getView(context) {
-  const leaves = plugin.app.workspace.getLeavesOfType("excalidraw");
-  if (context.canvas) return leaves.find(leaf => leaf.view.containerEl?.contains(context.canvas))?.view;
-  if (context.App?.api) return leaves.find(leaf => leaf.view.excalidrawAPI === context.App.api)?.view;
-  if (context.scene) {
-    const elements = context.scene.getNonDeletedElements();
-    return leaves.find(leaf => {
-      const scene = leaf.view.excalidrawAPI?.getSceneElements();
-      return scene === elements || (context.selectedElements?.[0] && scene?.includes(context.selectedElements[0]));
-    })?.view;
-  }
-  const target = context.event?.target || context.App?.interactiveCanvas;
-  if (target) return leaves.find(leaf => leaf.view.containerEl?.contains(target))?.view;
-  return undefined;
-}
-function validController(controller) {
-  const v = controller.view;
-  return !stopped && !controller.disposed && v._loaded && !v.semaphores?.viewunload && v.file?.path === controller.path && v.excalidrawAPI === controller.api && v.containerEl.isConnected;
-}
-function assertController(controller) { if (!validController(controller)) throw new Error(t("stale")); }
-function disposeController(c) {
-  if (c.disposed) return;
-  c.disposed = true;
-  for (const remove of c.cleanup) remove();
-  c.inputModal?.close();
-  c.toolbar?.remove(); c.worker.destroy(); c.gesture = null; c.drop = null;
-  controllers.delete(c.view);
-}
-function getController(view) {
-  if (stopped || !view || !view._loaded || !view.excalidrawAPI || !view.file) throw new Error(t("stale"));
-  let c = controllers.get(view);
-  if (c && !validController(c)) { disposeController(c); c = null; }
-  if (c) return c;
-  const worker = ExcalidrawAutomate.getAPI(view), doc = view.containerEl.ownerDocument;
-  c = { view, path: view.file.path, api: view.excalidrawAPI, worker, queue: Promise.resolve(), cleanup: [], disposed: false, gesture: null, pointers: new Set(), toolbar: null, drop: null, dragging: false, uiKey: "" };
-  controllers.set(view, c);
-  const listen = (target, name, fn, options) => { target.addEventListener(name, fn, options); c.cleanup.push(() => target.removeEventListener(name, fn, options)); };
-  const cancel = () => { c.gesture = null; c.drop = null; c.dragging = false; c.pointers.clear(); };
-  listen(doc, "pointerdown", event => {
-    if (!view.containerEl.contains(event.target)) return;
-    c.pointers.add(event.pointerId);
-    if (c.pointers.size > 1 && c.gesture) c.gesture.cancelled = true;
-  }, true);
-  listen(doc, "pointermove", event => {
-    const g = c.gesture;
-    if (g && g.id === event.pointerId && Math.hypot(event.clientX - g.x, event.clientY - g.y) > 8) g.cancelled = true;
-  }, true);
-  listen(doc, "pointerup", event => { c.pointers.delete(event.pointerId); }, true);
-  listen(doc, "pointercancel", cancel, true);
-  listen(doc, "lostpointercapture", event => { if (c.pointers.has(event.pointerId)) cancel(); }, true);
-  listen(doc, "contextmenu", event => { if (view.containerEl.contains(event.target)) cancel(); }, true);
-  listen(doc.defaultView, "blur", cancel);
-  c.cleanup.push(c.api.onChange(() => { if (validController(c)) updateToolbar(c); else disposeController(c); }));
-  return c;
-}
-/** A view-local serialized mutation with its own EA workbench. Never falls back to the active drawing. */
-function runAction(activeEa, callback, { allowViewMode = false } = {}) {
-  const view = activeEa?.targetView;
-  const c = getController(view), path = c.path, api = c.api;
-  const result = c.queue.then(async () => {
-    assertController(c);
-    if (c.path !== path || c.api !== api) throw new Error(t("stale"));
-    if (!allowViewMode && api.getAppState().viewModeEnabled) throw new Error(t("readonly"));
-    c.worker.clear();
-    const snapshot = () => api.getSceneElements().map(el => [el.id, el.version, el.versionNonce]);
-    let baseline = snapshot();
-    const assertCurrent = () => {
-      assertController(c);
-      if (!allowViewMode && api.getAppState().viewModeEnabled) throw new Error(t("readonly"));
-      const current = api.getSceneElements();
-      if (current.length !== baseline.length || current.some((el, i) => el.id !== baseline[i][0] || el.version !== baseline[i][1] || el.versionNonce !== baseline[i][2])) throw new Error(t("stale"));
+
+const FALLBACK_SETTINGS = {
+    direction: "LR", arrowType: "normal", defaultGap: 15, curveLength: 40, lengthBetweenElAndLine: 100, enableFixedPoint: true,
+    theme: "rainbow",
+    customTheme: { rootBg: FALLBACK_THEMES["custom"].rootBg, colors: [...FALLBACK_THEMES["custom"].colors], levels: JSON.parse(JSON.stringify(DEFAULT_LEVELS)) }
+};
+
+let engineSettings = ExcalidrawAutomate.plugin.settings.scriptEngineSettings["Mindmap_Engine"] || {};
+if (!engineSettings["Mindmap Configuration"]) {
+    engineSettings["Mindmap Configuration"] = {
+        value: JSON.stringify({ themes: FALLBACK_THEMES, defaultSettings: FALLBACK_SETTINGS }),
+        description: t("setting_desc")
     };
-    const session = { ea: c.worker, api, view, filePath: path, assertCurrent,
-      async commit(capture = "IMMEDIATELY") {
-        assertCurrent();
-        // Text parsing awaits inside view.addElements; recheck immediately before native publication.
-        const result = await view.addElements({ newElements: c.worker.getElements(), save: false, newElementsOnTop: false, shouldRestoreElements: false, captureUpdate: capture, validateBeforePublish: assertCurrent });
-        assertController(c);
-        baseline = snapshot();
-        if (result === false) throw new Error(t("stale"));
-      },
-      async layout(elements, history = true) {
-        assertCurrent();
-        const pending = new Map(elements.filter(Boolean).map(el => [el.id, el]));
-        for (const el of c.worker.getElements()) pending.set(el.id, el);
-        c.worker.clear(); c.worker.copyViewElementsToEAforEditing([...pending.values()]);
-        layoutCopies(c.worker.getElements(), c.worker);
-        await session.commit(history ? "IMMEDIATELY" : "EVENTUALLY");
-      }
-    };
-    try { return await callback(session); } finally { c.worker.clear(); }
-  });
-  c.queue = result.catch(() => {});
-  return result;
+    ExcalidrawAutomate.plugin.settings.scriptEngineSettings["Mindmap_Engine"] = engineSettings;
+    (async () => { await ExcalidrawAutomate.plugin.saveSettings(); })(); 
 }
-function fire(promise) { Promise.resolve(promise).catch(report); }
-function singleNode(api) {
-  const state = api.getAppState(), selected = api.getSceneElements().filter(el => state.selectedElementIds?.[el.id] && !el.containerId);
-  return selected.length === 1 && isNode(selected[0]) && selected[0].customData?.mindmap ? selected[0] : null;
+
+let mindmapConfig;
+try {
+    mindmapConfig = JSON.parse(engineSettings["Mindmap Configuration"].value);
+} catch (e) {
+    console.error(t("log_parse_fail"), e);
+    mindmapConfig = { themes: FALLBACK_THEMES, defaultSettings: FALLBACK_SETTINGS };
 }
-function freshNode(session, id) {
-  const el = session.api.getSceneElements().find(el => el.id === id && !el.isDeleted);
-  if (!el?.customData?.mindmap) throw new Error(t("stale"));
-  return el;
+
+const THEMES = mindmapConfig.themes || FALLBACK_THEMES;
+const DEFAULT_SETTINGS = mindmapConfig.defaultSettings || FALLBACK_SETTINGS;
+
+function lightenHex(hex, percent) {
+    if (!hex || hex === "transparent") return hex;
+    let num = parseInt(hex.replace("#",""), 16);
+    if (isNaN(num)) return hex;
+    let amt = Math.round(2.55 * percent);
+    let R = (num >> 16) + amt; let G = (num >> 8 & 0x00FF) + amt; let B = (num & 0x0000FF) + amt;
+    return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1);
 }
-function toggleFold(selected, App, activeEa, recurse = null) {
-  return runAction(activeEa, async session => {
-    const el = freshNode(session, selected.id), elements = treeElements(session.api.getSceneElements(), el.customData.mindmap.root);
-    const forest = buildForest(elements), node = forest.nodes.get(el.id);
-    if (!node?.children.length) return;
-    session.ea.copyViewElementsToEAforEditing(elements);
-    const open = el.customData.mindmap.status === "open", recursive = open || recurse === true;
-    const affected = descendants(node);
-    const updates = new Map();
-    for (const n of affected) if (recursive || n.parent === node) updates.set(n.el.id, n);
-    for (const n of updates.values()) {
-      const copy = session.ea.getElement(n.el.id);
-      copy.customData.mindmap.status = recursive ? (open ? "close" : "open") : copy.customData.mindmap.status;
-      for (const extra of related(forest, [n.el])) {
-        const item = session.ea.getElement(extra.id);
-        if (item) item.customData = { ...item.customData, hide: open };
-      }
-      if (n.arrow) session.ea.getElement(n.arrow.id).customData = { ...n.arrow.customData, hide: open };
+
+function resolveStyle(level, branchIndex, settings) {
+    const themeKey = settings?.theme || "rainbow";
+    let theme = THEMES[themeKey] || THEMES["rainbow"];
+    
+    if (themeKey === "custom" && settings?.customTheme) {
+        theme = { ...theme, ...settings.customTheme };
     }
-    session.ea.getElement(el.id).customData.mindmap.status = open ? "close" : "open";
-    await session.layout(elements, true);
-  }, { allowViewMode: true });
-}
-function isMobile(c) {
-  return ea.obsidian.Platform.isMobile || c.api.getAppState().stylesPanelMode === "mobile" || c.view.containerEl.ownerDocument.defaultView.matchMedia("(pointer: coarse)").matches;
-}
-/** Mobile editing uses a native multiline modal so its textarea focuses during the trusted click. */
-function promptText(view, initial) {
-  const c = getController(view);
-  if (c.inputModal) return Promise.resolve(null);
-  return new Promise(resolve => {
-    const { Modal, Setting } = ea.obsidian;
-    class TextModal extends Modal {
-      onOpen() {
-        this.setTitle(t("edit_text"));
-        const input = this.contentEl.createEl("textarea", { attr: { "aria-label": t("edit_text"), rows: "5" } });
-        input.value = initial; input.setCssStyles({ width: "100%", minHeight: "120px" });
-        new Setting(this.contentEl).addButton(b => b.setButtonText(t("tb_edit")).setCta().onClick(() => {
-          if (!input.value.trim()) { new ea.obsidian.Notice(t("empty")); return; }
-          this.result = input.value; this.close();
-        }));
-        input.focus();
-      }
-      onClose() { c.inputModal = null; resolve(this.result ?? null); this.contentEl.empty(); }
+
+    const levels = theme.levels || DEFAULT_LEVELS;
+    const lvlConfig = level <= levels.length ? levels[level - 1] : levels[levels.length - 1];
+
+    let bg = "transparent";
+    if (level === 1) {
+        bg = theme.rootBg;
+    } else {
+        const colors = theme.colors && theme.colors.length > 0 ? theme.colors : THEMES["rainbow"].colors;
+        const baseColor = colors[branchIndex % colors.length];
+        bg = level > 2 ? lightenHex(baseColor, Math.min((level - 2) * 15, 60)) : baseColor;
     }
-    c.inputModal = new TextModal(plugin.app);
-    c.inputModal.open();
-  });
+
+    return { backgroundColor: bg, textColor: lvlConfig.textColor, strokeColor: lvlConfig.strokeColor, fontSize: lvlConfig.fontSize, strokeWidth: lvlConfig.strokeWidth };
 }
-async function startEdit(selected, App, activeEa) {
-  const c = getController(activeEa?.targetView || getView({ App })); assertController(c);
-  if (c.api.getAppState().viewModeEnabled) return;
-  const node = c.api.getSceneElements().find(el => el.id === selected.id), index = indexScene(c.api.getSceneElements());
-  const text = node?.type === "text" ? node : index.map.get(node?.boundElements?.find(b => b.type === "text")?.id);
-  if (!text) return;
-  if (App && getView({ App }) === c.view && !isMobile(c)) {
-    App.startTextEditing(text === node ? { sceneX: node.x, sceneY: node.y, textElement: text } : { sceneX: node.x, sceneY: node.y, container: node });
-    return;
-  }
-  const textVersion = text.version, textNonce = text.versionNonce;
-  const value = await promptText(c.view, text.originalText || text.text || "");
-  if (value === null) return;
-  assertController(c);
-  await runAction(c.worker, async session => {
-    const current = freshNode(session, selected.id), elements = treeElements(session.api.getSceneElements(), current.customData.mindmap.root);
-    const liveText = session.api.getSceneElements().find(el => el.id === text.id);
-    if (!liveText || liveText.version !== textVersion || liveText.versionNonce !== textNonce) throw new Error(t("stale"));
-    session.ea.copyViewElementsToEAforEditing(elements);
-    const copy = session.ea.getElement(text.id); copy.originalText = value; copy.text = value;
-    if (typeof copy.rawText === "string") copy.rawText = value;
-    await session.layout(elements, true);
-  });
-}
-async function addNode(selected, pos, App, activeEa) {
-  const c = getController(activeEa?.targetView || getView({ App }));
-  const live = freshNode({ api: c.api }, selected.id);
-  if (pos === "same" && live.id === live.customData.mindmap.root) return null;
-  const inline = App && getView({ App }) === c.view && !isMobile(c);
-  const value = inline ? t("new_text") : await promptText(c.view, t("new_text"));
-  if (value === null) return null;
-  assertController(c);
-  return runAction(c.worker, async session => {
-    const source = freshNode(session, selected.id), elements = treeElements(session.api.getSceneElements(), source.customData.mindmap.root), forest = buildForest(elements);
-    const selectedNode = forest.nodes.get(source.id), parent = pos === "same" ? selectedNode.parent : selectedNode;
-    if (!parent) return null;
-    session.ea.copyViewElementsToEAforEditing(elements);
-    const settings = normalizeSettings(forest.map.get(source.customData.mindmap.root).customData.mindmap.settings || getConfiguration().defaultSettings);
-    Object.assign(session.ea.style, { fontFamily: session.api.getAppState().currentItemFontFamily, roughness: source.roughness ?? 0, fillStyle: source.fillStyle || "solid", opacity: source.opacity ?? 100, fontSize: 20 });
-    const horizontal = ["LR", "RL"].includes(settings.direction);
-    let x = source.x, y = source.y;
-    if (pos === "same") { if (horizontal) y += source.height + 20; else x += source.width + 20; }
-    else {
-      if (horizontal) x += source.width + 140; else y += source.height + 140;
-      for (const child of parent.children) {
-        if (horizontal) y = Math.max(y, child.el.y + child.el.height + 20);
-        else x = Math.max(x, child.el.x + child.el.width + 20);
-      }
-    }
-    const id = session.ea.addText(x, y, value, { box: true, textAlign: "center", textVerticalAlign: "middle" });
-    const added = session.ea.getElement(id);
-    added.customData = { ...added.customData, mindmap: { root: source.customData.mindmap.root, parent: parent.el.id, level: parent.level + 1, status: "open" } };
-    const p = session.ea.getElement(parent.el.id); p.customData.mindmap.status = "open";
-    for (const child of parent.children) {
-      for (const extra of related(forest, [child.el])) {
-        const item = session.ea.getElement(extra.id);
-        if (item) item.customData = { ...item.customData, hide: false };
-      }
-      if (child.arrow) session.ea.getElement(child.arrow.id).customData = { ...child.arrow.customData, hide: false };
-    }
-    const ports = { LR: ["right", "left"], RL: ["left", "right"], TD: ["bottom", "top"], BU: ["top", "bottom"] }[settings.direction];
-    session.ea.connectObjects(parent.el.id, ports[0], id, ports[1], { startArrowHead: null });
-    await session.layout(elements, true);
-    session.api.updateScene({ appState: { selectedElementIds: { [id]: true }, selectedGroupIds: {}, editingGroupId: null } });
-    const published = session.api.getSceneElements().find(el => el.id === id);
-    if (!published) throw new Error(t("stale"));
-    if (inline) App.startTextEditing({ sceneX: published.x, sceneY: published.y, container: published });
-    return published;
-  });
-}
-function iconCenter(el, map) {
-  const root = map.get(el.customData.mindmap.root), direction = root?.customData?.mindmap?.settings?.direction || "LR";
-  const cx = el.x + el.width / 2, cy = el.y + el.height / 2;
-  const dx = direction === "LR" ? el.width / 2 : direction === "RL" ? -el.width / 2 : 0;
-  const dy = direction === "TD" ? el.height / 2 : direction === "BU" ? -el.height / 2 : 0;
-  const angle = el.angle || 0;
-  return { x: cx + dx * Math.cos(angle) - dy * Math.sin(angle), y: cy + dx * Math.sin(angle) + dy * Math.cos(angle) };
-}
-function childCount(el, map) {
-  let count = 0;
-  for (const bound of el.boundElements || []) {
-    const link = map.get(bound.id), child = map.get(link?.endBinding?.elementId);
-    if (link?.startBinding?.elementId === el.id && child?.customData?.mindmap?.root === el.customData.mindmap.root && child.customData.mindmap.parent === el.id) count++;
-  }
-  return count;
-}
-function hasChildren(el, map) { return childCount(el, map) > 0; }
-function hitIcon(c, point, touch) {
-  if (!point || !plugin.settings.mindmapHandle) return null;
-  const elements = c.api.getSceneElements(), map = new Map(elements.map(el => [el.id, el])), zoom = c.api.getAppState().zoom.value;
-  let best = null, distance = Infinity;
-  for (let i = elements.length - 1; i >= 0; i--) {
-    const el = elements[i];
-    if (!isNode(el) || el.customData?.hide || !el.customData?.mindmap || !hasChildren(el, map)) continue;
-    const center = iconCenter(el, map), d = Math.hypot(point.x - center.x, point.y - center.y) * zoom;
-    if (d <= (touch ? 22 : 14) && d < distance) { distance = d; best = el; }
-  }
-  return best;
-}
-function updateToolbar(c) {
-  const state = c.api.getAppState(), node = singleNode(c.api);
-  const mobile = ea.obsidian.Platform.isMobile || state.stylesPanelMode === "mobile" || c.view.containerEl.ownerDocument.defaultView.matchMedia("(pointer: coarse)").matches;
-  const active = plugin.app.workspace.activeLeaf?.view === c.view;
-  const visible = mobile && active && node && !state.viewModeEnabled && !state.editingTextElement && !state.newElement && state.activeTool?.type === "selection";
-  const key = visible ? `${node.id}:${node.customData.mindmap.status}:${node.id === node.customData.mindmap.root}:${hasChildren(node, new Map(c.api.getSceneElements().map(el => [el.id, el])))}` : "hidden";
-  if (key === c.uiKey) return;
-  c.uiKey = key;
-  if (!visible) { c.toolbar?.hide(); return; }
-  if (!c.toolbar) {
-    const parent = c.view.containerEl.querySelector(".excalidraw") || c.view.containerEl;
-    const bar = parent.createDiv({ attr: { role: "toolbar", "aria-label": "Mindmap" } });
-    bar.setCssStyles({ position: "absolute", left: "8px", right: "8px", bottom: "calc(112px + env(safe-area-inset-bottom, 0px))", display: "flex", gap: "4px", padding: "6px", borderRadius: "12px", background: "var(--background-primary)", border: "1px solid var(--background-modifier-border)", zIndex: "5", overflowX: "auto" });
-    c.buttons = {};
-    for (const [action, label] of [["child", "tb_child"], ["sibling", "tb_sibling"], ["fold", "tb_fold"], ["edit", "tb_edit"]]) {
-      const button = bar.createEl("button", { text: t(label), attr: { "aria-label": t(label) } });
-      button.setCssStyles({ minHeight: "44px", minWidth: "44px", flex: "1 0 auto", padding: "4px 8px" });
-      button.onClickEvent(() => {
-        const selected = singleNode(c.api);
-        if (!selected || !validController(c)) return;
-        const operation = action === "child" ? addNode(selected, "next", null, c.worker) : action === "sibling" ? addNode(selected, "same", null, c.worker) : action === "fold" ? toggleFold(selected, null, c.worker) : startEdit(selected, null, c.worker);
-        fire(operation);
-      });
-      c.buttons[action] = button;
-    }
-    c.toolbar = bar;
-  }
-  c.buttons.sibling.disabled = node.id === node.customData.mindmap.root;
-  c.buttons.fold.disabled = !hasChildren(node, new Map(c.api.getSceneElements().map(el => [el.id, el])));
-  const label = t(node.customData.mindmap.status === "close" ? "tb_unfold" : "tb_fold");
-  c.buttons.fold.setText(label); c.buttons.fold.setAttribute("aria-label", label);
-  c.toolbar.show();
-  c.toolbar.setCssStyles({ display: "flex" });
-}
-function pointerDown(context) {
-  const view = getView(context); if (!view) return false;
-  const c = getController(view), e = context.event;
-  if (!e || e.button !== 0 || e.isPrimary === false || c.pointers.size > 1 || e.target?.closest?.("button, input, textarea, select")) { c.gesture = null; return false; }
-  const target = hitIcon(c, context.scenePointer, e.pointerType === "touch");
-  c.gesture = { id: e.pointerId, x: e.clientX, y: e.clientY, time: Number.isFinite(e.timeStamp) ? e.timeStamp : performance.now(), target: target?.id, touch: e.pointerType === "touch", cancelled: false };
-  c.dragging = false; c.drop = null;
-  // Let native touch tracking receive down: intercepting here disables pinch/pan cleanup.
-  return false;
-}
-function pointerMove(context) {
-  const view = getView(context); if (!view) return false;
-  const c = getController(view), e = context.event, g = c.gesture;
-  if (g && e && g.id === e.pointerId && Math.hypot(e.clientX - g.x, e.clientY - g.y) > 8) g.cancelled = true;
-  return false;
-}
-function dropTarget(c) {
-  const state = c.api.getAppState(), selected = c.api.getSceneElements().filter(el => state.selectedElementIds?.[el.id] && !el.containerId);
-  const source = selected.length === 1 && isNode(selected[0]) ? selected[0] : null;
-  if (!source || source.id === source.customData?.mindmap?.root) return null;
-  const all = c.api.getSceneElements(), map = new Map(all.map(el => [el.id, el]));
-  const excluded = new Set([source.id]), stack = [source.id], children = new Map();
-  for (const el of all) if (el.customData?.mindmap?.parent && el.id !== el.customData.mindmap.parent) append(children, el.customData.mindmap.parent, el.id);
-  while (stack.length) for (const id of children.get(stack.pop()) || []) if (!excluded.has(id)) { excluded.add(id); stack.push(id); }
-  for (let i = all.length - 1; i >= 0; i--) {
-    const target = all[i];
-    if (!isNode(target) || !target.customData?.mindmap || target.customData?.hide || excluded.has(target.id)) continue;
-    if (source.x + source.width <= target.x || target.x + target.width <= source.x || source.y + source.height <= target.y || target.y + target.height <= source.y) continue;
-    const settings = normalizeSettings(map.get(target.customData.mindmap.root)?.customData.mindmap.settings);
-    const dx = source.x + source.width / 2 - target.x - target.width / 2, dy = source.y + source.height / 2 - target.y - target.height / 2;
-    const horizontal = ["LR", "RL"].includes(settings.direction);
-    const child = settings.direction === "LR" ? dx > Math.abs(dy) : settings.direction === "RL" ? -dx > Math.abs(dy) : settings.direction === "TD" ? dy > Math.abs(dx) : -dy > Math.abs(dx);
-    const zone = child ? "child" : (horizontal ? dy : dx) < 0 ? "before" : "after";
-    return { source: source.id, target: target.id, zone };
-  }
-  return null;
-}
-function reparent(c, drop) {
-  return runAction(c.worker, async session => {
-    const all = session.api.getSceneElements(), index = indexScene(all), sourceEl = index.map.get(drop.source), targetEl = index.map.get(drop.target);
-    if (!isNode(sourceEl) || !targetEl?.customData?.mindmap || sourceEl.id === sourceEl.customData?.mindmap?.root) return;
-    const roots = new Set([sourceEl.customData?.mindmap?.root, targetEl.customData.mindmap.root].filter(Boolean));
-    const relevant = new Map();
-    for (const root of roots) for (const el of treeElements(all, root)) relevant.set(el.id, el);
-    const elements = [...relevant.values()], forest = buildForest(elements);
-    const source = forest.nodes.get(drop.source) || { el: sourceEl, parent: null, children: [], arrow: null, level: 1 };
-    const target = forest.nodes.get(drop.target);
-    if (!target) return;
-    const moved = descendants(source, true), ids = new Set(moved.map(n => n.el.id));
-    if (ids.has(target.el.id)) throw new Error(t("invalid"));
-    const parent = drop.zone === "child" ? target : target.parent || target;
-    if (ids.has(parent.el.id)) throw new Error(t("invalid"));
-    for (const el of related(index, [source.el])) relevant.set(el.id, el);
-    session.ea.copyViewElementsToEAforEditing([...relevant.values()]);
-    const oldArrow = source.arrow && session.ea.getElement(source.arrow.id);
-    if (oldArrow) oldArrow.isDeleted = true;
-    const hidden = new Map();
-    for (const n of moved) {
-      const el = session.ea.getElement(n.el.id);
-      el.customData = { ...el.customData, mindmap: { status: "open", ...el.customData?.mindmap, root: target.el.customData.mindmap.root } };
-      el.customData.mindmap.level = parent.level + n.level - source.level + 1;
-      const hide = n !== source && (hidden.get(n.parent.el.id) || n.parent.el.customData?.mindmap?.status === "close");
-      hidden.set(n.el.id, hide);
-      for (const extra of related(index, [n.el])) { const item = session.ea.getElement(extra.id); if (item) item.customData = { ...item.customData, hide }; }
-      if (n.arrow && n !== source) session.ea.getElement(n.arrow.id).customData = { ...n.arrow.customData, hide };
-    }
-    const copy = session.ea.getElement(source.el.id); copy.customData.mindmap.parent = parent.el.id;
-    const settings = normalizeSettings(forest.map.get(target.el.customData.mindmap.root).customData.mindmap.settings);
-    if (["LR", "RL"].includes(settings.direction)) copy.y = target.el.y + (drop.zone === "before" ? -copy.height : target.el.height + 1);
-    else copy.x = target.el.x + (drop.zone === "before" ? -copy.width : target.el.width + 1);
-    session.ea.getElement(parent.el.id).customData.mindmap.status = "open";
-    for (const child of parent.children) {
-      if (child === source) continue;
-      for (const extra of related(index, [child.el])) {
-        const item = session.ea.getElement(extra.id);
-        if (item) item.customData = { ...item.customData, hide: false };
-      }
-      if (child.arrow) session.ea.getElement(child.arrow.id).customData = { ...child.arrow.customData, hide: false };
-    }
-    if (oldArrow) for (const el of [session.ea.getElement(source.parent.el.id), copy]) el.boundElements = (el.boundElements || []).filter(b => b.id !== oldArrow.id);
-    session.ea.connectObjects(parent.el.id, "right", copy.id, "left", { startArrowHead: null });
-    await session.layout(elements, true);
-  });
-}
-function pointerUp(context) {
-  const view = getView(context); if (!view) return false;
-  const c = getController(view), g = c.gesture, e = context.event;
-  c.gesture = null;
-  if (!g || e?.pointerId !== g.id) { c.dragging = false; c.drop = null; return false; }
-  if (c.dragging && g?.cancelled && c.drop) fire(reparent(c, c.drop));
-  else if (!g.cancelled && (Number.isFinite(e.timeStamp) ? e.timeStamp : performance.now()) - g.time <= 500 && Math.hypot(e.clientX - g.x, e.clientY - g.y) <= 8) {
-    const target = hitIcon(c, context.scenePointer, g.touch);
-    if (target && g.target && target.id === g.target) fire(toggleFold(target, context.App, c.worker, e.ctrlKey || e.metaKey));
-  }
-  c.dragging = false; c.drop = null;
-  return false;
-}
-function dragged(context) {
-  const view = getView(context); if (!view) return false;
-  const c = getController(view);
-  if (context.selectedElements?.length === 1 && ["arrow", "line"].includes(context.selectedElements[0].type)) {
-    const arrow = context.selectedElements[0], map = indexScene(c.api.getSceneElements()).map;
-    if (map.get(arrow.startBinding?.elementId)?.customData?.mindmap || map.get(arrow.endBinding?.elementId)?.customData?.mindmap) {
-      context.elementsToUpdate?.delete(arrow);
-      return true;
-    }
-  }
-  c.dragging = true; c.drop = dropTarget(c);
-  return false;
-}
-function keyDown(context) {
-  const view = getView(context); if (!view) return false;
-  const c = getController(view), state = c.api.getAppState(), event = context.event, selected = singleNode(c.api);
-  if (!selected || state.viewModeEnabled || state.editingTextElement || event.isComposing || event.target?.closest?.("input, textarea, [contenteditable=true]")) return false;
-  if (event.ctrlKey || event.metaKey || event.altKey) { if (!["/", "?"].includes(event.key)) return false; }
-  let operation;
-  if (event.code === "Tab" || event.code === "Enter") operation = addNode(selected, event.code === "Tab" ? "next" : "same", context.App, c.worker);
-  else if (event.code === "Space") operation = startEdit(selected, context.App, c.worker);
-  else if (["/", "?"].includes(event.key)) operation = toggleFold(selected, context.App, c.worker, event.ctrlKey || event.metaKey);
-  else if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.code)) {
-    try {
-      const forest = buildForest(treeElements(c.api.getSceneElements(), selected.customData.mindmap.root)), node = forest.nodes.get(selected.id);
-      const direction = normalizeSettings(forest.map.get(selected.customData.mindmap.root).customData.mindmap.settings).direction;
-      const forward = { LR: "ArrowRight", RL: "ArrowLeft", TD: "ArrowDown", BU: "ArrowUp" }[direction];
-      const backward = { LR: "ArrowLeft", RL: "ArrowRight", TD: "ArrowUp", BU: "ArrowDown" }[direction];
-      let target;
-      if (event.code === forward) target = node.children.find(n => !n.el.customData?.hide);
-      else if (event.code === backward) target = node.parent;
-      else {
-        const horizontal = ["LR", "RL"].includes(direction), peers = forest.order.filter(n => n.level === node.level && !n.el.customData?.hide);
-        peers.sort((a, b) => horizontal ? a.el.y - b.el.y : a.el.x - b.el.x);
-        const delta = ["ArrowUp", "ArrowLeft"].includes(event.code) ? -1 : 1;
-        target = peers[peers.indexOf(node) + delta];
-      }
-      if (target) c.api.updateScene({ appState: { selectedElementIds: { [target.el.id]: true }, selectedGroupIds: {}, editingGroupId: null } });
-    } catch (error) { report(error); }
-  } else return false;
-  event.preventDefault(); event.stopPropagation();
-  if (operation) fire(operation);
-  return true;
-}
-/** Runs synchronously inside the native deletion transaction; undo/redo retains consistent metadata. */
-function afterDelete(context) {
-  const next = context.nextElements;
-  if (!next) return false;
-  const live = indexScene(next), previous = context.App?.scene?.getNonDeletedElementsMap?.();
-  const removed = new Set(next.filter(el => el.isDeleted && (!previous || previous.has(el.id))).map(el => el.id));
-  const removedNodes = new Set(next.filter(el => removed.has(el.id) && el.customData?.mindmap).map(el => el.id));
-  const removedLinks = next.filter(el => {
-    if (!el.isDeleted || !removed.has(el.id) || !["arrow", "line"].includes(el.type)) return false;
-    const parentId = el.startBinding?.elementId, child = live.map.get(el.endBinding?.elementId);
-    return Boolean(parentId && child?.customData?.mindmap && child.customData.mindmap.parent === parentId);
-  });
-  if (!removedNodes.size && !removedLinks.length) return false;
-  const affectedRoots = new Set(next.filter(el => removedNodes.has(el.id)).map(el => el.customData.mindmap.root));
-  const orphans = new Set();
-  const children = new Map();
-  for (const el of live.map.values()) if (el.customData?.mindmap) {
-    const mm = el.customData.mindmap; append(children, mm.parent, el.id);
-    if (!live.map.has(mm.root) || (mm.parent && mm.parent !== el.id && !live.map.has(mm.parent))) orphans.add(el.id);
-  }
-  for (const el of removedLinks) {
-    orphans.add(el.endBinding.elementId);
-    affectedRoots.add(live.map.get(el.endBinding.elementId).customData.mindmap.root);
-  }
-  const stack = [...orphans];
-  while (stack.length) for (const id of children.get(stack.pop()) || []) if (!orphans.has(id)) { orphans.add(id); stack.push(id); }
-  const reveal = new Set(related(live, [...orphans].map(id => live.map.get(id)).filter(Boolean)).map(el => el.id));
-  for (let i = 0; i < next.length; i++) {
-    const el = next[i];
-    if (el.isDeleted) continue;
-    const incomingRemoved = ["arrow", "line"].includes(el.type) && (!live.map.has(el.startBinding?.elementId) || !live.map.has(el.endBinding?.elementId));
-    if (incomingRemoved && (removedNodes.has(el.startBinding?.elementId) || removedNodes.has(el.endBinding?.elementId))) { next[i] = { ...el, isDeleted: true }; continue; }
-    if (reveal.has(el.id) || (["arrow", "line"].includes(el.type) && orphans.has(el.startBinding?.elementId))) {
-      const customData = { ...el.customData }; delete customData.hide;
-      if (orphans.has(el.id)) delete customData.mindmap;
-      next[i] = { ...el, customData };
-    }
-  }
-  const deletedArrows = new Set(next.filter(el => el.isDeleted && ["arrow", "line"].includes(el.type)).map(el => el.id));
-  const replacements = new Map();
-  for (const root of affectedRoots) {
-    const copies = treeElements(next, root).map(clone);
-    if (!copies.some(el => el.id === root && el.customData?.mindmap)) continue;
-    try {
-      layoutCopies(copies);
-      for (const el of copies) replacements.set(el.id, el);
-    } catch (error) { report(error); }
-  }
-  for (let i = 0; i < next.length; i++) {
-    const el = replacements.get(next[i].id) || next[i];
-    if (!el.isDeleted && el.boundElements?.some(b => deletedArrows.has(b.id))) next[i] = { ...el, boundElements: el.boundElements.filter(b => !deletedArrows.has(b.id)) };
-    else next[i] = el;
-  }
-  return false;
-}
-function render(context) {
-  const view = getView(context); if (!view) return false;
-  const c = getController(view), ctx = context.context, state = context.appState, map = context.elementsMap;
-  if (!ctx || !state) return false;
-  if (plugin.settings.mindmapHandle) for (const el of context.visibleElements || []) {
-    if (!isNode(el) || !el.customData?.mindmap || el.customData.hide || !hasChildren(el, map)) continue;
-    const center = iconCenter(el, map), closed = el.customData.mindmap.status === "close", z = state.zoom.value;
-    ctx.save();
-    try {
-      ctx.translate((center.x + state.scrollX) * z, (center.y + state.scrollY) * z);
-      ctx.globalAlpha = 1; ctx.fillStyle = "#ffd8a8"; ctx.strokeStyle = "#f08c00"; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-      if (closed) {
-        const count = childCount(el, map);
-        ctx.fillStyle = "#f08c00"; ctx.font = "12px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(String(count), 0, 0);
-      } else {
-        ctx.beginPath(); ctx.moveTo(-4, 0); ctx.lineTo(4, 0); ctx.stroke();
-      }
-    } finally { ctx.restore(); }
-  }
-  if (c.drop) {
-    const el = map.get(c.drop.target);
-    if (el) { ctx.save(); try { const z = state.zoom.value; ctx.strokeStyle = "#2f9e44"; ctx.lineWidth = 3; ctx.strokeRect((el.x + state.scrollX) * z - 4, (el.y + state.scrollY) * z - 4, el.width * z + 8, el.height * z + 8); } finally { ctx.restore(); } }
-  }
-  return false;
-}
-/** Recovery deliberately tolerates corrupt edges; the visited set prevents loops. */
-function detach(ids, activeEa) {
-  return runAction(activeEa, async session => {
-    const all = session.api.getSceneElements(), index = indexScene(all), children = new Map(), removed = new Set(), roots = new Set();
-    for (const el of all) if (el.customData?.mindmap && el.id !== el.customData.mindmap.parent) append(children, el.customData.mindmap.parent, el.id);
-    const stack = ids.filter(id => index.map.get(id)?.customData?.mindmap);
-    while (stack.length) {
-      const id = stack.pop();
-      if (removed.has(id)) continue;
-      removed.add(id); roots.add(index.map.get(id).customData.mindmap.root);
-      for (const child of children.get(id) || []) stack.push(child);
-    }
-    const nodes = [...removed].map(id => index.map.get(id));
-    const edits = new Map(related(index, nodes).map(el => [el.id, el]));
-    const boundary = new Set();
-    for (const el of all) if (["arrow", "line"].includes(el.type)) {
-      const start = el.startBinding?.elementId, end = el.endBinding?.elementId;
-      if (removed.has(start) || removed.has(end)) {
-        edits.set(el.id, el);
-        if (!removed.has(start) && removed.has(end)) {
-          boundary.add(el.id);
-          if (index.map.has(start)) edits.set(start, index.map.get(start));
+
+const MindmapState = { 
+    mindmapPosMap: new Map(), 
+    treeElements: [], 
+    hoveredMindmapElement: null, 
+    isRealDragging: false,
+    pointerDownPos: null,
+    currentSelectedNode: null,
+    currentApp: null,
+    currentEA: null
+};
+
+const getExpandedTreeElements = (baseItems, elementsMap, allElements) => {
+    const expandedMap = new Map();
+    const addGroupElements = (el) => {
+        if (!el.groupIds?.length || !allElements) return;
+        for (let i = 0; i < allElements.length; i++) {
+            const a = allElements[i];
+            if (!expandedMap.has(a.id) && a.groupIds?.some(gid => el.groupIds.includes(gid))) {
+                expandedMap.set(a.id, a);
+            }
         }
-      }
-    }
-    session.ea.copyViewElementsToEAforEditing([...edits.values()]);
-    for (const el of session.ea.getElements()) {
-      if (removed.has(el.id)) delete el.customData.mindmap;
-      if (removed.has(el.id) || (["arrow", "line"].includes(el.type) && removed.has(el.startBinding?.elementId)) || !el.customData?.mindmap) {
-        el.customData = { ...el.customData }; delete el.customData.hide;
-      }
-      if (["arrow", "line"].includes(el.type)) { delete el.customData.curveArrow; if (boundary.has(el.id)) el.isDeleted = true; }
-      if (el.boundElements) el.boundElements = el.boundElements.filter(b => !boundary.has(b.id));
-    }
-    const remaining = [];
-    for (const root of roots) remaining.push(...treeElements(all, root));
-    await session.layout(remaining, true);
-    return removed.size;
-  });
-}
-function rescue(ids, activeEa) {
-  return runAction(activeEa, async session => {
-    const all = session.api.getSceneElements(), index = indexScene(all), nodes = all.filter(el => el.customData?.mindmap), selected = new Set(ids);
-    const children = new Map(), stack = [...selected];
-    for (const node of nodes) if (node.id !== node.customData.mindmap.parent) append(children, node.customData.mindmap.parent, node.id);
-    while (stack.length) for (const id of children.get(stack.pop()) || []) if (!selected.has(id)) { selected.add(id); stack.push(id); }
-    const edits = new Map(related(index, nodes).map(el => [el.id, el]));
-    const nodeIds = new Set(nodes.map(el => el.id));
-    for (const el of all) if (["arrow", "line"].includes(el.type) && nodeIds.has(el.startBinding?.elementId) && nodeIds.has(el.endBinding?.elementId)) edits.set(el.id, el);
-    session.ea.copyViewElementsToEAforEditing([...edits.values()]);
-    for (const el of session.ea.getElements()) {
-      el.customData = { ...el.customData }; delete el.customData.hide;
-      if (el.customData.mindmap) {
-        if (selected.has(el.id)) delete el.customData.mindmap;
-        else el.customData.mindmap.status = "open";
-      }
-    }
-    await session.commit();
-  });
-}
-const api = {
-  getConfiguration, normalizeSettings, buildForest, treeElements, related, indexScene, descendants, runAction, promptText,
-  detach, rescue,
-  runLayout: (elements, history = false, activeEa) => runAction(activeEa, session => {
-    const ids = new Set(elements.filter(Boolean).map(el => el.id));
-    return session.layout(session.api.getSceneElements().filter(el => ids.has(el.id)), history);
-  }),
-  addNode, addChildNode: (el, App, activeEa) => addNode(el, "next", App, activeEa),
-  addSiblingNode: (el, App, activeEa) => addNode(el, "same", App, activeEa), toggleFold, startEdit
+    };
+
+    baseItems.forEach(item => {
+        if (!item || !item.id) return;
+        const el = elementsMap.get(item.id);
+        if (!el) return;
+        expandedMap.set(el.id, el);
+        
+        if (el.boundElements) {
+            for (let i = 0; i < el.boundElements.length; i++) {
+                const b = el.boundElements[i];
+                if (b.type !== "arrow") {
+                    const boundEl = elementsMap.get(b.id);
+                    if (boundEl) expandedMap.set(boundEl.id, boundEl);
+                }
+            }
+        }
+        addGroupElements(el);
+    });
+    return Array.from(expandedMap.values());
 };
-hostWindow.MindmapAPI = api;
-for (const [hook, handler] of [["handleCanvasPointerDown", pointerDown], ["handleCanvasPointerMove", pointerMove], ["handleCanvasPointerUp", pointerUp], ["dragSelectedElements", dragged], ["onKeyDown", keyDown], ["afterDeleteSelectedElements", afterDelete], ["renderInteractiveScene", render]]) core.registerHook(SCRIPT_ID, hook, handler, 50);
-const prune = () => { for (const c of controllers.values()) { if (!validController(c)) disposeController(c); else updateToolbar(c); } };
-const layoutRef = plugin.app.workspace.on("layout-change", prune);
-const disable = () => {
-  if (stopped) return;
-  stopped = true; core.unregisterHook(SCRIPT_ID); plugin.app.workspace.offref(layoutRef);
-  for (const c of [...controllers.values()]) disposeController(c);
-  if (hostWindow.MindmapAPI === api) delete hostWindow.MindmapAPI;
-  if (plugin[`disable_${SCRIPT_ID}`] === disable) delete plugin[`disable_${SCRIPT_ID}`];
+
+const getElementAbsoluteCoords = (element) => [element.x, element.y, element.x + element.width, element.y + element.height];
+
+const checkOverlap = (el1, el2) => {
+    if (!el1 || !el2 || el1.id === el2.id) return false;
+    const [x1, y1, x2, y2] = getElementAbsoluteCoords(el1);
+    const [tx1, ty1, tx2, ty2] = getElementAbsoluteCoords(el2);
+    return !(x2 < tx1 || x1 > tx2 || y2 < ty1 || y1 > ty2);
 };
-plugin[`disable_${SCRIPT_ID}`] = disable;
-if (!plugin._mindmapUnloadRegistered) {
-  plugin._mindmapUnloadRegistered = true;
-  plugin.register(() => { plugin[`disable_${SCRIPT_ID}`]?.(); delete plugin._mindmapUnloadRegistered; });
+
+const isDescendant = (potentialParentId, targetId, elementsMap) => {
+    let current = elementsMap.get(targetId);
+    const visited = new Set();
+    while (current?.customData?.mindmap?.parent) {
+        if (current.customData.mindmap.parent === potentialParentId) return true;
+        
+        if (current.customData.mindmap.parent === current.id || visited.has(current.id)) {
+            break;
+        }
+        visited.add(current.id);
+        current = elementsMap.get(current.customData.mindmap.parent);
+    }
+    return false;
+};
+
+const getDropZone = (dragged, target, direction = "LR") => {
+    const [dx1, dy1, dx2, dy2] = getElementAbsoluteCoords(dragged);
+    const [tx1, ty1, tx2, ty2] = getElementAbsoluteCoords(target);
+    const dCenterY = ((dy1 + dy2) / 2) - ((ty1 + ty2) / 2);
+    const dCenterX = ((dx1 + dx2) / 2) - ((tx1 + tx2) / 2);
+    if (direction === "LR" || direction === "RL") {
+        if (direction === "LR" && dCenterX > 0 && Math.abs(dCenterX) > Math.abs(dCenterY)) return "child";
+        if (direction === "RL" && dCenterX < 0 && Math.abs(dCenterX) > Math.abs(dCenterY)) return "child";
+        return dCenterY < 0 ? "sibling-before" : "sibling-after";
+    } else {
+        if (direction === "TD" && dCenterY > 0 && Math.abs(dCenterY) > Math.abs(dCenterX)) return "child";
+        if (direction === "BU" && dCenterY < 0 && Math.abs(dCenterY) > Math.abs(dCenterX)) return "child";
+        return dCenterX < 0 ? "sibling-before" : "sibling-after";
+    }
+};
+
+const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
+    const elementsMap = App.scene.getNonDeletedElementsMap();
+    const allElements = App.scene.getNonDeletedElements();
+    const rootId = targetEl.customData.mindmap.root;
+    const rootEl = elementsMap.get(rootId);
+    let rootSettings = rootEl?.customData?.mindmap?.settings || DEFAULT_SETTINGS;
+    const direction = rootSettings.direction || "LR";
+
+    let newParentId = dropZone === "child" ? targetEl.id : targetEl.customData.mindmap.parent;
+    if (!newParentId) newParentId = rootId; 
+    
+    const newParentEl = elementsMap.get(newParentId);
+    let shouldHide = newParentEl?.customData?.hide; 
+    if (dropZone === "child") {
+        if (!ea.getElement(newParentId)) ea.copyViewElementsToEAforEditing([newParentEl]);
+        const eaParent = ea.getElement(newParentId);
+        if (eaParent) {
+            eaParent.customData = {
+                ...eaParent.customData,
+                mindmap: { ...(eaParent.customData?.mindmap || {}), status: "open" }
+            };
+        }
+        shouldHide = newParentEl?.customData?.hide; 
+    } else {
+        shouldHide = newParentEl?.customData?.hide || newParentEl?.customData?.mindmap?.status === "close";
+    }
+    const newLevel = (newParentEl?.customData?.mindmap?.level || 0) + 1;
+
+    let arrowIdsToDelete = [];
+    for(let i = 0; i < allElements.length; i++){
+        const el = allElements[i];
+        if (el.type === "arrow" && el.endBinding?.elementId === draggedEl.id) {
+            arrowIdsToDelete.push(el.id);
+        }
+    }
+
+    const oldParentId = draggedEl.customData?.mindmap?.parent;
+    const descendantUpdates = [];
+    const visitedDescendants = new Set();
+    const findDescendants = (parentId, currentLevel) => {
+        if (visitedDescendants.has(parentId)) return;
+        visitedDescendants.add(parentId);
+        for (let i = 0; i < allElements.length; i++) {
+            const child = allElements[i];
+            if (child.customData?.mindmap?.parent === parentId) {
+                descendantUpdates.push({ child, level: currentLevel + 1 }); 
+                findDescendants(child.id, currentLevel + 1);
+            }
+        }
+    };
+    findDescendants(draggedEl.id, newLevel);
+
+    ea.clear();
+    let elementsToEdit = [draggedEl, ...descendantUpdates.map(d => d.child)];
+    const relatedEls = [];
+    
+    for (let i = 0; i < elementsToEdit.length; i++) {
+        const el = elementsToEdit[i];
+        if (el.boundElements) {
+            for (let j = 0; j < el.boundElements.length; j++) {
+                const b = el.boundElements[j];
+                if (b.type !== "arrow") { 
+                    const bEl = elementsMap.get(b.id); 
+                    if (bEl) relatedEls.push(bEl); 
+                }
+            }
+        }
+    }
+    
+    elementsToEdit = [...new Set([...elementsToEdit, ...relatedEls])];
+    ea.copyViewElementsToEAforEditing(elementsToEdit);
+
+    if (shouldHide) {
+        elementsToEdit.forEach(el => {
+            const eaEl = ea.getElement(el.id);
+            if (eaEl) eaEl.customData = { ...(eaEl.customData || {}), hide: true };
+        });
+    }
+    
+    const eaDragged = ea.getElement(draggedEl.id);
+    if (eaDragged) {
+        if (dropZone === "sibling-before") {
+            if (direction === "LR" || direction === "RL") {
+                eaDragged.y = targetEl.y - eaDragged.height / 2;
+                eaDragged.x = targetEl.x;
+            } else {
+                eaDragged.x = targetEl.x - eaDragged.width / 2;
+                eaDragged.y = targetEl.y;
+            }
+        } else if (dropZone === "sibling-after") {
+            if (direction === "LR" || direction === "RL") {
+                eaDragged.y = targetEl.y + targetEl.height + eaDragged.height / 2;
+                eaDragged.x = targetEl.x;
+            } else {
+                eaDragged.x = targetEl.x + targetEl.width + eaDragged.width / 2;
+                eaDragged.y = targetEl.y;
+            }
+        }
+        // 注意：无需在此再做复杂的 branchIndex 推算，排版引擎会全局修正
+        eaDragged.customData = { ...eaDragged.customData, mindmap: { ...(eaDragged.customData?.mindmap || {}), status: eaDragged.customData?.mindmap?.status || "open", root: rootId, parent: newParentId, level: newLevel } };
+    }
+
+    descendantUpdates.forEach(d => {
+        const eaChild = ea.getElement(d.child.id);
+        if (eaChild) {
+            eaChild.customData = { ...eaChild.customData, mindmap: { ...(eaChild.customData?.mindmap || {}), root: rootId, level: d.level } };
+        }
+    });
+
+    if (!ea.getElement(newParentId)) ea.copyViewElementsToEAforEditing([newParentEl]);
+    
+    let startPort = "right", endPort = "left";
+    if (direction === "RL") { startPort = "left"; endPort = "right"; }
+    else if (direction === "TD") { startPort = "bottom"; endPort = "top"; }
+    else if (direction === "BU") { startPort = "top"; endPort = "bottom"; }
+
+    const arrowId = ea.connectObjects(newParentId, startPort, draggedEl.id, endPort, { startArrowHead: null });
+    const eaArrow = ea.getElement(arrowId);
+    if (eaArrow) {
+        eaArrow.strokeWidth = rootSettings.strokeWidth || 1.5;
+        eaArrow.roughness = rootEl?.roughness ?? 0;
+        eaArrow.roundness = rootEl?.roundness;
+        if (shouldHide) eaArrow.customData = { ...(eaArrow.customData || {}), hide: true };
+    }
+
+    if (oldParentId) {
+        let eaOldParent = ea.getElement(oldParentId);
+        if (!eaOldParent) {
+            const oldParentEl = elementsMap.get(oldParentId);
+            if (oldParentEl) { ea.copyViewElementsToEAforEditing([oldParentEl]); eaOldParent = ea.getElement(oldParentId); }
+        }
+        if (eaOldParent && eaOldParent.boundElements) {
+            eaOldParent.boundElements = eaOldParent.boundElements.filter(b => b.type !== "arrow" || !arrowIdsToDelete.includes(b.id));
+            if (eaOldParent.boundElements.length === 0) eaOldParent.boundElements = null;
+        }
+    }
+
+    if (arrowIdsToDelete.length > 0) {
+        const arrowsToEdit = arrowIdsToDelete.map(id => elementsMap.get(id)).filter(Boolean);
+        ea.copyViewElementsToEAforEditing(arrowsToEdit);
+        arrowsToEdit.forEach(arr => { const eaArr = ea.getElement(arr.id); if (eaArr) eaArr.isDeleted = true; });
+    }
+
+    await ea.addElementsToView(false, false, true);
+
+    setTimeout(async () => {
+        try {
+            const updatedElementsMap = App.scene.getNonDeletedElementsMap(); 
+            const updatedElements = App.scene.getNonDeletedElements();
+            const freshRootEl = updatedElementsMap.get(rootId); if (!freshRootEl) return;
+            
+            const mindmap = new Mindmap(updatedElements, freshRootEl);
+            mindmap.setElements(updatedElements, updatedElementsMap); mindmap.buildNodeTree(freshRootEl, null, 1, null);
+            MindmapState.mindmapPosMap.set(rootId, mindmap);
+            
+            const rootNode = mindmap.NodeMap.get(rootId); if (!rootNode) return;
+            const [children, arrows] = mindmap.getChildren(rootNode, ea, true, (el) => updatedElementsMap.get(el.id)?.customData?.hide);
+            
+            const freshDragged = updatedElementsMap.get(draggedEl.id);
+            const freshArrow = updatedElementsMap.get(arrowId);
+            const descendantEls = descendantUpdates.map(d => updatedElementsMap.get(d.child.id));
+            
+            const extraItems = [freshDragged, freshArrow, ...descendantEls].filter(Boolean);
+            const rawItems = [...new Set([...children, ...arrows, rootNode, ...extraItems])];
+            
+            const treeElements = getExpandedTreeElements(rawItems, updatedElementsMap, updatedElements);
+            mindmap.clearElements(); await window.MindmapAPI.runLayout(treeElements, true, ea);
+        } catch(e) {
+            console.error("Mindmap auto-layout failed:", e);
+        }
+    }, 100);
+};
+
+const isPointHittingMindmapIcon = (element, elementsMap, x, y, appState) => {
+    if (!element?.customData?.mindmap?.root) return false;
+    
+    let hasStartArrow = false;
+    if (element.boundElements) {
+        for (let i = 0; i < element.boundElements.length; i++) {
+            const el = element.boundElements[i];
+            if (el.type === "arrow") {
+                const arrowEl = elementsMap.get(el.id);
+                if (arrowEl?.startBinding?.elementId === element.id) {
+                    hasStartArrow = true;
+                    break;
+                }
+            }
+        }
+    }
+    if (!hasStartArrow) return false;
+
+    const isMobile = ExcalidrawAutomate?.obsidian?.Platform?.isMobile || appState?.stylesPanelMode === "mobile" || false;
+    const zoom = appState?.zoom?.value || 1;
+    const baseTargetSize = isMobile ? 36 : 24;
+    const effectiveRadius = Math.max(12, (baseTargetSize / 2) / zoom);
+    
+    const [x1, y1, x2, y2] = getElementAbsoluteCoords(element);
+    const rootEl = elementsMap.get(element.customData.mindmap.root); 
+    const direction = rootEl?.customData?.mindmap?.settings?.direction || "LR";
+    
+    let iconCenterX = x2, iconCenterY = y1 + element.height / 2;
+    switch (direction) {
+        case "LR": iconCenterX = x2; iconCenterY = y1 + element.height / 2; break;
+        case "RL": iconCenterX = x1; iconCenterY = y1 + element.height / 2; break;
+        case "TD": iconCenterX = x1 + element.width / 2; iconCenterY = y2; break;
+        case "BU": iconCenterX = x1 + element.width / 2; iconCenterY = y1; break;
+        default: iconCenterX = x2; iconCenterY = y1 + element.height / 2; break;
+    }
+
+    const dist = Math.hypot(x - iconCenterX, y - iconCenterY);
+    return dist <= effectiveRadius;
+};
+
+const isPointHittingMindmap = (element, elementsMap, appState, x, y) => {
+    if (!element?.customData?.mindmap) return false;
+    if (appState?.viewModeEnabled) {
+        const [x1, y1, x2, y2] = getElementAbsoluteCoords(element);
+        if (x >= x1 && x <= x2 && y >= y1 && y <= y2) return true;
+    }
+    return isPointHittingMindmapIcon(element, elementsMap, x, y, appState);
+};
+
+const findHitMindmapElement = (App, scenePointer) => {
+    if (!App || !scenePointer) return null;
+    const elementsMap = App.scene.getNonDeletedElementsMap();
+    const elements = App.scene.getNonDeletedElements();
+    
+    for (let i = elements.length - 1; i >= 0; i--) {
+        const el = elements[i];
+        if (el?.customData?.mindmap && isPointHittingMindmap(el, elementsMap, App.state, scenePointer.x, scenePointer.y)) {
+            return el;
+        }
+    }
+    return null;
+};
+
+class MindmapNode {
+    constructor(element, rootId, parentId, level) {
+        this.parent = null; this.parentArrow = null; this.children = []; this.childrenArrow = []; this.level = level; this.id = element.id;
+        if (!element?.customData?.mindmap) element.customData = { ...element.customData, mindmap: { status: "open", root: rootId, parent: parentId, level: level } };
+    }
 }
-console.log(`[${SCRIPT_ID}] ${t("mounted")}`);
+
+class Mindmap {
+    constructor(elements, element) { 
+        this.rootId = element.customData.mindmap.root; 
+        this.NodeMap = new Map(); 
+        this.visitedNodes = new Set();
+    }
+    clearElements() { this.elements = []; this.elementsMap = []; this.arrowElements = []; }
+    setElements(elements, elementsMap) { this.elements = elements; this.elementsMap = elementsMap; this.arrowElements = elements.filter((el) => el.type == "arrow"); }
+    buildNodeTree(element, parentNode, level, arrow) {
+        if (!element || this.visitedNodes.has(element.id)) return;
+        this.visitedNodes.add(element.id);
+
+        let startArrowElements = this.arrowElements.filter((el) => el.startBinding && el.startBinding.elementId == element.id);
+        let node = new MindmapNode(element, this.rootId, parentNode?.id, (parentNode?.level || 0) + 1);
+        if (level == 1) this.rootNode = node;
+        this.NodeMap.set(node.id, node); node.parent = parentNode;
+        parentNode && parentNode?.children.push(node); node.parentArrow = arrow;
+        startArrowElements.forEach((el) => {
+            if (el.endBinding?.elementId) {
+                node.childrenArrow.push(el);
+                let child = this.elementsMap?.get(el.endBinding.elementId); this.buildNodeTree(child, node, level+1, el);
+            }
+        });
+    }
+    getChildren(node, ea, recursion=true, filter=undefined) {
+        const children = []; const arrows = [];
+        if (filter && node.children.length) {
+            const firstChildEl = this.elementsMap.get(node.children[0].id);
+            if (firstChildEl && filter(firstChildEl)) return [[], []];
+        }
+        children.push(...node?.children); arrows.push(...node?.childrenArrow);
+        
+        const childrenEls = children.map((el) => this.elementsMap?.get(el.id)).filter(el => el);
+        let groupElements = [];
+        
+        for (let i = 0; i < childrenEls.length; i++) {
+            const groups = ea.getElementsInTheSameGroupWithElement(childrenEls[i], this.elements);
+            for (let j = 0; j < groups.length; j++) {
+                if (!groups[j]?.customData?.zoomHide && !groups[j]?.customData?.mindmap) {
+                    groupElements.push(groups[j]);
+                }
+            }
+        }
+        children.push(...groupElements);
+        
+        if (recursion) {
+            node.children.forEach(el => { const [_children, _arrows] = this.getChildren(el, ea, true, filter); children.push(..._children); arrows.push(..._arrows); });
+        }
+        return [children, arrows];
+    }
+    
+    async changeVisibility(element, currentNode, recursion, visiable, status, ea) {
+        const [children, arrows] = this.getChildren(currentNode, ea, recursion);
+        const childrenEls = children.map((el) => this.elementsMap?.get(el.id)).filter(el => el);
+        const arrowEls = arrows.map((el) => this.elementsMap?.get(el.id)).filter(el => el);
+        const boundElements = [];
+        
+        childrenEls.forEach(el => {
+            if (el.boundElements) {
+                el.boundElements.forEach(bound => { if (bound.type != "arrow") boundElements.push(this.elementsMap?.get(bound.id)); });
+            }
+        });
+        
+        let groupElements = [];
+        for (let i = 0; i < childrenEls.length; i++) {
+            const groups = ea.getElementsInTheSameGroupWithElement(childrenEls[i], this.elements);
+            for (let j = 0; j < groups.length; j++) {
+                if (!groups[j]?.customData?.zoomHide && !groups[j]?.customData?.mindmap) {
+                    groupElements.push(groups[j]);
+                }
+            }
+        }
+        
+        element?.customData?.mindmap && (element.customData.mindmap.status = status);
+        if (status === "close" || (status === "open" && recursion)) {
+            childrenEls.forEach((el) => { 
+                el = this.elementsMap?.get(el.id); 
+                if (el?.customData?.mindmap) {
+                    el.customData.mindmap.status = status; 
+                }
+            });
+        }
+        ea.clear();
+        let changedVisiableEls = [...new Set([...childrenEls, ...groupElements, ...arrowEls, ...boundElements])];
+        changedVisiableEls.forEach((el) => { el.customData = el.customData || {}; el.customData.hide = !visiable; });
+        ea.copyViewElementsToEAforEditing([...changedVisiableEls, element]);
+        await ea.addElementsToView(false, false, false);
+    }
+    
+    async addNewNode(element, currentNode, pos, state, ea) {
+        const newEls = []; let parentNode, level, newElX, newElY;
+        
+        const rootEl = this.elementsMap?.get(this.rootId);
+        let rootSettings = rootEl?.customData?.mindmap?.settings || DEFAULT_SETTINGS;
+        const direction = rootSettings.direction || "LR";
+        const isHorizontal = ["LR", "RL"].includes(direction);
+
+        if (pos == "next") {
+            parentNode = currentNode; level = element.customData.mindmap.level+1;
+            newElX = direction === "RL" ? element.x - 100 : element.x + element.width + 20; 
+            newElY = element.y;
+            
+            if (currentNode.children && currentNode.children.length > 0) {
+                let maxVal = -Infinity;
+                currentNode.children.forEach(c => {
+                    const childEl = this.elementsMap.get(c.id);
+                    if (childEl) {
+                        const val = isHorizontal ? childEl.y : childEl.x;
+                        if (val > maxVal) maxVal = val;
+                    }
+                });
+                if (maxVal !== -Infinity) {
+                    if (isHorizontal) newElY = maxVal + 100;
+                    else newElX = maxVal + 100;
+                }
+            }
+        }
+        if (pos =="same") {
+            parentNode = currentNode.parent; level = element.customData.mindmap.level;
+            
+            if (isHorizontal) {
+                newElX = element.x; newElY = element.y + element.height + 20;
+            } else {
+                newElX = element.x + element.width + 20; newElY = element.y;
+            }
+        }
+
+        let parentEl = this.elementsMap?.get(parentNode.id);
+
+        ea.style.opacity = parentEl?.opacity || 100; ea.style.roughness = element.roughness || 0;
+        ea.style.fillStyle = element.fillStyle || "solid"; ea.style.roundness = element.roundness; ea.style.fontFamily  = state.currentItemFontFamily;
+
+        const newElId = ea.addText(newElX, newElY, "new element", {box:true, textAlign: "center", textVerticalAlign: "middle", boxStrokeColor: "transparent"});
+        const newEl = ea.getElement(newElId); 
+        
+        this.elementsMap.set(newEl.id, newEl); this.elements.push(newEl);
+        const boundElId = newEl.boundElements[0].id; 
+        const boundElement = ea.getElement(boundElId);
+
+        this.elementsMap.set(boundElId, boundElement); this.elements.push(boundElement);
+        
+        if(pos == "same") { newEl.width = element.width; newEl.height = element.height; }
+        const newNode = new MindmapNode(newEl, this.rootId, parentNode?.id, level);
+        parentEl.boundElements = parentEl?.boundElements?.length != 0 ?  parentEl.boundElements : null;
+        ea.copyViewElementsToEAforEditing([parentEl]);
+        const arrowId = ea.connectObjects(parentNode.id, "right", newEl.id, "left", {startArrowHead: null});
+        let arrowEl = ea.getElement(arrowId); this.elementsMap.set(arrowEl.id, arrowEl); this.elements.push(arrowEl);
+        await ea.addElementsToView(false, false, false);
+        newNode.parent = parentNode; newNode.parentArrow = arrowEl; this.NodeMap.set(newNode.id, newNode);
+        this.elementsMap.set(parentNode.id, ea.getElement(parentNode.id));
+        if (parentNode) { parentNode.childrenArrow.push(arrowEl); parentNode.children.push(newNode); }
+
+        newEls.push(newEl); newEls.push(arrowEl);
+        return [newEl, newEls];
+    }
+}
+
+class MindMapLayouter {
+    constructor(elements, config) {
+        this.elements = elements; this.config = config; this.changedElementsSet = new Set();  
+        this.elIdMap = new Map(); this.nodeMap = new Map(); this.visited = new Set();              
+    }
+    runLayout() {
+        if (!this.elements?.length) return;
+        for (let i = 0; i < this.elements.length; i++) {
+            const el = this.elements[i];
+            this.elIdMap.set(el.id, el);
+            if (!["arrow", "line"].includes(el.type)) this.nodeMap.set(el.id, this.createNode(el));
+        }
+        for (let i = 0; i < this.elements.length; i++) {
+            const el = this.elements[i];
+            if (!["arrow", "line"].includes(el.type)) continue;
+            const startId = el.startBinding?.elementId; const endId   = el.endBinding?.elementId;
+            if (startId && endId && this.nodeMap.has(startId) && this.nodeMap.has(endId)) {
+                const parentNode = this.nodeMap.get(startId); const childNode  = this.nodeMap.get(endId);
+                parentNode.children.push(childNode); parentNode.linkChildrensLines.push(el); childNode.parent = parentNode; 
+            }
+        }
+        const roots = [...this.nodeMap.values()].filter((node) => !node.parent);
+        for (let i = 0; i < roots.length; i++) {
+            const rootNode = roots[i];
+            this.visited.clear(); this.calculateDimensions(rootNode);   
+
+            // [新增]: 全局结构排序及颜色动态指派
+            const sortAndColor = (node, level, branchIndex) => {
+                node.level = level;
+                node.branchIndex = branchIndex;
+                
+                // 必须在对当前节点处理样式前，先基于物理坐标流式排序它的子节点
+                node.children.sort((a, b) => this.isHorizontal() ? ((a.el.y + a.el.height / 2) - (b.el.y + b.el.height / 2)) : ((a.el.x + a.el.width / 2) - (b.el.x + b.el.width / 2)));
+                
+                // 应用全局严格推算的样式结构
+                const style = resolveStyle(level, branchIndex, this.config);
+                this.updateNodeStyle(node, style);
+                
+                // 向下递归传递该基准分支对应的 branchIndex
+                node.children.forEach((child, idx) => {
+                    const childBranchIdx = (level === 1) ? idx : branchIndex;
+                    sortAndColor(child, level + 1, childBranchIdx);
+                });
+            };
+            sortAndColor(rootNode, 1, 0);
+
+            let startX = rootNode.el.x; let startY = rootNode.el.y;
+            if (this.isHorizontal()) { startY = rootNode.el.y + rootNode.el.height / 2 - rootNode.totalHeight / 2; } 
+            else { startX = rootNode.el.x + rootNode.el.width / 2 - rootNode.totalWidth / 2; }
+            this.assignPositions(rootNode, startX, startY);    
+        }
+    }
+    createNode(el) { return { el, parent: null, children: [], linkChildrensLines: [], totalHeight: 0, totalWidth: 0, childrenTotalHeight: 0, childrenTotalWidth: 0, level: 1, branchIndex: 0 }; }
+    isHorizontal() { return ["LR", "RL"].includes(this.config.direction); }
+    calculateDimensions(node) {
+        if (this.visited.has(node.el.id)) return;
+        this.visited.add(node.el.id);
+
+        if (node.el.customData?.hide) {
+            node.totalHeight = 0; node.totalWidth = 0;
+            node.childrenTotalHeight = 0; node.childrenTotalWidth = 0;
+            for (let i = 0; i < node.children.length; i++) { this.calculateDimensions(node.children[i]); }
+            return;
+        }
+
+        if (!node.children.length) {
+            node.totalHeight = node.el.height + this.config.defaultGap; node.totalWidth = node.el.width + this.config.defaultGap;
+            node.childrenTotalHeight = 0; node.childrenTotalWidth = 0; return;
+        }
+        let sumH = 0, sumW = 0;
+        for (let i = 0; i < node.children.length; i++) { 
+            const child = node.children[i];
+            this.calculateDimensions(child); 
+            sumH += child.totalHeight; 
+            sumW += child.totalWidth; 
+        }
+        node.childrenTotalHeight = sumH; node.childrenTotalWidth = sumW;
+        if (this.isHorizontal()) { node.totalHeight = Math.max(node.el.height + this.config.defaultGap, sumH); } 
+        else { node.totalWidth = Math.max(node.el.width + this.config.defaultGap, sumW); }
+    }
+    
+    updateNodeStyle(node, style) {
+        if (!style || node.el.type === "arrow" || node.el.type === "line") return;
+        
+        if (node.el.customData && node.el.customData.mindmap) {
+            if (node.el.customData.mindmap.level !== node.level) {
+                node.el.customData = { ...node.el.customData, mindmap: { ...node.el.customData.mindmap, level: node.level } };
+                this.changedElementsSet.add(node.el);
+            }
+        }
+        if (node.el.backgroundColor !== style.backgroundColor) { node.el.backgroundColor = style.backgroundColor; this.changedElementsSet.add(node.el); }
+        if (node.el.strokeColor !== style.strokeColor && style.strokeColor) { node.el.strokeColor = style.strokeColor; this.changedElementsSet.add(node.el); }
+        if (node.el.strokeWidth !== style.strokeWidth && style.strokeWidth) { node.el.strokeWidth = style.strokeWidth; this.changedElementsSet.add(node.el); }
+        if (node.el.type === "text" && node.el.fontSize !== style.fontSize) { node.el.fontSize = style.fontSize; this.changedElementsSet.add(node.el); }
+        if (node.el.boundElements) {
+            node.el.boundElements.forEach(b => {
+                if (b.type === "text") {
+                    const textEl = this.elIdMap.get(b.id);
+                    if (textEl) {
+                        if (textEl.strokeColor !== style.textColor && style.textColor) { textEl.strokeColor = style.textColor; this.changedElementsSet.add(textEl); }
+                        if (textEl.fontSize !== style.fontSize) { textEl.fontSize = style.fontSize; this.changedElementsSet.add(textEl); }
+                    }
+                }
+            });
+        }
+    }
+
+    assignPositions(node, bboxX, bboxY) {
+        node.children.sort((a, b) => this.isHorizontal() ? ((a.el.y + a.el.height / 2) - (b.el.y + b.el.height / 2)) : ((a.el.x + a.el.width / 2) - (b.el.x + b.el.width / 2)));
+        const sortedLines = [];
+        node.children.forEach(child => { const line = node.linkChildrensLines.find(l => l.endBinding?.elementId === child.el.id || l.startBinding?.elementId === child.el.id); if (line) sortedLines.push(line); });
+        node.linkChildrensLines = sortedLines;
+
+        let newX = node.el.x; let newY = node.el.y;
+        if (this.isHorizontal()) { newY = bboxY + node.totalHeight / 2 - node.el.height / 2; if (node.parent) newX = bboxX; } 
+        else { newX = bboxX + node.totalWidth / 2 - node.el.width / 2; if (node.parent) newY = bboxY; }
+
+        const dx = newX - node.el.x; const dy = newY - node.el.y;
+        if (dx !== 0 || dy !== 0) {
+            node.el.x = newX; node.el.y = newY; this.changedElementsSet.add(node.el);
+            if (["rectangle", "diamond", "ellipse"].includes(node.el.type)) {
+                const textDesc = (node.el.boundElements ?? []).find(b => b.type === "text");
+                if (textDesc) { const textEl = this.elIdMap.get(textDesc.id); if (textEl) { textEl.x += dx; textEl.y += dy; this.changedElementsSet.add(textEl); } }
+            }
+            if (node.el.groupIds?.length) {
+                this.elements.filter(item => item.groupIds?.some(gid => node.el.groupIds.includes(gid))).forEach(g => {
+                    if (g.id !== node.el.id) { g.x += dx; g.y += dy; this.changedElementsSet.add(g); }
+                });
+            }
+            if (node.el.type === "frame") {
+                this.elements.filter(item => item.frameId === node.el.id).forEach(g => {
+                    g.x += dx; g.y += dy; this.changedElementsSet.add(g);
+                });
+            }
+            if (node.el.customData?.swimlane) {
+                this.elements.filter(item => item.customData?.parent === node.el.id).forEach(g => {
+                    g.x += dx; 
+                    g.y += dy; 
+                    this.changedElementsSet.add(g);
+                });
+            }
+        }
+
+        if (node.children.length === 0) return;
+
+        let currentChildBboxY = bboxY + (node.totalHeight - node.childrenTotalHeight) / 2; let currentChildBboxX = bboxX + (node.totalWidth - node.childrenTotalWidth) / 2;
+
+        for (let i = 0; i < node.children.length; i++) {
+            const child = node.children[i]; const line = node.linkChildrensLines[i];
+            let nextBboxX = bboxX; let nextBboxY = bboxY;
+            if (this.config.direction === "LR") { nextBboxX = node.el.x + node.el.width + this.config.lengthBetweenElAndLine + this.config.curveLength; nextBboxY = currentChildBboxY; currentChildBboxY += child.totalHeight; } 
+            else if (this.config.direction === "RL") { nextBboxX = node.el.x - this.config.lengthBetweenElAndLine - this.config.curveLength - child.el.width; nextBboxY = currentChildBboxY; currentChildBboxY += child.totalHeight; } 
+            else if (this.config.direction === "TD") { nextBboxY = node.el.y + node.el.height + this.config.lengthBetweenElAndLine + this.config.curveLength; nextBboxX = currentChildBboxX; currentChildBboxX += child.totalWidth; } 
+            else if (this.config.direction === "BU") { nextBboxY = node.el.y - this.config.lengthBetweenElAndLine - this.config.curveLength - child.el.height; nextBboxX = currentChildBboxX; currentChildBboxX += child.totalWidth; }
+            this.assignPositions(child, nextBboxX, nextBboxY); if (line) this.updateLine(node, child, line);
+        }
+    }
+
+    updateLine(parentNode, childNode, line) {
+        line.x = parentNode.el.x + parentNode.el.width; line.y = parentNode.el.y + parentNode.el.height / 2;
+        if (this.config.direction === "RL") { line.x = parentNode.el.x; } 
+        else if (this.config.direction === "TD") { line.x = parentNode.el.x + parentNode.el.width / 2; line.y = parentNode.el.y + parentNode.el.height; } 
+        else if (this.config.direction === "BU") { line.x = parentNode.el.x + parentNode.el.width / 2; line.y = parentNode.el.y; }
+
+        line.startBinding = { elementId: parentNode.el.id, focus: 0, gap: 1 };
+        line.endBinding = { elementId: childNode.el.id, focus: 0, gap: 1 };
+
+        if (this.config.enableFixedPoint) {
+            line.startBinding.mode = "inside";
+            line.endBinding.mode = "inside";
+            if (this.config.direction === "LR") { line.startBinding.fixedPoint = [1.0, 0.5]; line.endBinding.fixedPoint = [0.0, 0.5]; } 
+            else if (this.config.direction === "RL") { line.startBinding.fixedPoint = [0.0, 0.5]; line.endBinding.fixedPoint = [1.0, 0.5]; } 
+            else if (this.config.direction === "TD") { line.startBinding.fixedPoint = [0.5, 1.0]; line.endBinding.fixedPoint = [0.5, 0.0]; } 
+            else if (this.config.direction === "BU") { line.startBinding.fixedPoint = [0.5, 0.0]; line.endBinding.fixedPoint = [0.5, 1.0]; }
+        } else {
+            delete line.startBinding.fixedPoint; delete line.startBinding.mode;
+            delete line.endBinding.fixedPoint; delete line.endBinding.mode;
+        }
+
+        let childConnX = childNode.el.x; let childConnY = childNode.el.y + childNode.el.height / 2;
+        if (this.config.direction === "RL") childConnX = childNode.el.x + childNode.el.width;
+        else if (this.config.direction === "TD") { childConnX = childNode.el.x + childNode.el.width / 2; childConnY = childNode.el.y; }
+        else if (this.config.direction === "BU") { childConnX = childNode.el.x + childNode.el.width / 2; childConnY = childNode.el.y + childNode.el.height; }
+
+        const dx = childConnX - line.x; const dy = childConnY - line.y;
+        if (this.config.arrowType === "elbow") {
+            line.elbowed = true;
+            if (this.isHorizontal()) { line.points = [[0, 0], [dx / 2, 0], [dx / 2, dy], [dx, dy]]; } 
+            else { line.points = [[0, 0], [0, dy / 2], [dx, dy / 2], [dx, dy]]; }
+        } else {
+            line.elbowed = false; const isAligned = this.isHorizontal() ? Math.abs(dy) < 1 : Math.abs(dx) < 1;
+            if (line.customData?.curveArrow || parentNode.children.length === 1 || isAligned) {
+                line.points = [ [0, 0], [dx, dy] ];
+            } else {
+                if (this.isHorizontal()) { line.points = [ [0, 0], [dx * 0.4, dy * 0.8905], [dx, dy] ]; } 
+                else { line.points = [ [0, 0], [dx * 0.8905, dy * 0.4], [dx, dy] ]; }
+            }
+        }
+        
+        const style = resolveStyle(childNode.level, childNode.branchIndex, this.config);
+        if (style) {
+            if (line.strokeColor !== style.strokeColor && style.strokeColor) { line.strokeColor = style.strokeColor; this.changedElementsSet.add(line); }
+            if (line.strokeWidth !== style.strokeWidth && style.strokeWidth) { line.strokeWidth = style.strokeWidth; this.changedElementsSet.add(line); }
+        }
+        this.changedElementsSet.add(line);
+    }
+}
+
+window.MindmapAPI = {
+    runLayout: async (sceneElements, commitToHistory = false, activeEa = null) => {
+        if (!activeEa) {
+            console.warn("MindmapAPI.runLayout: No EA instance provided.");
+            return;
+        }
+
+        const rootEl = sceneElements.find(el => el.customData?.mindmap?.root === el.id);
+        const rootSettings = rootEl?.customData?.mindmap?.settings || DEFAULT_SETTINGS;
+
+        const notArrowEls = sceneElements.filter((el) => el.type !== "arrow");
+        const arrowEls = sceneElements.filter((el) => el.type === "arrow");
+        
+        activeEa.clear();
+        if (notArrowEls.length > 0) activeEa.copyViewElementsToEAforEditing(notArrowEls);
+        if (arrowEls.length > 0) activeEa.copyViewElementsToEAforEditing(arrowEls);
+
+        const eaElements = activeEa.getElements();
+
+        const layouter = new MindMapLayouter(eaElements, {
+            direction: rootSettings.direction || "LR", arrowType: rootSettings.arrowType || "normal", enableFixedPoint: rootSettings.enableFixedPoint ?? true,
+            defaultGap: Number(rootSettings.defaultGap ?? 10), curveLength: Number(rootSettings.curveLength ?? 40), lengthBetweenElAndLine: Number(rootSettings.lengthBetweenElAndLine ?? 100),
+            theme: rootSettings.theme,
+            customTheme: rootSettings.customTheme
+        });
+        
+        layouter.runLayout();
+        
+        await activeEa.addElementsToView(false, false, commitToHistory, false, "EVENTUALLY");
+        activeEa.clear();
+    },
+
+    addChildNode: async (selectedEl, App, activeEa = null) => {
+        return window.MindmapAPI.addNode(selectedEl, "next", App, activeEa);
+    },
+
+    addSiblingNode: async (selectedEl, App, activeEa = null) => {
+        return window.MindmapAPI.addNode(selectedEl, "same", App, activeEa);
+    },
+
+    addNode: async (selectedEl, pos, App, activeEa = null) => {
+        const curEa = activeEa || ExcalidrawAutomate;
+        if (!selectedEl?.customData?.mindmap || !curEa) return null;
+        const elements = curEa.getViewElements();
+        let elementsMap = App?.scene?.getNonDeletedElementsMap?.() || elements.reduce((acc, el) => acc.set(el.id, el), new Map());
+        elements.forEach(el => elementsMap.set(el.id, el));
+
+        curEa.clear();
+        let mindmap = MindmapState.mindmapPosMap.get(selectedEl.customData.mindmap.root);
+        const rootEl = elementsMap?.get(selectedEl.customData.mindmap.root);
+        if (!mindmap || !(mindmap.NodeMap.get(selectedEl.id)?.children?.length)) {
+            mindmap = new Mindmap(elements, selectedEl);
+            mindmap.setElements(elements, elementsMap);
+            mindmap.buildNodeTree(rootEl, null, 1, null);
+            MindmapState.mindmapPosMap.set(selectedEl.customData.mindmap.root, mindmap);
+        } else {
+            mindmap.setElements(elements, elementsMap);
+        }
+
+        const currentNode = mindmap.NodeMap.get(selectedEl.id);
+        const rootNode = mindmap.NodeMap.get(mindmap.rootId);
+        if (!currentNode) return null;
+
+        const [newEl, newEls] = await mindmap.addNewNode(selectedEl, currentNode, pos, App?.state || {}, curEa);
+        const [children, arrows] = mindmap.getChildren(rootNode, curEa, true, (el) => curEa.getElement(el.id)?.customData?.hide);
+
+        curEa.selectElementsInView([newEl]);
+        setTimeout(() => {
+            const appInst = App || curEa?.targetView?.excalidrawRef?.current;
+            const startFn = appInst?.startTextEditing?.bind(appInst) || appInst?.text?.startTextEditing?.bind(appInst?.text);
+            if (startFn) {
+                startFn({ sceneX: 0, sceneY: 0, container: newEl });
+            }
+        }, 50);
+
+        const rawItems = [...children, ...arrows, rootNode, ...newEls];
+        const treeElements = getExpandedTreeElements(rawItems, elementsMap, elements);
+        await window.MindmapAPI.runLayout(treeElements, true, curEa);
+        mindmap.clearElements();
+        return newEl;
+    },
+
+    toggleFold: async (selectedEl, App, activeEa = null, recursion = null) => {
+        const curEa = activeEa || ExcalidrawAutomate;
+        if (!selectedEl?.customData?.mindmap || !curEa) return;
+        const elementsMap = App?.scene?.getNonDeletedElementsMap?.() || curEa.getViewElements().reduce((acc, el) => acc.set(el.id, el), new Map());
+        const elements = App?.scene?.getNonDeletedElements?.() || curEa.getViewElements();
+
+        let mindmap = MindmapState.mindmapPosMap.get(selectedEl.customData.mindmap.root);
+        if (!mindmap || !(mindmap.NodeMap.get(selectedEl.id)?.children?.length)) {
+            const rootEl = elementsMap?.get(selectedEl.customData.mindmap.root);
+            mindmap = new Mindmap(elements, selectedEl);
+            mindmap.setElements(elements, elementsMap);
+            mindmap.buildNodeTree(rootEl, null, 1, null);
+            MindmapState.mindmapPosMap.set(selectedEl.customData.mindmap.root, mindmap);
+        } else {
+            mindmap.setElements(elements, elementsMap);
+        }
+
+        const currentNode = mindmap.NodeMap.get(selectedEl.id);
+        if (!currentNode || !currentNode.children.length) return;
+
+        const isCurrentlyOpen = selectedEl.customData.mindmap.status === "open";
+        const doRecursion = recursion !== null ? recursion : (isCurrentlyOpen ? true : false);
+        const visiable = !isCurrentlyOpen;
+        const status = isCurrentlyOpen ? "close" : "open";
+
+        await mindmap.changeVisibility(selectedEl, currentNode, doRecursion, visiable, status, curEa);
+        const rootNode = mindmap.NodeMap.get(mindmap.rootId);
+        const [children, arrows] = mindmap.getChildren(rootNode, curEa, true, (el) => mindmap.elementsMap?.get(el.id)?.customData?.hide);
+        const rawItems = [...children, ...arrows, rootNode, selectedEl];
+        const treeElements = getExpandedTreeElements(rawItems, elementsMap, elements);
+        mindmap.clearElements();
+        await window.MindmapAPI.runLayout(treeElements, false, curEa);
+    },
+
+    startEdit: (selectedEl, App) => {
+        if (!selectedEl) return;
+        const isTextNode = selectedEl.type === "text";
+        const hasBoundText = selectedEl.boundElements?.some(b => b.type === "text");
+        if (isTextNode || hasBoundText) {
+            setTimeout(() => {
+                const appInst = App || ExcalidrawAutomate?.targetView?.excalidrawRef?.current;
+                const startFn = appInst?.startTextEditing?.bind(appInst) || appInst?.text?.startTextEditing?.bind(appInst?.text);
+                if (startFn) {
+                    const payload = { sceneX: 0, sceneY: 0 };
+                    if (isTextNode) {
+                        payload.textElement = selectedEl;
+                    } else {
+                        payload.container = selectedEl;
+                    }
+                    startFn(payload);
+                }
+            }, 0);
+        }
+    }
+};
+
+const handlePointerMove = (context) => {
+    const { ea, api, App, scenePointer } = context;
+    if (!ea || !api) return;
+
+    if (!App || !scenePointer) return false;
+    const hitMindmapElement = findHitMindmapElement(App, scenePointer);
+    if (hitMindmapElement) {
+        if (App.interactiveCanvas) App.interactiveCanvas.style.cursor = "pointer";
+        MindmapState.hoveredMindmapElement = hitMindmapElement; return true; 
+    }
+    MindmapState.hoveredMindmapElement = null; return false;
+};
+
+const handlePointerUp = async (context) => {
+    const { ea, api, App, event, scenePointer } = context;
+    if (!ea || !api) return;
+
+    let isTap = true;
+    if (MindmapState.pointerDownPos && event && typeof event.clientX === "number") {
+        const dist = Math.hypot(event.clientX - MindmapState.pointerDownPos.x, event.clientY - MindmapState.pointerDownPos.y);
+        if (dist > 8) {
+            isTap = false;
+        }
+    }
+    MindmapState.pointerDownPos = null;
+
+    const elementsMap = App?.scene?.getNonDeletedElementsMap?.(); 
+    const allElements = App?.scene?.getNonDeletedElements();
+    const selectedEls = App.scene.getSelectedElements(App.state); 
+    
+    const mainSelectedEls = selectedEls.filter(el => !el.containerId && el.type !== "arrow" && el.type !== "line");
+
+    let draggedEl = null;
+    if (mainSelectedEls.length > 0) {
+        draggedEl = mainSelectedEls.reduce((max, el) => {
+            return (el.width * el.height > max.width * max.height) ? el : max;
+        }, mainSelectedEls[0]);
+    }
+
+    if (draggedEl && MindmapState.isRealDragging && !isTap) {
+        if (draggedEl.customData?.mindmap && draggedEl.customData.mindmap.root === draggedEl.id) { } 
+        else {
+            const targetEl = allElements.find(el => el.id !== draggedEl.id && el.customData?.mindmap && !el.customData?.hide && checkOverlap(draggedEl, el) && !isDescendant(draggedEl.id, el.id, elementsMap) );
+            if (targetEl) {
+                const rootId = targetEl.customData?.mindmap?.root || targetEl.id; const rootEl = elementsMap.get(rootId);
+                const direction = rootEl?.customData?.mindmap?.settings?.direction || "LR";
+                const dropZone = getDropZone(draggedEl, targetEl, direction);
+
+                if (App.interactiveCanvas) App.interactiveCanvas.style.cursor = "";
+
+                setTimeout(async () => { 
+                    await attachNodeToMindmap(draggedEl, targetEl, dropZone, App, ea); 
+                    if (App.interactiveCanvas) App.interactiveCanvas.style.cursor = ""; 
+                }, 50);
+                
+                MindmapState.isRealDragging = false;
+                return false; 
+            }
+        }
+    }
+
+    MindmapState.isRealDragging = false;
+
+    // 仅在真实轻触(isTap)时才触发折叠/展开，避免平移/缩放画布被误识别为点击折叠
+    if (!isTap) {
+        MindmapState.hoveredMindmapElement = null;
+        return false;
+    }
+
+    const targetElement = findHitMindmapElement(App, scenePointer) || MindmapState.hoveredMindmapElement;
+    if (ea?.plugin?.settings?.mindmapHandle && targetElement) {
+        if (event && typeof event.preventDefault === "function") { event.preventDefault(); event.stopPropagation(); }
+        const element = targetElement;
+        ea.viewUpdateScene({ appState: { selectedElementIds: [], selectedGroupIds: {}, editingGroupId: null, activeEmbeddable: null } });
+        const elements = App.scene.getNonDeletedElements();
+        
+        let mindmap = MindmapState.mindmapPosMap.get(element.customData.mindmap.root);
+        let currentNode = mindmap ? mindmap.NodeMap.get(element.id) : null;
+        
+        if (!MindmapState.mindmapPosMap.get(element.customData.mindmap.root) || (currentNode && !currentNode?.children?.length)) {
+            const rootEl = elementsMap?.get(element.customData.mindmap.root);
+            mindmap = new Mindmap(elements, element); mindmap.setElements(elements, elementsMap); mindmap.buildNodeTree(rootEl, null, 1, null);
+            MindmapState.mindmapPosMap.set(element.customData.mindmap.root, mindmap);
+        } else { mindmap.setElements(elements, elementsMap); }
+        
+        currentNode = mindmap.NodeMap.get(element.id);
+        const isCtrl = event?.ctrlKey; 
+        let recursion = element.customData.mindmap.status === "open" ? true : isCtrl;
+        let visiable = element.customData.mindmap.status === "open" ? false : true;
+        let status = element.customData.mindmap.status === "open" ? "close" : "open";
+        
+        await mindmap.changeVisibility(element, currentNode, recursion, visiable, status, ea);
+        const rootNode = mindmap.NodeMap.get(mindmap.rootId);
+        const [children, arrows] = mindmap.getChildren(rootNode, ea, true, (el) => mindmap.elementsMap?.get(el.id)?.customData?.hide);
+        
+        const rawItems = [...children, ...arrows, rootNode, element];
+        const treeElements = getExpandedTreeElements(rawItems, elementsMap, elements);
+        mindmap.clearElements(); await window.MindmapAPI.runLayout(treeElements, false, ea); return true; 
+    }
+    return false;
+};
+
+const handleKeyDown = (context) => {
+    const { App, event, ea, api } = context;
+    if (!ea || !api) return;
+
+    const selectedEls = ea.getViewSelectedElements();
+    if (!selectedEls.length) return false;
+    const selectedEl = selectedEls.find(el => !el.containerId) || selectedEls[0];
+
+    if (event.code === "Space" && selectedEl.customData?.mindmap) {
+        event.preventDefault();
+        event.stopPropagation();
+        window.MindmapAPI.startEdit(selectedEl, App);
+        return true;
+    }
+
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.code) && selectedEl.customData?.mindmap) {
+        const elementsMap = App.scene.getNonDeletedElementsMap(); const elements = App.scene.getNonDeletedElements();
+        const mindmap = new Mindmap(elements, selectedEl); const rootEl = elementsMap.get(selectedEl.customData.mindmap.root);
+        mindmap.setElements(elements, elementsMap); mindmap.buildNodeTree(rootEl, null, 1, null);
+        
+        const node = mindmap.NodeMap.get(selectedEl.id); if (!node) return false;
+
+        let targetNode = null; const direction = rootEl?.customData?.mindmap?.settings?.direction || "LR";
+
+        if (direction === "LR" || direction === "RL") {
+            if (event.code === "ArrowLeft") targetNode = direction === "LR" ? node.parent : node.children.find(c => !elementsMap.get(c.id)?.customData?.hide);
+            if (event.code === "ArrowRight") targetNode = direction === "LR" ? node.children.find(c => !elementsMap.get(c.id)?.customData?.hide) : node.parent;
+            if (event.code === "ArrowUp" || event.code === "ArrowDown") {
+                let sameLevelNodes = Array.from(mindmap.NodeMap.values()).filter(n => { const el = elementsMap.get(n.id); return n.level === node.level && el && !el.customData?.hide; });
+                sameLevelNodes.sort((a, b) => { const elA = elementsMap.get(a.id); const elB = elementsMap.get(b.id); return (elA ? elA.y + elA.height / 2 : 0) - (elB ? elB.y + elB.height / 2 : 0); });
+                const idx = sameLevelNodes.findIndex(s => s.id === node.id);
+                if (event.code === "ArrowUp" && idx > 0) targetNode = sameLevelNodes[idx - 1];
+                if (event.code === "ArrowDown" && idx < sameLevelNodes.length - 1) targetNode = sameLevelNodes[idx + 1];
+            }
+        } else if (direction === "TD" || direction === "BU") {
+            if (event.code === "ArrowUp") targetNode = direction === "TD" ? node.parent : node.children.find(c => !elementsMap.get(c.id)?.customData?.hide);
+            if (event.code === "ArrowDown") targetNode = direction === "TD" ? node.children.find(c => !elementsMap.get(c.id)?.customData?.hide) : node.parent;
+            if (event.code === "ArrowLeft" || event.code === "ArrowRight") {
+                let sameLevelNodes = Array.from(mindmap.NodeMap.values()).filter(n => { const el = elementsMap.get(n.id); return n.level === node.level && el && !el.customData?.hide; });
+                sameLevelNodes.sort((a, b) => { const elA = elementsMap.get(a.id); const elB = elementsMap.get(b.id); return (elA ? elA.x + elA.width / 2 : 0) - (elB ? elB.x + elB.width / 2 : 0); });
+                const idx = sameLevelNodes.findIndex(s => s.id === node.id);
+                if (event.code === "ArrowLeft" && idx > 0) targetNode = sameLevelNodes[idx - 1];
+                if (event.code === "ArrowRight" && idx < sameLevelNodes.length - 1) targetNode = sameLevelNodes[idx + 1];
+            }
+        }
+        event.preventDefault(); event.stopPropagation();
+        if (targetNode) ea.viewUpdateScene({ appState: { selectedElementIds: { [targetNode.id]: true } } });
+        return true;
+    }
+    
+    if (["Tab", "Enter"].includes(event.code)) {
+        if (selectedEl?.customData?.mindmap) {
+            event.preventDefault(); event.stopPropagation();
+            window.MindmapAPI.addNode(selectedEl, event.code === "Enter" ? "same" : "next", App, ea);
+            return true;
+        }
+    }
+
+    if ((event.key === "/" || event.key === "?") && selectedEl?.customData?.mindmap) {
+        event.preventDefault(); event.stopPropagation();
+        const isCtrl = event.ctrlKey || event.metaKey;
+        const isCurrentlyOpen = selectedEl.customData.mindmap.status === "open";
+        window.MindmapAPI.toggleFold(selectedEl, App, ea, isCurrentlyOpen ? true : isCtrl);
+        return true;
+    }
+    return false;
+};
+
+const handlePointerDown = (context) => {
+    const { ea, api, App, event, scenePointer } = context;
+    if (!ea || !api) return;
+
+    if (event && typeof event.clientX === "number") {
+        MindmapState.pointerDownPos = { x: event.clientX, y: event.clientY };
+    }
+
+    const hitMindmapElement = findHitMindmapElement(App, scenePointer) || MindmapState.hoveredMindmapElement;
+    if (ea?.plugin?.settings?.mindmapHandle && hitMindmapElement) {
+        if (event && typeof event.preventDefault === "function") { event.preventDefault(); event.stopPropagation(); } return true; 
+    } return false;
+};
+
+const handleElementsDragged = (context) => {
+    const { ea, api, selectedElements, scene, elementsToUpdate } = context;
+    if (!ea || !api) return;
+    
+    MindmapState.isRealDragging = true;
+    
+    const elementsMap = scene?.getNonDeletedElementsMap?.();
+
+    if (selectedElements.length === 1 && selectedElements[0].type === "arrow") {
+        const arrowEl = selectedElements[0];
+        const startTarget = arrowEl.startBinding?.elementId ? elementsMap.get(arrowEl.startBinding.elementId) : null;
+        const endTarget = arrowEl.endBinding?.elementId ? elementsMap.get(arrowEl.endBinding.elementId) : null;
+        
+        const isMindmapArrow = startTarget?.customData?.mindmap || endTarget?.customData?.mindmap;
+        
+        if (isMindmapArrow) {
+            if (elementsToUpdate && elementsToUpdate.has(arrowEl)) {
+                elementsToUpdate.delete(arrowEl);
+            }
+            return true;
+        }
+    }
+
+    selectedElements.forEach((el) => {
+        if (el?.customData?.mindmap) {
+            const rootEl = elementsMap?.get(el.customData.mindmap.root);
+            if (rootEl?.customData?.mindmap?.settings?.arrowType == 'normal')  {
+                el.boundElements?.forEach(boundElement => {
+                    if (boundElement.type == "arrow") {
+                        const be = elementsMap?.get(boundElement.id);
+                        if (be && be.points && be.points.length >= 3) {
+                            if (be.startBinding?.elementId == el.id || be.endBinding?.elementId == el.id) {
+                                const newPoints = be.points.map(p => [...p]);
+                                newPoints[1][0] = 0.4 * (newPoints[2][0] - newPoints[0][0]);  newPoints[1][1] = (newPoints[2][1] - newPoints[0][1]) * 0.8905; be.points = newPoints;
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }); 
+    
+    return false;
+};
+
+const handleElementsDeleted = async (context) => {
+    const { ea, api, elements, appState, App  } = context;
+    if (!ea || !api) return;
+
+    ea.setView("active");
+    const selectedEls = ea.getViewSelectedElements(); 
+    const elementsMap = App?.scene?.getNonDeletedElementsMap?.();
+    
+    let elementsToUpdate = []; 
+    let arrowsToDelete = []; 
+    let affectedRoots = new Set();
+
+    function deleteOrphan(node) {
+        if (node) { 
+            let el = elementsMap?.get(node.id); 
+            if (el?.customData?.mindmap) { 
+                const newCustomData = { ...el.customData };
+                delete newCustomData.mindmap;
+                el.customData = newCustomData; 
+                elementsToUpdate.push(el);
+                node.children.forEach(n => deleteOrphan(n)); 
+            } 
+        }
+    }
+    
+    selectedEls.forEach(el => {
+        if (el.type === "arrow" && el.endBinding?.elementId) {
+            const targetId = el.endBinding.elementId;
+            const targetEl = elementsMap.get(targetId);
+            
+            if (targetEl?.customData?.mindmap && targetEl.id !== targetEl.customData.mindmap.root) {
+                const rootId = targetEl.customData.mindmap.root;
+                const mindmap = MindmapState.mindmapPosMap.get(rootId);
+                
+                if (mindmap) {
+                    affectedRoots.add(rootId);
+                    mindmap.setElements(elements, elementsMap);
+                    const node = mindmap.NodeMap.get(targetId);
+                    
+                    if (node && node.parent) {
+                        node.parent.childrenArrow = node.parent.childrenArrow.filter(arr => arr.id !== el.id);
+                        node.parent.children = node.parent.children.filter(n => n.id !== node.id);
+                        
+                        deleteOrphan(node);
+                        mindmap.NodeMap.delete(node.id);
+                    }
+                }
+            }
+        }
+
+        if (el?.customData?.mindmap && el.id != el.customData.mindmap.root) {
+            const rootId = el.customData.mindmap.root; 
+            const mindmap = MindmapState.mindmapPosMap.get(rootId);
+            if (!mindmap) return; 
+            affectedRoots.add(rootId); 
+            mindmap.setElements(elements, elementsMap);
+            const node = mindmap.NodeMap.get(el.id); 
+            const parentNode = node?.parent; 
+            if (!parentNode) return;
+            
+            let deleteArrow; 
+            let arrows = [];
+            parentNode.childrenArrow.map(arrEl => elementsMap?.get(arrEl.id)).forEach(arrow => {
+                if (arrow?.endBinding?.elementId) { 
+                    if (arrow.endBinding.elementId != node.id) arrows.push(arrow); 
+                    else deleteArrow = arrow; 
+                }
+            });
+            parentNode.childrenArrow = arrows; 
+            let children = new Set(parentNode.children); 
+            children.delete(node); 
+            parentNode.children = [...children];
+            
+            node.children.forEach(child => deleteOrphan(child));
+            mindmap.NodeMap.delete(node.id);
+            
+            if (deleteArrow) {
+                appState.selectedElementIds[deleteArrow.id] = true; 
+                arrowsToDelete.push(deleteArrow);
+                const parentEl = elementsMap?.get(parentNode.id);
+                if (parentEl?.boundElements?.length > 0) {
+                    const newBoundElements = parentEl.boundElements.filter(b => !(b.type == "arrow" && b.id == deleteArrow.id));
+                    parentEl.boundElements = newBoundElements.length > 0 ? newBoundElements : null; 
+                    elementsToUpdate.push(parentEl);
+                }
+            }
+        }
+    });
+
+    if (arrowsToDelete.length > 0 || elementsToUpdate.length > 0) {
+        ea.clear(); 
+        ea.copyViewElementsToEAforEditing([...arrowsToDelete, ...elementsToUpdate]);
+        ea.getElements().forEach(el => { 
+            if (el.type === "arrow" && arrowsToDelete.some(a => a.id === el.id)) el.isDeleted = true; 
+        });
+        await ea.addElementsToView(false, false, false);
+    }
+
+    for (const rootId of affectedRoots) {
+        const mindmap = MindmapState.mindmapPosMap.get(rootId);
+        if (mindmap) {
+            const rootNode = mindmap.NodeMap.get(rootId);
+            if (rootNode) {
+                const [children, arrows] = mindmap.getChildren(rootNode, ea, true, (el) => mindmap.elementsMap?.get(el.id)?.customData?.hide);
+                const rawItems = [...children, ...arrows, rootNode];
+                const treeElements = getExpandedTreeElements(rawItems, elementsMap, elements).filter(el => el && !selectedEls.some(sel => sel.id === el.id) && !arrowsToDelete.some(a => a.id === el.id));
+                mindmap.clearElements(); 
+                await window.MindmapAPI.runLayout(treeElements, true, ea);
+            }
+        }
+    }
+    return false;
+};
+const ensureMobileToolbar = (App, ea) => {
+    let toolbar = document.getElementById("ea-mindmap-mobile-toolbar");
+    if (!toolbar) {
+        const style = document.createElement("style");
+        style.id = "ea-mindmap-toolbar-style";
+        style.innerHTML = `
+            #ea-mindmap-mobile-toolbar {
+                position: fixed;
+                bottom: 24px;
+                left: 50%;
+                transform: translateX(-50%);
+                display: none;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 12px;
+                background: var(--background-primary, #ffffff);
+                border: 1px solid var(--background-modifier-border, rgba(0,0,0,0.15));
+                border-radius: 24px;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+                z-index: 9999;
+                pointer-events: auto;
+                user-select: none;
+                -webkit-user-select: none;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
+            .ea-mm-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                padding: 6px 12px;
+                border: none;
+                border-radius: 16px;
+                background: var(--background-secondary, rgba(0,0,0,0.06));
+                color: var(--text-normal, #333);
+                font-size: 13px;
+                font-weight: 500;
+                cursor: pointer;
+                touch-action: manipulation;
+                white-space: nowrap;
+            }
+            .ea-mm-btn:active {
+                background: var(--interactive-accent, #705df2);
+                color: var(--text-on-accent, #ffffff);
+            }
+            .ea-mm-btn span {
+                font-size: 14px;
+            }
+        `;
+        document.head.appendChild(style);
+
+        toolbar = document.createElement("div");
+        toolbar.id = "ea-mindmap-mobile-toolbar";
+        toolbar.innerHTML = `
+            <button class="ea-mm-btn" id="ea-mm-child">
+                <span>🌿</span> ${t("tb_child")}
+            </button>
+            <button class="ea-mm-btn" id="ea-mm-sibling">
+                <span>🪵</span> ${t("tb_sibling")}
+            </button>
+            <button class="ea-mm-btn" id="ea-mm-fold">
+                <span>📁</span> ${t("tb_fold")}
+            </button>
+            <button class="ea-mm-btn" id="ea-mm-edit">
+                <span>✏️</span> ${t("tb_edit")}
+            </button>
+        `;
+        document.body.appendChild(toolbar);
+
+        toolbar.querySelector("#ea-mm-child").onclick = (e) => {
+            e.stopPropagation();
+            if (MindmapState.currentSelectedNode) {
+                window.MindmapAPI.addChildNode(MindmapState.currentSelectedNode, MindmapState.currentApp, MindmapState.currentEA);
+            }
+        };
+        toolbar.querySelector("#ea-mm-sibling").onclick = (e) => {
+            e.stopPropagation();
+            if (MindmapState.currentSelectedNode) {
+                window.MindmapAPI.addSiblingNode(MindmapState.currentSelectedNode, MindmapState.currentApp, MindmapState.currentEA);
+            }
+        };
+        toolbar.querySelector("#ea-mm-fold").onclick = (e) => {
+            e.stopPropagation();
+            if (MindmapState.currentSelectedNode) {
+                window.MindmapAPI.toggleFold(MindmapState.currentSelectedNode, MindmapState.currentApp, MindmapState.currentEA);
+            }
+        };
+        toolbar.querySelector("#ea-mm-edit").onclick = (e) => {
+            e.stopPropagation();
+            if (MindmapState.currentSelectedNode) {
+                window.MindmapAPI.startEdit(MindmapState.currentSelectedNode, MindmapState.currentApp);
+            }
+        };
+    }
+    return toolbar;
+};
+
+const updateMobileToolbar = (selectedElements, App, ea) => {
+    MindmapState.currentApp = App;
+    MindmapState.currentEA = ea;
+
+    const isMobile = ExcalidrawAutomate?.obsidian?.Platform?.isMobile || (window.app?.isMobile ?? false) || ('ontouchstart' in window);
+    if (!isMobile) {
+        const existing = document.getElementById("ea-mindmap-mobile-toolbar");
+        if (existing) existing.style.display = "none";
+        return;
+    }
+
+    const toolbar = ensureMobileToolbar(App, ea);
+    if (!toolbar) return;
+
+    if (selectedElements && selectedElements.length === 1 && selectedElements[0]?.customData?.mindmap) {
+        const el = selectedElements[0];
+        MindmapState.currentSelectedNode = el;
+        const foldBtn = toolbar.querySelector("#ea-mm-fold");
+        if (foldBtn) {
+            const isClosed = el.customData.mindmap.status === "close";
+            foldBtn.innerHTML = isClosed 
+                ? `<span>📂</span> ${t("tb_unfold")}`
+                : `<span>📁</span> ${t("tb_fold")}`;
+        }
+        toolbar.style.display = "flex";
+    } else {
+        MindmapState.currentSelectedNode = null;
+        toolbar.style.display = "none";
+    }
+};
+
+const handleMindmapRender = (contextPayload) => {
+    const { ea, api, appState, elementsMap, visibleElements, context, selectedElements } = contextPayload;
+    if (!ea || !api) return;
+
+    try {
+        const selectedEls = selectedElements || ea?.getViewSelectedElements?.() || [];
+        updateMobileToolbar(selectedEls, api, ea);
+
+        for (let i = 0; i < visibleElements.length; i++) {
+            const element = visibleElements[i];
+            if (element?.customData?.hide || !element?.customData?.mindmap || ["arrow", "line"].includes(element.type)) continue;
+            if (!ExcalidrawAutomate.plugin.settings.mindmapHandle) continue;
+
+            let hasStartArrow = false;
+            let isCollapsed = false;
+
+            if (element.boundElements) {
+                for (let j = 0; j < element.boundElements.length; j++) {
+                    const bound = element.boundElements[j];
+                    if (bound.type === "arrow") {
+                        const arrowEl = elementsMap.get(bound.id);
+                        if (arrowEl && arrowEl.startBinding?.elementId === element.id) {
+                            hasStartArrow = true;
+                            if (arrowEl.customData?.hide) isCollapsed = true;
+                            break; 
+                        }
+                    }
+                }
+            }
+
+            if (!hasStartArrow) continue;
+
+            context.save(); context.globalAlpha = 1;
+            const rootEl = elementsMap?.get(element.customData.mindmap.root);
+            let [x1, y1, x2, y2] = getElementAbsoluteCoords(element);
+            const cx = ((x1 + x2) / 2 + appState.scrollX); const cy = ((y1 + y2) / 2 + appState.scrollY);
+            let shiftX = (x2 - x1) / 2 - (element.x - x1); let shiftY = (y2 - y1) / 2 - (element.y - y1);
+            
+            context.scale(appState.zoom.value, appState.zoom.value); context.translate(cx, cy); context.rotate(element.angle);
+            const direction = rootEl?.customData?.mindmap?.settings?.direction || "LR";
+            switch (direction) {
+                case "LR": context.translate(shiftX, 0); break;
+                case "RL": context.translate(-shiftX, 0); break;
+                case "TD": context.translate(0, shiftY); break;
+                case "BU": context.translate(0, -shiftY); break;
+                default: context.translate(shiftX, 0); break;
+            }
+
+            context.beginPath(); context.arc(0, 0, 10, 0, 2 * Math.PI, false); context.fillStyle = '#ffd8a8'; context.fill(); context.lineWidth = 3; context.strokeStyle = '#ffa94d';
+
+            if (isCollapsed) {
+                context.stroke(); const mindmap = MindmapState.mindmapPosMap.get(element.customData.mindmap.root); const num = mindmap?.NodeMap?.get(element.id)?.children?.length;
+                if (num) { context.fillStyle = "#f08c00"; context.textAlign = "center"; context.textBaseline = "middle"; context.fillText(num, 0, 0); } 
+                else { context.beginPath(); context.moveTo(-5, 0); context.lineTo(5, 0); context.moveTo(0, -5); context.lineTo(0, 5); context.stroke(); }
+            } else { context.moveTo(-5, 0); context.lineTo(5, 0); context.stroke(); }
+            context.restore();
+        }
+    } catch (e) { console.error(`[Feature: MindmapRender] Error:`, e); }
+    return false; 
+};
+
+async function mountFeature() {
+    if (!window.EA_Core) return console.warn(`[${SCRIPT_ID}] EA_Core 未运行`);
+    if (typeof ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] === "function") ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`]();
+    window.EA_Core.registerHook(SCRIPT_ID, 'handleCanvasPointerMove', handlePointerMove, 50);
+    window.EA_Core.registerHook(SCRIPT_ID, 'handleCanvasPointerUp', handlePointerUp, 50);
+    window.EA_Core.registerHook(SCRIPT_ID, 'handleCanvasPointerDown', handlePointerDown, 50);
+    window.EA_Core.registerHook(SCRIPT_ID, 'onKeyDown', handleKeyDown, 30);
+    window.EA_Core.registerHook(SCRIPT_ID, 'dragSelectedElements', handleElementsDragged, 50);
+    window.EA_Core.registerHook(SCRIPT_ID, 'deleteSelectedElements', handleElementsDeleted, 50);
+    window.EA_Core.registerHook(SCRIPT_ID, 'renderInteractiveScene', handleMindmapRender, 50);
+
+    ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] = () => {
+        if (window.EA_Core) {
+            window.EA_Core.unregisterHook(SCRIPT_ID); MindmapState.mindmapPosMap.clear();
+            const excalidrawAPI = ExcalidrawAutomate.api || window.ExcalidrawAutomate?.api;
+            if (excalidrawAPI) {
+                excalidrawAPI.updateScene({ appState: { ...excalidrawAPI.getAppState() } });
+            }
+        }
+        const toolbar = document.getElementById("ea-mindmap-mobile-toolbar");
+        if (toolbar) toolbar.remove();
+        const tbStyle = document.getElementById("ea-mindmap-toolbar-style");
+        if (tbStyle) tbStyle.remove();
+        console.log(t("log_unmounted", { id: SCRIPT_ID }));
+    };
+
+    console.log(t("log_mounted", { id: SCRIPT_ID }));
+}
+
+mountFeature();

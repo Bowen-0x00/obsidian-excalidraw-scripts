@@ -1,82 +1,158 @@
 ---
 name: 导出脑图为Markdown文件
-description: 安全导出整棵脑图为 Markdown，同名文件必须确认后才覆盖。
+description: 将选中的脑图导出为层级结构的 Markdown 列表文本，并保存为文件。
 author: ymjr
-version: 1.1.0
+version: 1.1.1
 license: MIT
-usage: 选中脑图节点运行。取消不写入；支持库根目录，保护当前绘图文件不被覆盖。
+usage: 选中脑图节点，运行此脚本即可将整棵树导出并保存为一个新的 Markdown 文件到当前文件夹中。
+features:
+  - 递归遍历脑图节点并转换为 Markdown 结构
+  - 弹窗询问并支持自定义导出的文件名
+  - 自动创建或覆盖同名 md 文件
 dependencies:
-  - 无依赖
+  - 无前置依赖
 autorun: false
 ---
 /*
 ```javascript
 */
 var locales = {
-  zh: { select: "请先选中脑图节点。", invalid: "脑图结构无效：存在循环、多父节点或丢失的根节点。", filename: "导出文件路径（库内 .md 文件）", overwrite: "覆盖已有文件", cancel: "取消", question: "文件已存在：{path}", done: "已导出：{path}", bad_path: "请输入有效的库内 Markdown 路径，不能覆盖当前绘图或文件夹。", stale: "画布已关闭或切换文件，请重新运行。", error: "导出失败：{message}" },
-  en: { select: "Select a mindmap node first.", invalid: "Invalid mindmap: cycle, multiple parents, or missing root.", filename: "Export path (.md file inside the vault)", overwrite: "Overwrite existing file", cancel: "Cancel", question: "File exists: {path}", done: "Exported: {path}", bad_path: "Enter a valid vault Markdown path. The current drawing and folders cannot be overwritten.", stale: "The drawing closed or changed. Run the script again.", error: "Export failed: {message}" }
+  zh: {
+    notice_select: "⚠️ 请先选中要导出的脑图节点！",
+    notice_not_mindmap: "⚠️ 当前选中的元素不是脑图节点！",
+    notice_no_root: "⚠️ 未找到该脑图的根节点！",
+    ui_ask_filename: "是否以根节点文本作为文件名？",
+    ui_yes: "Yes (以根节点作为文件名)",
+    ui_no: "No (自定义文件名)",
+    ui_prompt_filename: "请输入文件名 (包含路径与 .md 后缀):",
+    notice_cancelled: "已取消导出。",
+    notice_updated: "✅ 已更新文件: {name}",
+    notice_success: "✨ 成功导出脑图至: {name}",
+    notice_fail: "❌ 导出失败，请检查控制台报错。"
+  },
+  en: {
+    notice_select: "⚠️ Please select a mindmap node to export first!",
+    notice_not_mindmap: "⚠️ The selected element is not a mindmap node!",
+    notice_no_root: "⚠️ Root node not found for this mindmap!",
+    ui_ask_filename: "Use root node text as filename?",
+    ui_yes: "Yes (Use root text)",
+    ui_no: "No (Custom filename)",
+    ui_prompt_filename: "Enter filename (include path and .md suffix):",
+    notice_cancelled: "Export cancelled.",
+    notice_updated: "✅ File updated: {name}",
+    notice_success: "✨ Mindmap exported to: {name}",
+    notice_fail: "❌ Export failed, please check console for errors."
+  }
 };
 locales["zh-cn"] = locales.zh;
-locales["zh-tw"] = { select: "請先選取腦圖節點。", invalid: "腦圖結構無效：存在循環、多父節點或遺失的根節點。", filename: "匯出檔案路徑（庫內 .md 檔案）", overwrite: "覆寫既有檔案", cancel: "取消", question: "檔案已存在：{path}", done: "已匯出：{path}", bad_path: "請輸入有效的庫內 Markdown 路徑，不能覆寫目前繪圖或資料夾。", stale: "畫布已關閉或切換檔案，請重新執行。", error: "匯出失敗：{message}" };
-const { Notice, normalizePath } = ea.obsidian;
-const view = ea.targetView, api = view?.excalidrawAPI, filePath = view?.file?.path, vault = ea.plugin.app.vault;
-const selected = ea.getViewSelectedElements().find(el => el.customData?.mindmap);
-if (!selected) { new Notice(t("select")); return; }
-function exportTree(elements, rootId) {
-  const map = new Map(elements.filter(el => !el.isDeleted).map(el => [el.id, el])), root = map.get(rootId), children = new Map(), parents = new Map();
-  if (!root?.customData?.mindmap) throw new Error(t("invalid"));
-  const horizontal = !["TD", "BU"].includes(root.customData.mindmap.settings?.direction);
-  const nodes = elements.filter(el => !el.isDeleted && el.customData?.mindmap?.root === rootId), ids = new Set(nodes.map(el => el.id));
-  for (const el of elements) {
-    const a = el.startBinding?.elementId, b = el.endBinding?.elementId;
-    if (el.isDeleted || !["arrow", "line"].includes(el.type) || !ids.has(a) || !ids.has(b)) continue;
-    if (parents.has(b) || a === b) throw new Error(t("invalid"));
-    parents.set(b, a); if (!children.has(a)) children.set(a, []); children.get(a).push(map.get(b));
-  }
-  const textOf = el => {
-    const text = el.type === "text" ? el : map.get(el.boundElements?.find(b => b.type === "text")?.id);
-    return String(text?.originalText || text?.text || `![[${filePath}#^group=${el.id}]]`).replace(/\r?\n/g, " ");
-  };
-  const lines = [], seen = new Set(), stack = [{ el: root, depth: 0 }];
-  while (stack.length) {
-    const { el, depth } = stack.pop(); if (seen.has(el.id)) throw new Error(t("invalid")); seen.add(el.id);
-    lines.push(`${depth ? "\t".repeat(depth - 1) + "- " : "## "}${textOf(el)}`);
-    const next = children.get(el.id) || []; next.sort((a, b) => horizontal ? a.y - b.y : a.x - b.x);
-    for (let i = next.length - 1; i >= 0; i--) stack.push({ el: next[i], depth: depth + 1 });
-  }
-  if (seen.size !== ids.size || parents.has(rootId)) throw new Error(t("invalid"));
-  return lines.join("\n") + "\n";
+locales["zh-tw"] = locales.zh;
+const { Notice } = ea.obsidian;
+
+const selectedEls = ea.getViewSelectedElements();
+if (selectedEls.length === 0) {
+    new Notice(t("notice_select"));
+    return;
 }
-const check = () => { if (!view._loaded || view.semaphores?.viewunload || view.excalidrawAPI !== api || view.file?.path !== filePath) throw new Error(t("stale")); };
+
+const selectedEl = selectedEls.find(el => el.customData?.mindmap) || selectedEls[0];
+if (!selectedEl?.customData?.mindmap) {
+    new Notice(t("notice_not_mindmap"));
+    return;
+}
+
+// 修复：手动构建 elementsMap
+const elements = ea.getViewElements();
+const elementsMap = new Map();
+elements.forEach(el => elementsMap.set(el.id, el));
+
+const rootId = selectedEl.customData.mindmap.root;
+const rootEl = elementsMap.get(rootId);
+
+if (!rootEl) {
+    new Notice(t("notice_no_root"));
+    return;
+}
+
+// 获取节点文本内容
+function getNodeText(element) {
+    if (!element) return "";
+    if (element.type === "text") return element.originalText || element.text;
+    
+    // 如果是容器（矩形等），寻找绑定的文本
+    if (element.boundElements) {
+        const textBound = element.boundElements.find(b => b.type === "text");
+        if (textBound) {
+            const textEl = elementsMap.get(textBound.id);
+            return textEl ? (textEl.originalText || textEl.text) : "";
+        }
+    }
+    return `![[${ea.targetView.file.path}#^group=${element.id}]]`;
+}
+
+// 收集 Markdown 结果
+let mdResult = "";
+
+function traverse(currentEl, depth) {
+    if (!currentEl) return;
+    
+    // 生成当前节点的 Markdown
+    const indent = "\t".repeat(Math.max(0, depth - 1));
+    const prefix = depth === 0 ? "## " : "- ";
+    mdResult += `${indent}${prefix}${getNodeText(currentEl)}\n`;
+
+    // 寻找子节点（通过发出箭头寻找）
+    const startArrows = (currentEl.boundElements || [])
+        .filter(b => b.type === "arrow")
+        .map(b => elementsMap.get(b.id))
+        .filter(arrow => arrow && arrow.startBinding?.elementId === currentEl.id);
+
+    // 根据子节点在画布上的 Y 坐标排序，保证导出顺序与视觉一致
+    const children = startArrows
+        .map(arrow => elementsMap.get(arrow.endBinding?.elementId))
+        .filter(Boolean)
+        .sort((a, b) => a.y - b.y);
+
+    children.forEach(child => traverse(child, depth + 1));
+}
+
+// 交互询问：是否以根节点名称作为文件名
+const rootText = getNodeText(rootEl).replace(/[\\/:*?"<>|]/g, "_"); // 过滤非法字符
+const useRootName = await utils.suggester(
+    [t("ui_yes"), t("ui_no")], 
+    [true, false], 
+    t("ui_ask_filename")
+);
+
+let fileName = "";
+const currentFilePath = ea.targetView.file.path;
+const dirPath = currentFilePath.substring(0, currentFilePath.lastIndexOf("/"));
+
+if (useRootName) {
+    fileName = `${dirPath}/${rootText || "Untitled_Mindmap"}.md`;
+} else {
+    const defaultName = currentFilePath.replace('.md', `.mindmap.md`);
+    const input = await utils.inputPrompt(t("ui_prompt_filename"), defaultName, defaultName);
+    if (!input) {
+        new Notice(t("notice_cancelled"));
+        return;
+    }
+    fileName = input;
+}
+
+// 开始遍历生成
+traverse(rootEl, 0);
+
+// 写入文件
 try {
-  check();
-  const root = api.getSceneElements().find(el => el.id === selected.customData.mindmap.root);
-  if (!root) throw new Error(t("invalid"));
-  const texts = new Map(api.getSceneElements().map(el => [el.id, el]));
-  const text = root.type === "text" ? root : texts.get(root.boundElements?.find(b => b.type === "text")?.id);
-  const name = (text?.originalText || text?.text || "Untitled_Mindmap").replace(/[\r\n\\/:*?"<>|]/g, "_").trim();
-  const directory = filePath.includes("/") ? filePath.slice(0, filePath.lastIndexOf("/")) + "/" : "";
-  const defaultPath = `${directory}${name}.md`;
-  const input = await utils.inputPrompt(t("filename"), defaultPath, defaultPath);
-  if (input == null || !input.trim()) return;
-  check();
-  const target = normalizePath(input.trim());
-  if (!/\.md$/i.test(target) || target === filePath || /^[\\/]|^[a-z]:/i.test(input.trim()) || target.split("/").some(part => !part || part === ".." || part === ".") || vault.getFolderByPath(target)) throw new Error(t("bad_path"));
-  let existing = vault.getFileByPath(target);
-  let confirmedContent = null;
-  if (existing) {
-    const confirmed = await utils.suggester([t("overwrite"), t("cancel")], [true, false], t("question", { path: target }));
-    if (confirmed !== true) return;
-    check(); confirmedContent = await vault.read(existing); check();
-  }
-  const markdown = exportTree(api.getSceneElements(), selected.customData.mindmap.root);
-  check();
-  if (existing) {
-    // Refuse a race with another writer after the overwrite choice rather than losing its edits.
-    await vault.process(existing, current => { check(); if (current !== confirmedContent) throw new Error(t("stale")); return markdown; });
-  } else {
-    // Vault.create fails rather than overwriting if a competing writer created the path meanwhile.
-    await vault.create(target, markdown);
-  }
-  new Notice(t("done", { path: target }));
-} catch (error) { console.error(error); new Notice(t("error", { message: error.message })); }
+    let file = app.vault.getAbstractFileByPath(fileName);
+    if (file) {
+        await app.vault.modify(file, mdResult);
+        new Notice(t("notice_updated", { name: fileName }));
+    } else {
+        await app.vault.create(fileName, mdResult);
+        new Notice(t("notice_success", { name: fileName }));
+    }
+} catch (error) {
+    console.error(error);
+    new Notice(t("notice_fail"));
+}
