@@ -2,7 +2,7 @@
 name: 解除脑图属性
 description: 将选中元素及其子节点从脑图结构中脱离，转换为普通元素，并修复原脑图排版。
 author: ymjr
-version: 1.1.1
+version: 1.1.2
 usage: 选中要解除的脑图节点，运行该脚本即可。
 ---
 /*
