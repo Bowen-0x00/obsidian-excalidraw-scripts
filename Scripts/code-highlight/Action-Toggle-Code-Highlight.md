@@ -2,7 +2,7 @@
 name: 切换代码高亮
 description: 选中文本，自动识别语言并应用高亮；若已高亮则取消。
 author: ymjr
-version: 1.0.0
+version: 1.0.1
 license: MIT
 usage: 选中画板中的一个或多个文本元素，点击运行脚本。如果是普通文本，将自动识别语言并转换为代码高亮图片；如果是已高亮的图片，将恢复为普通文本。
 features:
