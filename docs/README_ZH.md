@@ -166,6 +166,12 @@ Node.js 维护入口是 `node Scripts/get_json.js`，路径以工具自身所在
 
 维护者应将同一份 `main` 提交同步到 [GitHub](https://github.com/Bowen-0x00/obsidian-excalidraw-scripts) 与 [Gitee](https://gitee.com/Bowen-0x00/obsidian-excalidraw-scripts)。为 `origin` 配置两个 HTTPS push URL，并设置仓库级 `remote.pushDefault=origin`、`branch.main.pushRemote=origin`、`push.default=simple`，即可在 `main` 分支执行一次 `git push` 推送两处。这些配置只在本机生效，新克隆需重新配置。推送后分别核对两边引用和 raw 市场文件；双平台非原子事务，一边成功不代表另一边也成功。
 
+### 自动更新 Agent 包的共享 Engine
+
+[Agent/Skill 仓库](https://github.com/Bowen-0x00/obsidian-excalidraw-agent-skill)的`bridge/shared-scripts.json`是导入白名单：共享Engine只维护这里的一份源码，不在两个仓库双写。GitHub main push触发[通知工作流](../.github/workflows/notify-skill.yml)，读取目标清单，只有涉及声明文件或通知配置才dispatch；其它脚本修改跳过。目标端校验固定源快照、语法及回归后创建/更新同一同步PR，不直接覆盖main。
+
+两仓库各配置Actions secret `SKILL_SYNC_TOKEN`；推荐限目标Agent仓库Contents/Pull requests读写及Metadata读取、有限期的fine-grained token，禁止提交凭据。可在Actions点击Run workflow补发；目标端每6小时兜底。必需源文件删除/改名会报错，不能静默保留旧副本。GitHub通知不代表Gitee镜像成功；PR不自动发布Skill、覆盖vault或重载Engine，兼容性和真实宿主验收仍需维护者确认。
+
 ## 致谢与许可
 
 感谢 [Zsolt Viczian 及 Obsidian Excalidraw 贡献者](https://github.com/zsviczian/obsidian-excalidraw-plugin)与 [Excalidraw 贡献者](https://github.com/excalidraw/excalidraw)。保留脚本作者和许可元数据；请检查各脚本或素材声明的许可，不假设整个仓库使用统一许可。

@@ -1,0 +1,40 @@
+name: Notify Agent Skill of shared script updates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Scripts/**'
+      - '.github/scripts/notify_skill.py'
+      - '.github/workflows/notify-skill.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: notify-agent-skill
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    if: github.repository == 'Bowen-0x00/obsidian-excalidraw-scripts'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.13'
+      - name: Notify only declared upstream changes
+        env:
+          GH_TOKEN: ${{ secrets.SKILL_SYNC_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo 'Missing SKILL_SYNC_TOKEN for the Agent repository dispatch.' >&2
+            exit 1
+          fi
+          python .github/scripts/notify_skill.py

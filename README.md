@@ -166,6 +166,14 @@ The Node.js maintenance entry is `node Scripts/get_json.js` (paths are resolved 
 
 Maintainers publish the same `main` commit to [GitHub](https://github.com/Bowen-0x00/obsidian-excalidraw-scripts) and [Gitee](https://gitee.com/Bowen-0x00/obsidian-excalidraw-scripts). Configure `origin` with both HTTPS push URLs and repository-local `remote.pushDefault=origin`, `branch.main.pushRemote=origin`, and `push.default=simple`; then run `git push` once from `main`. These settings are local, not inherited by new clones. Verify both remote refs and raw catalogs afterward: a multi-target push can succeed on one host and fail on the other.
 
+### Automatic Agent bundle updates
+
+The [Agent package](https://github.com/Bowen-0x00/obsidian-excalidraw-agent-skill) imports only the shared Engines declared in its [`bridge/shared-scripts.json`](https://github.com/Bowen-0x00/obsidian-excalidraw-agent-skill/blob/main/bridge/shared-scripts.json). Maintain those Engine sources here, not in both repositories.
+
+On GitHub `main` push, [Notify Agent Skill](.github/workflows/notify-skill.yml) reads that target manifest and dispatches only when declared source files or notification configuration changed; unrelated scripts are skipped. The Agent receiver validates a pinned source snapshot and opens/updates one reviewable synchronization PR. Deletion/rename of a required source is an error, not a reason to retain a silent stale copy. **Run workflow** can request a full comparison, and the Agent receiver checks every six hours as a fallback.
+
+Both repositories need the Actions secret `SKILL_SYNC_TOKEN`; use a dedicated expiring fine-grained token for the target Agent repository (Contents and Pull requests read/write, Metadata read). Do not commit credentials. A GitHub push notification does not prove the Gitee mirror updated; keep the two existing publication targets synchronized separately. A sync PR is not an automatic Skill release, vault deployment or Engine reload. See the [Agent maintenance contract](https://github.com/Bowen-0x00/obsidian-excalidraw-agent-skill#shared-engine-source-and-automatic-update-prs).
+
 ## Credits and license
 
 Thanks to [Zsolt Viczian and the Obsidian Excalidraw contributors](https://github.com/zsviczian/obsidian-excalidraw-plugin) and the [Excalidraw contributors](https://github.com/excalidraw/excalidraw). Preserve script authorship and license metadata; check the license declared by each script or library instead of assuming a repository-wide license.
