@@ -1,70 +1,69 @@
-# Obsidian-Excalidraw-ymjr
+# Obsidian Excalidraw Scripts
 
 [English](../README.md) | [简体中文](./README_ZH.md)
 
-这是我的[obsidian-excalidraw-plugin](https://github.com/zsviczian/obsidian-excalidraw-plugin)的自定义脚本仓库。
+这是 [Bowen-0x00](https://github.com/Bowen-0x00) 维护的 Excalidraw Automate 自定义脚本及素材库，**不是插件源码或插件编译产物仓库**。
 
-实现了很多实用/有趣的功能，以提高使用excalidraw的体验
+- **完整脚本目录、介绍与安装按钮：**[Scripts/index.md](../Scripts/index.md)。
+- **推荐宿主插件：**[Excalidraw-ymjr](https://github.com/Bowen-0x00/obsidian-excalidraw-plugin-ymjr)。很多 Feature 引擎依赖修改版的自定义 Hook；能否用于原版插件必须逐脚本核实。
+- **可直接打开的示例：**[示例 vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault)。
 
-部分脚本依赖于我对obsidian-excalidraw的[修改版本](https://github.com/Bowen-0x00/obsidian-excalidraw-plugin-ymjr)，部分不需要任何依赖。
+## 从自定义脚本市场安装
 
-我打包了一个obsidian 示例库 [obsidian-excalidraw-example-vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault), 其中包含了修改后的插件和很多自定义脚本，以及一些用于演示功能的excalidraw画布。你可以直接用obsidian打开然后体验功能。
-你也可以看[视频](https://www.bilibili.com/video/BV1zN4y1H7Dx/) 快速了解其中的部分功能。
+1. 安装并启用 [Excalidraw-ymjr](https://github.com/Bowen-0x00/obsidian-excalidraw-plugin-ymjr/releases)。BRAT 和手动安装方法见插件仓库；本脚本仓库不负责安装宿主插件。
+2. 在插件设置中配置脚本目录，将 **Custom script store URL** 设置为：
 
+   ```text
+   https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/index.md
+   ```
 
-## 特性&功能 (上传中...)
+3. 打开一个 Excalidraw 绘图，从绘图菜单或标题栏入口选择 **安装或更新 Excalidraw 脚本（自定义地址）**。普通社区脚本市场是另一份目录，不是这里的自定义市场。
+4. 从分类表跳转到脚本详情，阅读说明与依赖，再点击安装按钮。自定义市场下载的脚本保存在已配置脚本目录下的 `Downloaded(Custom)/`。
+5. 除 `Action-*` 操作脚本外，还要安装它依赖的 `Feature-*-Engine`。Action 执行操作；Engine 提供后台渲染或交互。启用前检查脚本元数据中的 `dependencies`、`usage` 和 `autorun`。
 
-|feature|scripts|image|
-|---|---|---|
-|思维导图| - [autorun-_renderInteractiveScene_Hook](../Scripts/Encrypted/autorun-_renderInteractiveScene_Hook.md) </br> - [autorun-deleteSelectedElementsHook](../Scripts/Encrypted/autorun-deleteSelectedElementsHook.md) </br> - [autorun-handleCanvasPointerUp_Hook](../Scripts/Encrypted/autorun-handleCanvasPointerUp_Hook.md)  </br> - [autorun-onKeyDownHook](../Scripts/Encrypted/autorun-onKeyDownHook.md) </br> - [autorun-onPointerDownHook](../Scripts/Encrypted/autorun-onPointerDownHook.md) </br> - [_autorun-utils](../Scripts/Encrypted/_autorun-utils.md) </br> - [add mind map](../Scripts/Encrypted/add%20mind%20map.md) </br> - [Mindmap format2](../Scripts/Encrypted/Mindmap%20format2.md) </br> - [clear ea Mindmap](../Scripts/Encrypted/clear%20ea%20Mindmap.md) </br> - [replace mindmap node](../Scripts/Encrypted/replace%20mindmap%20node.md)| <img src="../images/mindmap2.gif"> </br> <img src="../images/mindmap2 - mobile.gif"> |
-|md <=> ex思维导图| - [export mindmap to md](../Scripts/Encrypted/export%20mindmap%20to%20md.md) </br> - [tp.excalidraw.mindmap](../Templaters/tp.excalidraw.mindmap.md)| <img src="../images/md ex mindmap.gif">|
-|转换连接为直角连接| [convert line to Right-angle.md](../Scripts/convert%20line%20to%20Right-angle.md) | <img src="../images/right%20angle.gif" alt="Image" >|
-|转换连接为直角连接 (圆角边)| [convert connection shape to elbow.md](../Scripts/Encrypted/convert%20connection%20shape%20to%20elbow.md) | <img src="../images/Convert connection to elbow.gif" alt="Image" >|
-用kanban显示frame为大纲|[show outline by frame - kanban.md](../Scripts/show%20outline%20by%20frame%20-%20kanban.md)|<img src="../images/kanban.gif" alt="Image" >|
-|设置箭头类型| [Set arrow type.md](../Scripts/Set%20arrow%20type.md) | <img src="../images/arrow type2.gif" alt="Image" >|
-|插入垂直间隔 | [insert vertical space.md](../Scripts/insert%20vertical%20space.md) | <img src="../images/insert vertical space.gif" alt="Image" >|
-|插入垂直间隔 (宽度范围) | [insert vertical space with width.md](../Scripts/insert%20vertical%20space%20with%20width.md) | <img src="../images/insert vertical space.gif" alt="Image" >|
-|增加图片到当前画布|[add image server.md](../Scripts/add%20image%20server.md)| <img src="../images/add image by server1.gif" alt="Image" >|
-|x方向顺序连接元素|[connect elements sequece by x](../Scripts/Connect%20elements%20sequence%20by%20x.md)|<img src="../images/connect elements sequece by x.gif" alt="Image" >|
-|y方向顺序连接元素|[connect elements sequece by y](../Scripts/Connect%20elements%20sequence%20by%20x.md)|<img src="../images/connect elements sequece by y.gif" alt="Image" >|
-|连接元素为思维导图结构|[connect elements sequece by y](../Scripts/Connect%20elements_by_x.md)|<img src="../images/connect elements by x - mindmap.gif" alt="Image" >|
-|按需加载library|[load more library](../Scripts/Encrypted/load%20more%20library.md)|<img src="../images/library1.gif" alt="Image" ><img src="../images/library2.gif" alt="Image" >|
-|自定义形状箭头拉伸|- [add fixed and dragable for line](../Scripts/Encrypted/add%20fixed%20and%20dragable%20for%20line.md)</br>- [autorun-handlePointDraggingHook](../Scripts/Encrypted/autorun-handlePointDraggingHook.md)|<img src="../images/fixedDragable.gif" alt="Image" >|
-| 显示/隐藏细节 |- [add detail - detail](../Scripts/Encrypted/add%20detial%20-%20detail.md)</br>- [add detail - target](../Scripts/Encrypted/add%20detial%20-%20target.md)</br>- [autorun-handleCanvasPointerUp_detail_Hook](../Scripts/Encrypted/autorun-handleCanvasPointerUp_detail_Hook.md)|<img src="../images/detail2.gif" alt="Image" >|
-| 自动连接功能 (直角连接、附着到连接点) |- [autorun-binding](../Scripts/Encrypted/autorun-binding.md)</br>- [_autorun-utils](../Scripts/Encrypted/_autorun-utils.md)</br>- [switch connection shape](../Scripts/Encrypted/switch%20connection%20shape.md) </br>- [autorun-dragSelectedElementsHook](../Scripts/Encrypted/autorun-dragSelectedElementsHook.md)</br>- [autorun-handlePointDraggingHook](../Scripts/Encrypted/autorun-handlePointDraggingHook.md)</br>- [autorun-maybeBindLinearElement_Hook](../Scripts/Encrypted/autorun-maybeBindLinearElement_Hook.md)</br>- [autorun-updateBoundPoint_Hook](../Scripts/Encrypted/autorun-updateBoundPoint_Hook.md)|<img src="../images/switch connection shape2.gif" alt="Image" > </br> <img src="../images/curve.gif" alt="Image" >|
-| 代码语法高亮 |- [mark as code](../Scripts/Encrypted/mark%20as%20code.md)</br>- [autorun-drawElementOnCanvasHook](../Scripts/Encrypted/autorun-drawElementOnCanvasHook.md)</br>- [_autorun-utils](../Scripts/Encrypted/_autorun-utils.md)|<img src="../images/code.gif" alt="Image" >|
-| 展开/折叠元素  |- [add collapse by line](../Scripts/Encrypted/add%20collapse%20by%20line.md)</br>- [autorun-onPointerDownHook](../Scripts/Encrypted/autorun-onPointerDownHook.md)|<img src="../images/collapse.gif" alt="Image" >|
-| echarts  |- [insert echarts](../Scripts/Encrypted/insert%20echarts.md)</br>- [convert text to echarts](../Scripts/Encrypted/convert%20text%20to%20echarts.md) </br>- [switch echarts type](../Scripts/Encrypted/switch%20echarts%20type.md) </br>- [autorun-onPasteHook](../Scripts/Encrypted/autorun-onPasteHook.md) </br>- [autorun-renderCustomDocument](../Scripts/Encrypted/autorun-renderCustomDocument.md)|<img src="../images/echarts.gif" >|
-| 导出svg时渲染本地md、代码高亮、echarts  |- [autorun-renderElementToSvg_Hook](../Scripts/Encrypted/autorun-renderElementToSvg_Hook.md)</br>|<img src="../images/export svg.gif" alt="Image" >|
-| 箭头和形状流动动画  |- [add animation for line](../Scripts/Encrypted/add%20animation%20for%20line.md)</br> - [autorun-drawElementFromCanvasHook](../Scripts/Encrypted/autorun-drawElementFromCanvasHook.md)</br> - [remove animation](../Scripts/Encrypted/remove%20animation.md)</br> - [autorun-deleteSelectedElementsHook](../Scripts/Encrypted/autorun-deleteSelectedElementsHook.md)|<img src="../images/arrow flow animation.gif" alt="Image" >|
-| 高亮连接 |- [add highlight link](../Scripts/Encrypted/add%20highlight%20link.md)</br> - [autorun-_renderInteractiveScene_Hook](../Scripts/Encrypted/autorun-_renderInteractiveScene_Hook.md)</br> - [autorun-handleCanvasPointerUp_Hook](../Scripts/Encrypted/autorun-handleCanvasPointerUp_Hook.md)|<img src="../images/highlight link.gif" alt="Image" >|
-| 添加标签 (Obsidian) |- [add highlight link](../Scripts/Encrypted/set%20element%20tags.md)|<img src="../images/tags.gif" alt="Image" >|
+脚本会在 vault 内执行代码。请审查源码、备份重要绘图，并先在临时 vault 中尝试不熟悉的脚本。部分脚本会调用外部应用或服务，其安装与配置要求以对应脚本为准。
 
-你可以查看演示和更多细节在:
-- 我的[B站空间](https://space.bilibili.com/39231346/)
+### 手动安装
 
-## 问题、反馈、创意
-欢迎联系我，如果：
-- 遇到使用问题
-- 建议与反馈
-- 交流沟通有趣的想法、新的feature
+从 [`Scripts/`](../Scripts/) 下载需要的 `.md` 文件，放入 Excalidraw-ymjr 设置中的脚本目录。保留文件名及同名 `.svg` 图标，并安装所需引擎。可保留分类子目录。打开绘图后，从脚本界面或已注册命令运行 Action；Engine 的加载和启动行为取决于插件及脚本元数据。
 
-沟通渠道可以是：
-- github issue
-- 邮件
-- B站留言或私信
-- 我的个人联系方式 (微信、qq)
+不要把仓库说明、`index.md`、`directory-info.json` 或维护工具安装成脚本。不要在不同子目录保留同一脚本的多份副本，否则命令选择和更新容易产生歧义。
 
-## 赞助
-如果你觉得我做的这些修改对你有所帮助，欢迎评论、留言。
+## 现有能力
 
-你也可以赞助我一杯咖啡：
-- 微信赞助码 
-  <img src="../images/赞助码.jpg" width="200px">
-- ko-fi
-  <a href='https://ko-fi.com/G2G3SY16R' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+[脚本市场目录](../Scripts/index.md)是完整清单。代表性分类如下：
 
-## 感谢
-感谢[zsviczian](https://github.com/zsviczian)和[obsidian-excalidraw-plugin](https://github.com/zsviczian/obsidian-excalidraw-plugin)的其他贡献者
+| 方向 | 脚本分类 |
+| --- | --- |
+| 结构化绘图 | [`mindmap`](../Scripts/mindmap/)、[`table`](../Scripts/table/)、[`swimlane`](../Scripts/swimlane/)、[`outline`](../Scripts/outline/) |
+| 图形与连线 | [`generate`](../Scripts/generate/)、[`arrow`](../Scripts/arrow/)、[`brace`](../Scripts/brace/)、[`connection`](../Scripts/connection/) |
+| 文字与视觉样式 | [`text`](../Scripts/text/)、[`color`](../Scripts/color/)、[`gradient`](../Scripts/gradient/)、[`shadow`](../Scripts/shadow/)、[`code-highlight`](../Scripts/code-highlight/) |
+| 交互与导航 | [`hover`](../Scripts/hover/)、[`layer`](../Scripts/layer/)、[`detail`](../Scripts/detail/)、[`link`](../Scripts/link/)、[`follow`](../Scripts/follow/)、[`zoom`](../Scripts/zoom/) |
+| 动画与图表 | [`animation`](../Scripts/animation/)、[`gif`](../Scripts/gif/)、[`step-appear`](../Scripts/step-appear/)、[`echarts`](../Scripts/echarts/)、[`wave-drom`](../Scripts/wave-drom/) |
+| 工具与集成 | [`library`](../Scripts/library/)、[`latex`](../Scripts/latex/)、[`export`](../Scripts/export/)、[`clipboard`](../Scripts/clipboard/)、[`select`](../Scripts/select/)、[`distribute`](../Scripts/distribute/) |
 
-感谢[excalidraw](https://github.com/excalidraw/excalidraw)的贡献者
+[`Library/`](../Library/) 提供额外 Excalidraw 素材库。[`images/`](../images/)、[演示视频](https://www.bilibili.com/video/BV1zN4y1H7Dx/)与 [B 站空间](https://space.bilibili.com/39231346/)中的历史演示可能使用旧界面或旧文件名。安装时请以当前市场目录为准，不再使用旧版 Encrypted 脚本链接。
+
+## 版本与更新
+
+每个脚本在 YAML frontmatter 中单独声明 `version`，与 Excalidraw-ymjr 插件版本相互独立。排查问题时，请对照下载文件的 frontmatter 与市场详情的 Version 字段。
+
+当前 Markdown 自定义市场通过 [`Scripts/directory-info.json`](../Scripts/directory-info.json) 中的 `fname` 和 `mtime` 判断可用更新，**不是比较语义版本号**。市场页、清单和实际脚本必须属于同一次发布。更新后重新打开自定义市场并核对安装文件，不能只凭“已是最新版本”按钮认定版本正确。
+
+下载失败时，先检查自定义市场 URL、`raw.githubusercontent.com` 的网络连通性、宿主插件及依赖引擎版本，并排查重复安装。反馈到 [Issues](https://github.com/Bowen-0x00/obsidian-excalidraw-scripts/issues) 时，请提供准确脚本文件名、脚本版本、插件版本、Obsidian 版本和复现步骤；不要上传 token 或私人 vault 内容。
+
+## 仓库维护
+
+公开脚本位于 `Scripts/<分类>/`。`Scripts/index.md` 会被插件读取：前半部分是分类表格，后半部分是每个脚本的详情及 `excalidraw-script-install` 安装块。`Scripts/directory-info.json` 是更新检测清单，不是插件安装 manifest。
+
+Node.js 维护入口是 `node Scripts/get_json.js`，路径以工具自身所在目录为基准。修改脚本后重新生成清单和市场页，不手工修改生成的版本与下载 URL。遵守 `.gitignore` 并审查明确的发布文件清单，不把整个开发脚本目录直接镜像到发布仓库。测试文件、私人 prompt、凭据和 vault 状态不得发布。
+
+## 致谢与许可
+
+感谢 [Zsolt Viczian 及 Obsidian Excalidraw 贡献者](https://github.com/zsviczian/obsidian-excalidraw-plugin)与 [Excalidraw 贡献者](https://github.com/excalidraw/excalidraw)。保留脚本作者和许可元数据；请检查各脚本或素材声明的许可，不假设整个仓库使用统一许可。
+
+## 反馈与支持
+
+反馈：[GitHub Issues](https://github.com/Bowen-0x00/obsidian-excalidraw-scripts/issues) 或 [B 站](https://space.bilibili.com/39231346/)。
+
+如果这些脚本对你有帮助，可以通过 [Ko-fi](https://ko-fi.com/G2G3SY16R) 或[微信赞助码](../images/赞助码.jpg)支持维护。

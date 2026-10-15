@@ -1,2 +1,23 @@
 *.js
+!/Scripts/get_json.js
 *.py
+
+# Private maintenance instructions and credentials.
+/prompt
+.env
+.env.*
+node_modules/
+*.log
+.obsidian/
+
+# Development-only files must not enter the public script catalog.
+/Scripts/temp/
+/Scripts/temp.md
+/Scripts/temp.txt
+/Scripts/Agent-Drawing/
+/Scripts/dev-feedback/
+/Scripts/mcp/
+/Scripts/Downloaded/
+/Scripts/generate/Action-Generate-Digital-Microarch-Items.md
+/Scripts/test*.md
+/Scripts/README*.md

@@ -2,7 +2,7 @@
 name: 终极逐笔绘制动画
 description: 完美模拟手绘与打字过程。提供可拖拽的悬浮面板，支持滑动条与输入框双向绑定，方便实时调试参数。
 author: ymjr
-version: 1.0.1
+version: 1.1.2
 license: MIT
 usage: 运行脚本弹出控制台。面板可任意拖拽，不遮挡画布。可反复点击“运行”进行调试。
 features:

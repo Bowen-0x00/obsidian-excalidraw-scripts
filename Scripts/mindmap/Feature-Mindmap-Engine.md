@@ -2,7 +2,7 @@
 name: 脑图核心引擎
 description: 后台引擎：提供脑图折叠、排版、快捷键创建节点及实时高亮渲染。
 author: ymjr
-version: 1.0.2
+version: 1.0.3
 license: MIT
 usage: 后台常驻引擎，为带有 customData.mindmap 的元素提供折叠展开的右上角图标绘制，实现回车和 Tab 键的快捷节点生成与连线，实现方向键导航节点，以及监听节点的增删实现自动排版。
 features:
@@ -25,7 +25,12 @@ var locales = {
     notice_success: "✨ 解析生成完成，正在自动排版...",
     notice_no_engine: "⚠️ 脑图核心引擎未运行，无法自动排版，请手动开启 Engine 脚本！",
     log_unmounted: "[{id}] 🔌 已卸载",
-    log_mounted: "[{id}] 🚀 挂载完毕"
+    log_mounted: "[{id}] 🚀 挂载完毕",
+    tb_child: "子节点",
+    tb_sibling: "同级",
+    tb_fold: "折叠",
+    tb_unfold: "展开",
+    tb_edit: "编辑"
   },
   en: {
     setting_desc: "⚠️ Do not modify JSON directly. Use 'Change Mindmap Style' script UI to update global defaults.",
@@ -33,7 +38,12 @@ var locales = {
     notice_success: "✨ Parse complete, re-layout in progress...",
     notice_no_engine: "⚠️ Mindmap engine not running, layout skipped. Enable Engine script!",
     log_unmounted: "[{id}] 🔌 Unmounted",
-    log_mounted: "[{id}] 🚀 Mounted successfully"
+    log_mounted: "[{id}] 🚀 Mounted successfully",
+    tb_child: "Child",
+    tb_sibling: "Sibling",
+    tb_fold: "Fold",
+    tb_unfold: "Unfold",
+    tb_edit: "Edit"
   }
 };
 const SCRIPT_ID = "ymjr.feature.mindmap-engine";
@@ -111,7 +121,16 @@ function resolveStyle(level, branchIndex, settings) {
     return { backgroundColor: bg, textColor: lvlConfig.textColor, strokeColor: lvlConfig.strokeColor, fontSize: lvlConfig.fontSize, strokeWidth: lvlConfig.strokeWidth };
 }
 
-const MindmapState = { mindmapPosMap: new Map(), treeElements: [], hoveredMindmapElement: null, isRealDragging: false };
+const MindmapState = { 
+    mindmapPosMap: new Map(), 
+    treeElements: [], 
+    hoveredMindmapElement: null, 
+    isRealDragging: false,
+    pointerDownPos: null,
+    currentSelectedNode: null,
+    currentApp: null,
+    currentEA: null
+};
 
 const getExpandedTreeElements = (baseItems, elementsMap, allElements) => {
     const expandedMap = new Map();
@@ -358,7 +377,7 @@ const attachNodeToMindmap = async (draggedEl, targetEl, dropZone, App, ea) => {
     }, 100);
 };
 
-const isPointHittingMindmapIcon = (element, elementsMap, x, y) => {
+const isPointHittingMindmapIcon = (element, elementsMap, x, y, appState) => {
     if (!element?.customData?.mindmap?.root) return false;
     
     let hasStartArrow = false;
@@ -376,27 +395,35 @@ const isPointHittingMindmapIcon = (element, elementsMap, x, y) => {
     }
     if (!hasStartArrow) return false;
 
-    const threshold = 4; const iconWidth = 20; const [x1, y1, x2, y2] = getElementAbsoluteCoords(element);
-    const rootEl = elementsMap.get(element.customData.mindmap.root); const direction = rootEl?.customData?.mindmap?.settings?.direction || "LR";
-    let hitLink = false;
+    const isMobile = ExcalidrawAutomate?.obsidian?.Platform?.isMobile || appState?.stylesPanelMode === "mobile" || false;
+    const zoom = appState?.zoom?.value || 1;
+    const baseTargetSize = isMobile ? 36 : 24;
+    const effectiveRadius = Math.max(12, (baseTargetSize / 2) / zoom);
+    
+    const [x1, y1, x2, y2] = getElementAbsoluteCoords(element);
+    const rootEl = elementsMap.get(element.customData.mindmap.root); 
+    const direction = rootEl?.customData?.mindmap?.settings?.direction || "LR";
+    
+    let iconCenterX = x2, iconCenterY = y1 + element.height / 2;
     switch (direction) {
-        case "LR": hitLink = x > x2 - threshold - iconWidth / 2 && x < x2 + threshold + iconWidth / 2 && y > y1 + element.height / 2 - threshold - iconWidth / 2 && y < y1 + element.height / 2 + threshold + iconWidth / 2; break;
-        case "RL": hitLink = x > x1 - threshold - iconWidth / 2 && x < x1 + threshold + iconWidth / 2 && y > y1 + element.height / 2 - threshold - iconWidth / 2 && y < y1 + element.height / 2 + threshold + iconWidth / 2; break;
-        case "TD": hitLink = x > x1 + element.width / 2 - threshold - iconWidth / 2 && x < x1 + element.width / 2 + threshold + iconWidth / 2 && y > y2 - threshold - iconWidth / 2 && y < y2 + threshold + iconWidth / 2; break;
-        case "BU": hitLink = x > x1 + element.width / 2 - threshold - iconWidth / 2 && x < x1 + element.width / 2 + threshold + iconWidth / 2 && y > y1 - threshold - iconWidth / 2 && y < y1 + threshold + iconWidth / 2; break;
-        default: hitLink = x > x2 - threshold - iconWidth / 2 && x < x2 + threshold + iconWidth / 2 && y > y1 + element.height / 2 - threshold - iconWidth / 2 && y < y1 + element.height / 2 + threshold + iconWidth / 2; break;
+        case "LR": iconCenterX = x2; iconCenterY = y1 + element.height / 2; break;
+        case "RL": iconCenterX = x1; iconCenterY = y1 + element.height / 2; break;
+        case "TD": iconCenterX = x1 + element.width / 2; iconCenterY = y2; break;
+        case "BU": iconCenterX = x1 + element.width / 2; iconCenterY = y1; break;
+        default: iconCenterX = x2; iconCenterY = y1 + element.height / 2; break;
     }
-    return hitLink;
+
+    const dist = Math.hypot(x - iconCenterX, y - iconCenterY);
+    return dist <= effectiveRadius;
 };
 
 const isPointHittingMindmap = (element, elementsMap, appState, x, y) => {
     if (!element?.customData?.mindmap) return false;
-    const isMobile = appState?.stylesPanelMode === "mobile" || false;
-    if (!isMobile && appState.viewModeEnabled) {
+    if (appState?.viewModeEnabled) {
         const [x1, y1, x2, y2] = getElementAbsoluteCoords(element);
         if (x >= x1 && x <= x2 && y >= y1 && y <= y2) return true;
     }
-    return isPointHittingMindmapIcon(element, elementsMap, x, y);
+    return isPointHittingMindmapIcon(element, elementsMap, x, y, appState);
 };
 
 const findHitMindmapElement = (App, scenePointer) => {
@@ -815,6 +842,111 @@ window.MindmapAPI = {
         
         await activeEa.addElementsToView(false, false, commitToHistory, false, "EVENTUALLY");
         activeEa.clear();
+    },
+
+    addChildNode: async (selectedEl, App, activeEa = null) => {
+        return window.MindmapAPI.addNode(selectedEl, "next", App, activeEa);
+    },
+
+    addSiblingNode: async (selectedEl, App, activeEa = null) => {
+        return window.MindmapAPI.addNode(selectedEl, "same", App, activeEa);
+    },
+
+    addNode: async (selectedEl, pos, App, activeEa = null) => {
+        const curEa = activeEa || ExcalidrawAutomate;
+        if (!selectedEl?.customData?.mindmap || !curEa) return null;
+        const elements = curEa.getViewElements();
+        let elementsMap = App?.scene?.getNonDeletedElementsMap?.() || elements.reduce((acc, el) => acc.set(el.id, el), new Map());
+        elements.forEach(el => elementsMap.set(el.id, el));
+
+        curEa.clear();
+        let mindmap = MindmapState.mindmapPosMap.get(selectedEl.customData.mindmap.root);
+        const rootEl = elementsMap?.get(selectedEl.customData.mindmap.root);
+        if (!mindmap || !(mindmap.NodeMap.get(selectedEl.id)?.children?.length)) {
+            mindmap = new Mindmap(elements, selectedEl);
+            mindmap.setElements(elements, elementsMap);
+            mindmap.buildNodeTree(rootEl, null, 1, null);
+            MindmapState.mindmapPosMap.set(selectedEl.customData.mindmap.root, mindmap);
+        } else {
+            mindmap.setElements(elements, elementsMap);
+        }
+
+        const currentNode = mindmap.NodeMap.get(selectedEl.id);
+        const rootNode = mindmap.NodeMap.get(mindmap.rootId);
+        if (!currentNode) return null;
+
+        const [newEl, newEls] = await mindmap.addNewNode(selectedEl, currentNode, pos, App?.state || {}, curEa);
+        const [children, arrows] = mindmap.getChildren(rootNode, curEa, true, (el) => curEa.getElement(el.id)?.customData?.hide);
+
+        curEa.selectElementsInView([newEl]);
+        setTimeout(() => {
+            const appInst = App || curEa?.targetView?.excalidrawRef?.current;
+            const startFn = appInst?.startTextEditing?.bind(appInst) || appInst?.text?.startTextEditing?.bind(appInst?.text);
+            if (startFn) {
+                startFn({ sceneX: 0, sceneY: 0, container: newEl });
+            }
+        }, 50);
+
+        const rawItems = [...children, ...arrows, rootNode, ...newEls];
+        const treeElements = getExpandedTreeElements(rawItems, elementsMap, elements);
+        await window.MindmapAPI.runLayout(treeElements, true, curEa);
+        mindmap.clearElements();
+        return newEl;
+    },
+
+    toggleFold: async (selectedEl, App, activeEa = null, recursion = null) => {
+        const curEa = activeEa || ExcalidrawAutomate;
+        if (!selectedEl?.customData?.mindmap || !curEa) return;
+        const elementsMap = App?.scene?.getNonDeletedElementsMap?.() || curEa.getViewElements().reduce((acc, el) => acc.set(el.id, el), new Map());
+        const elements = App?.scene?.getNonDeletedElements?.() || curEa.getViewElements();
+
+        let mindmap = MindmapState.mindmapPosMap.get(selectedEl.customData.mindmap.root);
+        if (!mindmap || !(mindmap.NodeMap.get(selectedEl.id)?.children?.length)) {
+            const rootEl = elementsMap?.get(selectedEl.customData.mindmap.root);
+            mindmap = new Mindmap(elements, selectedEl);
+            mindmap.setElements(elements, elementsMap);
+            mindmap.buildNodeTree(rootEl, null, 1, null);
+            MindmapState.mindmapPosMap.set(selectedEl.customData.mindmap.root, mindmap);
+        } else {
+            mindmap.setElements(elements, elementsMap);
+        }
+
+        const currentNode = mindmap.NodeMap.get(selectedEl.id);
+        if (!currentNode || !currentNode.children.length) return;
+
+        const isCurrentlyOpen = selectedEl.customData.mindmap.status === "open";
+        const doRecursion = recursion !== null ? recursion : (isCurrentlyOpen ? true : false);
+        const visiable = !isCurrentlyOpen;
+        const status = isCurrentlyOpen ? "close" : "open";
+
+        await mindmap.changeVisibility(selectedEl, currentNode, doRecursion, visiable, status, curEa);
+        const rootNode = mindmap.NodeMap.get(mindmap.rootId);
+        const [children, arrows] = mindmap.getChildren(rootNode, curEa, true, (el) => mindmap.elementsMap?.get(el.id)?.customData?.hide);
+        const rawItems = [...children, ...arrows, rootNode, selectedEl];
+        const treeElements = getExpandedTreeElements(rawItems, elementsMap, elements);
+        mindmap.clearElements();
+        await window.MindmapAPI.runLayout(treeElements, false, curEa);
+    },
+
+    startEdit: (selectedEl, App) => {
+        if (!selectedEl) return;
+        const isTextNode = selectedEl.type === "text";
+        const hasBoundText = selectedEl.boundElements?.some(b => b.type === "text");
+        if (isTextNode || hasBoundText) {
+            setTimeout(() => {
+                const appInst = App || ExcalidrawAutomate?.targetView?.excalidrawRef?.current;
+                const startFn = appInst?.startTextEditing?.bind(appInst) || appInst?.text?.startTextEditing?.bind(appInst?.text);
+                if (startFn) {
+                    const payload = { sceneX: 0, sceneY: 0 };
+                    if (isTextNode) {
+                        payload.textElement = selectedEl;
+                    } else {
+                        payload.container = selectedEl;
+                    }
+                    startFn(payload);
+                }
+            }, 0);
+        }
     }
 };
 
@@ -835,6 +967,15 @@ const handlePointerUp = async (context) => {
     const { ea, api, App, event, scenePointer } = context;
     if (!ea || !api) return;
 
+    let isTap = true;
+    if (MindmapState.pointerDownPos && event && typeof event.clientX === "number") {
+        const dist = Math.hypot(event.clientX - MindmapState.pointerDownPos.x, event.clientY - MindmapState.pointerDownPos.y);
+        if (dist > 8) {
+            isTap = false;
+        }
+    }
+    MindmapState.pointerDownPos = null;
+
     const elementsMap = App?.scene?.getNonDeletedElementsMap?.(); 
     const allElements = App?.scene?.getNonDeletedElements();
     const selectedEls = App.scene.getSelectedElements(App.state); 
@@ -848,7 +989,7 @@ const handlePointerUp = async (context) => {
         }, mainSelectedEls[0]);
     }
 
-    if (draggedEl && MindmapState.isRealDragging) {
+    if (draggedEl && MindmapState.isRealDragging && !isTap) {
         if (draggedEl.customData?.mindmap && draggedEl.customData.mindmap.root === draggedEl.id) { } 
         else {
             const targetEl = allElements.find(el => el.id !== draggedEl.id && el.customData?.mindmap && !el.customData?.hide && checkOverlap(draggedEl, el) && !isDescendant(draggedEl.id, el.id, elementsMap) );
@@ -871,6 +1012,12 @@ const handlePointerUp = async (context) => {
     }
 
     MindmapState.isRealDragging = false;
+
+    // 仅在真实轻触(isTap)时才触发折叠/展开，避免平移/缩放画布被误识别为点击折叠
+    if (!isTap) {
+        MindmapState.hoveredMindmapElement = null;
+        return false;
+    }
 
     const targetElement = findHitMindmapElement(App, scenePointer) || MindmapState.hoveredMindmapElement;
     if (ea?.plugin?.settings?.mindmapHandle && targetElement) {
@@ -914,24 +1061,10 @@ const handleKeyDown = (context) => {
     const selectedEl = selectedEls.find(el => !el.containerId) || selectedEls[0];
 
     if (event.code === "Space" && selectedEl.customData?.mindmap) {
-        const isTextNode = selectedEl.type === "text";
-        const hasBoundText = selectedEl.boundElements?.some(b => b.type === "text");
-        
-        if (isTextNode || hasBoundText) {
-            event.preventDefault();
-            event.stopPropagation();
-            
-            setTimeout(() => {
-                const payload = { sceneX: 0, sceneY: 0 };
-                if (isTextNode) {
-                    payload.textElement = selectedEl;
-                } else {
-                    payload.container = selectedEl;
-                }
-                App.startTextEditing(payload);
-            }, 0);
-            return true;
-        }
+        event.preventDefault();
+        event.stopPropagation();
+        window.MindmapAPI.startEdit(selectedEl, App);
+        return true;
     }
 
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.code) && selectedEl.customData?.mindmap) {
@@ -970,55 +1103,18 @@ const handleKeyDown = (context) => {
     }
     
     if (["Tab", "Enter"].includes(event.code)) {
-        const elements = ea.getViewElements();
-        let elementsMap = App?.scene?.getNonDeletedElementsMap?.() || elements.reduce((acc, el) => acc.set(el.id, el), new Map());
-        elements.forEach(el => elementsMap.set(el.id, el));
-        
         if (selectedEl?.customData?.mindmap) {
             event.preventDefault(); event.stopPropagation();
-            (async () => {
-                ea.clear();
-                let mindmap = MindmapState.mindmapPosMap.get(selectedEl.customData.mindmap.root); const rootEl = elementsMap?.get(selectedEl.customData.mindmap.root);
-                if (!mindmap || !(mindmap.NodeMap.get(selectedEl.id)?.children?.length)) {
-                    mindmap = new Mindmap(elements, selectedEl); mindmap.setElements(elements, elementsMap); mindmap.buildNodeTree(rootEl, null, 1, null);
-                    MindmapState.mindmapPosMap.set(selectedEl.customData.mindmap.root, mindmap);
-                } else { mindmap.setElements(elements, elementsMap); }
-                const currentNode = mindmap.NodeMap.get(selectedEl.id); const rootNode = mindmap.NodeMap.get(mindmap.rootId);
-                
-                const [newEl, newEls] = await mindmap.addNewNode(selectedEl, currentNode, event.code === "Enter" ? "same" : "next", App.state, ea);
-                const [children, arrows] = mindmap.getChildren(rootNode, ea, true, (el) => ea.getElement(el.id)?.customData?.hide);
-                
-                ea.selectElementsInView([newEl]); setTimeout(() => App.startTextEditing({ sceneX: 0, sceneY: 0, container: newEl }), 0);
-                
-                const rawItems = [...children, ...arrows, rootNode, ...newEls];
-                const treeElements = getExpandedTreeElements(rawItems, elementsMap, elements);
-                await window.MindmapAPI.runLayout(treeElements, true, ea); mindmap.clearElements();
-            })();
+            window.MindmapAPI.addNode(selectedEl, event.code === "Enter" ? "same" : "next", App, ea);
             return true;
         }
     }
 
-    if ((event.key === "/" || event.key === "?") && selectedEl.customData?.mindmap) {
+    if ((event.key === "/" || event.key === "?") && selectedEl?.customData?.mindmap) {
         event.preventDefault(); event.stopPropagation();
-        (async () => {
-            const elementsMap = App.scene.getNonDeletedElementsMap(); const elements = App.scene.getNonDeletedElements();
-            let mindmap = MindmapState.mindmapPosMap.get(selectedEl.customData.mindmap.root);
-            if (!mindmap || !(mindmap.NodeMap.get(selectedEl.id)?.children?.length)) {
-                const rootEl = elementsMap?.get(selectedEl.customData.mindmap.root);
-                mindmap = new Mindmap(elements, selectedEl); mindmap.setElements(elements, elementsMap); mindmap.buildNodeTree(rootEl, null, 1, null);
-                MindmapState.mindmapPosMap.set(selectedEl.customData.mindmap.root, mindmap);
-            } else { mindmap.setElements(elements, elementsMap); }
-
-            const currentNode = mindmap.NodeMap.get(selectedEl.id); if (!currentNode || !currentNode.children.length) return;
-            const isCtrl = event.ctrlKey || event.metaKey; const recursion = selectedEl.customData.mindmap.status === "open" ? true : isCtrl;
-            const visiable = selectedEl.customData.mindmap.status === "open" ? false : true; const status = selectedEl.customData.mindmap.status === "open" ? "close" : "open";
-            await mindmap.changeVisibility(selectedEl, currentNode, recursion, visiable, status, ea);
-            const rootNode = mindmap.NodeMap.get(mindmap.rootId);
-            const [children, arrows] = mindmap.getChildren(rootNode, ea, true, (el) => mindmap.elementsMap?.get(el.id)?.customData?.hide);
-            const rawItems = [...children, ...arrows, rootNode, selectedEl];
-            const treeElements = getExpandedTreeElements(rawItems, elementsMap, elements);
-            mindmap.clearElements(); await window.MindmapAPI.runLayout(treeElements, false, ea);
-        })();
+        const isCtrl = event.ctrlKey || event.metaKey;
+        const isCurrentlyOpen = selectedEl.customData.mindmap.status === "open";
+        window.MindmapAPI.toggleFold(selectedEl, App, ea, isCurrentlyOpen ? true : isCtrl);
         return true;
     }
     return false;
@@ -1027,6 +1123,10 @@ const handleKeyDown = (context) => {
 const handlePointerDown = (context) => {
     const { ea, api, App, event, scenePointer } = context;
     if (!ea || !api) return;
+
+    if (event && typeof event.clientX === "number") {
+        MindmapState.pointerDownPos = { x: event.clientX, y: event.clientY };
+    }
 
     const hitMindmapElement = findHitMindmapElement(App, scenePointer) || MindmapState.hoveredMindmapElement;
     if (ea?.plugin?.settings?.mindmapHandle && hitMindmapElement) {
@@ -1192,12 +1292,143 @@ const handleElementsDeleted = async (context) => {
     }
     return false;
 };
+const ensureMobileToolbar = (App, ea) => {
+    let toolbar = document.getElementById("ea-mindmap-mobile-toolbar");
+    if (!toolbar) {
+        const style = document.createElement("style");
+        style.id = "ea-mindmap-toolbar-style";
+        style.innerHTML = `
+            #ea-mindmap-mobile-toolbar {
+                position: fixed;
+                bottom: 24px;
+                left: 50%;
+                transform: translateX(-50%);
+                display: none;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 12px;
+                background: var(--background-primary, #ffffff);
+                border: 1px solid var(--background-modifier-border, rgba(0,0,0,0.15));
+                border-radius: 24px;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+                z-index: 9999;
+                pointer-events: auto;
+                user-select: none;
+                -webkit-user-select: none;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
+            .ea-mm-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                padding: 6px 12px;
+                border: none;
+                border-radius: 16px;
+                background: var(--background-secondary, rgba(0,0,0,0.06));
+                color: var(--text-normal, #333);
+                font-size: 13px;
+                font-weight: 500;
+                cursor: pointer;
+                touch-action: manipulation;
+                white-space: nowrap;
+            }
+            .ea-mm-btn:active {
+                background: var(--interactive-accent, #705df2);
+                color: var(--text-on-accent, #ffffff);
+            }
+            .ea-mm-btn span {
+                font-size: 14px;
+            }
+        `;
+        document.head.appendChild(style);
+
+        toolbar = document.createElement("div");
+        toolbar.id = "ea-mindmap-mobile-toolbar";
+        toolbar.innerHTML = `
+            <button class="ea-mm-btn" id="ea-mm-child">
+                <span>🌿</span> ${t("tb_child")}
+            </button>
+            <button class="ea-mm-btn" id="ea-mm-sibling">
+                <span>🪵</span> ${t("tb_sibling")}
+            </button>
+            <button class="ea-mm-btn" id="ea-mm-fold">
+                <span>📁</span> ${t("tb_fold")}
+            </button>
+            <button class="ea-mm-btn" id="ea-mm-edit">
+                <span>✏️</span> ${t("tb_edit")}
+            </button>
+        `;
+        document.body.appendChild(toolbar);
+
+        toolbar.querySelector("#ea-mm-child").onclick = (e) => {
+            e.stopPropagation();
+            if (MindmapState.currentSelectedNode) {
+                window.MindmapAPI.addChildNode(MindmapState.currentSelectedNode, MindmapState.currentApp, MindmapState.currentEA);
+            }
+        };
+        toolbar.querySelector("#ea-mm-sibling").onclick = (e) => {
+            e.stopPropagation();
+            if (MindmapState.currentSelectedNode) {
+                window.MindmapAPI.addSiblingNode(MindmapState.currentSelectedNode, MindmapState.currentApp, MindmapState.currentEA);
+            }
+        };
+        toolbar.querySelector("#ea-mm-fold").onclick = (e) => {
+            e.stopPropagation();
+            if (MindmapState.currentSelectedNode) {
+                window.MindmapAPI.toggleFold(MindmapState.currentSelectedNode, MindmapState.currentApp, MindmapState.currentEA);
+            }
+        };
+        toolbar.querySelector("#ea-mm-edit").onclick = (e) => {
+            e.stopPropagation();
+            if (MindmapState.currentSelectedNode) {
+                window.MindmapAPI.startEdit(MindmapState.currentSelectedNode, MindmapState.currentApp);
+            }
+        };
+    }
+    return toolbar;
+};
+
+const updateMobileToolbar = (selectedElements, App, ea) => {
+    MindmapState.currentApp = App;
+    MindmapState.currentEA = ea;
+
+    const isMobile = ExcalidrawAutomate?.obsidian?.Platform?.isMobile || (window.app?.isMobile ?? false) || ('ontouchstart' in window);
+    if (!isMobile) {
+        const existing = document.getElementById("ea-mindmap-mobile-toolbar");
+        if (existing) existing.style.display = "none";
+        return;
+    }
+
+    const toolbar = ensureMobileToolbar(App, ea);
+    if (!toolbar) return;
+
+    if (selectedElements && selectedElements.length === 1 && selectedElements[0]?.customData?.mindmap) {
+        const el = selectedElements[0];
+        MindmapState.currentSelectedNode = el;
+        const foldBtn = toolbar.querySelector("#ea-mm-fold");
+        if (foldBtn) {
+            const isClosed = el.customData.mindmap.status === "close";
+            foldBtn.innerHTML = isClosed 
+                ? `<span>📂</span> ${t("tb_unfold")}`
+                : `<span>📁</span> ${t("tb_fold")}`;
+        }
+        toolbar.style.display = "flex";
+    } else {
+        MindmapState.currentSelectedNode = null;
+        toolbar.style.display = "none";
+    }
+};
 
 const handleMindmapRender = (contextPayload) => {
-    const { ea, api, appState, elementsMap, visibleElements, context } = contextPayload;
+    const { ea, api, appState, elementsMap, visibleElements, context, selectedElements } = contextPayload;
     if (!ea || !api) return;
 
     try {
+        const selectedEls = selectedElements || ea?.getViewSelectedElements?.() || [];
+        updateMobileToolbar(selectedEls, api, ea);
+
         for (let i = 0; i < visibleElements.length; i++) {
             const element = visibleElements[i];
             if (element?.customData?.hide || !element?.customData?.mindmap || ["arrow", "line"].includes(element.type)) continue;
@@ -1270,6 +1501,10 @@ async function mountFeature() {
                 excalidrawAPI.updateScene({ appState: { ...excalidrawAPI.getAppState() } });
             }
         }
+        const toolbar = document.getElementById("ea-mindmap-mobile-toolbar");
+        if (toolbar) toolbar.remove();
+        const tbStyle = document.getElementById("ea-mindmap-toolbar-style");
+        if (tbStyle) tbStyle.remove();
         console.log(t("log_unmounted", { id: SCRIPT_ID }));
     };
 

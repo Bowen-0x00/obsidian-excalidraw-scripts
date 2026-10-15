@@ -2,7 +2,7 @@
 name: 修改脑图样式
 description: 弹出脑图样式与排版配置面板，支持修改当前选中脑图或全局默认配置。
 author: ymjr
-version: 1.0.0
+version: 1.0.1
 license: MIT
 usage: 选中脑图的根节点运行，修改当前脑图的样式；不选任何元素运行，则修改全局新建脑图的默认样式配置。
 features:
@@ -204,7 +204,10 @@ function createStylePanel() {
 
     const panel = document.createElement('div');
     panel.id = "ea-mindmap-style-panel";
-    panel.style.cssText = `position:fixed; top:100px; right:80px; width:380px; max-height:85vh; background:var(--background-primary); border:1px solid var(--background-modifier-border); box-shadow:0 10px 30px rgba(0,0,0,0.3); border-radius:8px; z-index:9999; display:flex; flex-direction:column; overflow:hidden;`;
+    const isSmallScreen = window.innerWidth <= 600 || (ea?.obsidian?.Platform?.isMobile ?? false);
+    panel.style.cssText = isSmallScreen
+        ? `position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:min(380px, 94vw); max-height:85vh; background:var(--background-primary); border:1px solid var(--background-modifier-border); box-shadow:0 10px 30px rgba(0,0,0,0.3); border-radius:8px; z-index:9999; display:flex; flex-direction:column; overflow:hidden;`
+        : `position:fixed; top:80px; right:40px; width:380px; max-height:85vh; background:var(--background-primary); border:1px solid var(--background-modifier-border); box-shadow:0 10px 30px rgba(0,0,0,0.3); border-radius:8px; z-index:9999; display:flex; flex-direction:column; overflow:hidden;`;
 
     const header = document.createElement('div');
     header.style.cssText = `padding:12px 16px; background:var(--background-secondary); cursor:move; border-bottom:1px solid var(--background-modifier-border); display:flex; justify-content:space-between; align-items:center; user-select:none;`;
@@ -278,13 +281,24 @@ function createStylePanel() {
                 localConfig.themes[newId] = { name: t("ui_new_theme_name"), rootBg: "#343a40", colors: ["#1971c2", "#e03131", "#099268"], levels: JSON.parse(JSON.stringify(DEFAULT_LEVELS)) };
                 activeThemeKey = newId; activeLayoutSettings.theme = activeThemeKey; renderThemeSelector(); renderThemeEditor();
             }, t("ui_new_theme_name")));
-            tools.appendChild(createIconButton("✏️", () => {
-                const newName = prompt(t("ui_prompt_theme_name"), localConfig.themes[activeThemeKey].name);
+            tools.appendChild(createIconButton("✏️", async () => {
+                let newName = null;
+                if (utils && typeof utils.inputPrompt === "function") {
+                    newName = await utils.inputPrompt(t("ui_prompt_theme_name"), localConfig.themes[activeThemeKey].name, localConfig.themes[activeThemeKey].name);
+                } else {
+                    newName = prompt(t("ui_prompt_theme_name"), localConfig.themes[activeThemeKey].name);
+                }
                 if (newName && newName.trim()) { localConfig.themes[activeThemeKey].name = newName.trim(); renderThemeSelector(); }
             }, t("ui_rename_title")));
-            tools.appendChild(createIconButton("🗑️", () => {
+            tools.appendChild(createIconButton("🗑️", async () => {
                 if (Object.keys(localConfig.themes).length <= 1) return new Notice(t("notice_at_least_one"));
-                if (confirm(t("confirm_delete_theme", { name: localConfig.themes[activeThemeKey].name }))) {
+                let confirmed = false;
+                if (utils && typeof utils.suggester === "function") {
+                    confirmed = await utils.suggester(["Yes (删除)", "No (取消)"], [true, false], t("confirm_delete_theme", { name: localConfig.themes[activeThemeKey].name }));
+                } else {
+                    confirmed = confirm(t("confirm_delete_theme", { name: localConfig.themes[activeThemeKey].name }));
+                }
+                if (confirmed) {
                     delete localConfig.themes[activeThemeKey]; activeThemeKey = Object.keys(localConfig.themes)[0]; activeLayoutSettings.theme = activeThemeKey;
                     renderThemeSelector(); renderThemeEditor();
                 }
@@ -459,12 +473,42 @@ function createStylePanel() {
     header.querySelector('#close-btn').onclick = () => panel.remove();
 
     let isDragging = false, startX, startY, initLeft, initTop;
-    header.onmousedown = (e) => {
-        if(e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
-        isDragging = true; startX = e.clientX; startY = e.clientY; const rect = panel.getBoundingClientRect(); initLeft = rect.left; initTop = rect.top; e.preventDefault();
-        document.onmousemove = (e) => { if(!isDragging) return; panel.style.left = (initLeft + e.clientX - startX) + 'px'; panel.style.top = (initTop + e.clientY - startY) + 'px'; };
-        document.onmouseup = () => { isDragging = false; document.onmousemove = null; document.onmouseup = null; };
+    const startDrag = (clientX, clientY, target) => {
+        if(target && (target.tagName === 'BUTTON' || target.tagName === 'INPUT' || target.tagName === 'SELECT')) return;
+        isDragging = true; startX = clientX; startY = clientY;
+        const rect = panel.getBoundingClientRect(); initLeft = rect.left; initTop = rect.top;
+        panel.style.transform = 'none';
+        panel.style.left = `${initLeft}px`;
+        panel.style.top = `${initTop}px`;
     };
+    const doDrag = (clientX, clientY) => {
+        if(!isDragging) return;
+        const newLeft = Math.max(10, Math.min(window.innerWidth - panel.offsetWidth - 10, initLeft + clientX - startX));
+        const newTop = Math.max(10, Math.min(window.innerHeight - panel.offsetHeight - 10, initTop + clientY - startY));
+        panel.style.left = `${newLeft}px`;
+        panel.style.top = `${newTop}px`;
+    };
+    const endDrag = () => { isDragging = false; };
+
+    header.onmousedown = (e) => {
+        startDrag(e.clientX, e.clientY, e.target);
+        e.preventDefault();
+        document.onmousemove = (ev) => doDrag(ev.clientX, ev.clientY);
+        document.onmouseup = () => { endDrag(); document.onmousemove = null; document.onmouseup = null; };
+    };
+    header.ontouchstart = (e) => {
+        if (e.touches && e.touches.length === 1) {
+            startDrag(e.touches[0].clientX, e.touches[0].clientY, e.target);
+        }
+    };
+    header.ontouchmove = (e) => {
+        if (isDragging && e.touches && e.touches.length === 1) {
+            doDrag(e.touches[0].clientX, e.touches[0].clientY);
+            e.preventDefault();
+        }
+    };
+    header.ontouchend = () => endDrag();
+    header.ontouchcancel = () => endDrag();
 }
 
 createStylePanel();

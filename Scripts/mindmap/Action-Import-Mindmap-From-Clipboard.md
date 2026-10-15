@@ -2,7 +2,7 @@
 name: 从剪贴板导入脑图
 description: 将剪贴板中的 Markdown 列表文本解析为层级树结构，并在当前画布生成带样式的脑图。
 author: ymjr
-version: 1.0.0
+version: 1.0.1
 license: MIT
 usage: 复制任意 Markdown 列表文本，运行此脚本。在弹出的面板中选择需要的排版方向、连线样式和主题配色，确认后脚本将在画布中心自动生成完整的脑图。
 features:
@@ -24,6 +24,7 @@ var locales = {
     theme_custom: "⚙️ 自定义色",
     notice_empty: "⚠️ 剪贴板为空或没有文本内容！",
     notice_parse_fail: "⚠️ 无法将剪贴板文本解析为有效的层级结构！",
+    prompt_paste_text: "请在此粘贴 Markdown 脑图大纲文本：",
     ui_title: "导入剪贴板脑图设置",
     ui_theme: "主题配色",
     ui_direction: "排版方向",
@@ -50,6 +51,7 @@ var locales = {
     theme_custom: "⚙️ Custom",
     notice_empty: "⚠️ Clipboard is empty or contains no text!",
     notice_parse_fail: "⚠️ Failed to parse clipboard text into a valid hierarchy!",
+    prompt_paste_text: "Please paste Markdown mindmap outline text here:",
     ui_title: "Import Mindmap from Clipboard",
     ui_theme: "Theme",
     ui_direction: "Direction",
@@ -137,7 +139,17 @@ function resolveStyle(level, branchIndex, settings) {
     return { backgroundColor: bg, textColor: lvlConfig.textColor, strokeColor: lvlConfig.strokeColor, fontSize: lvlConfig.fontSize, strokeWidth: lvlConfig.strokeWidth };
 }
 
-const clipboardText = await navigator.clipboard.readText();
+let clipboardText = "";
+try {
+    clipboardText = await navigator.clipboard.readText();
+} catch (e) {
+    console.warn("navigator.clipboard.readText failed:", e);
+}
+if (!clipboardText || !clipboardText.trim()) {
+    if (utils && typeof utils.inputPrompt === "function") {
+        clipboardText = await utils.inputPrompt(t("prompt_paste_text"), "", "");
+    }
+}
 if (!clipboardText || !clipboardText.trim()) { new Notice(t("notice_empty")); return; }
 
 function parseOutline(text) {
@@ -173,7 +185,7 @@ const config = await (async () => {
     return new Promise((resolve) => {
         if (document.getElementById("ea-mindmap-import-panel")) return resolve(null);
         const panel = document.createElement('div'); panel.id = "ea-mindmap-import-panel";
-        panel.style.cssText = `position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:300px; background:var(--background-primary); border:1px solid var(--background-modifier-border); box-shadow:0 4px 12px rgba(0,0,0,0.2); border-radius:8px; z-index:9999; display:flex; flex-direction:column;`;
+        panel.style.cssText = `position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:min(320px, 92vw); max-height:85vh; background:var(--background-primary); border:1px solid var(--background-modifier-border); box-shadow:0 8px 24px rgba(0,0,0,0.25); border-radius:8px; z-index:9999; display:flex; flex-direction:column; overflow:hidden;`;
 
         const header = document.createElement('div'); header.style.cssText = `padding:10px 15px; background:var(--background-secondary); border-bottom:1px solid var(--background-modifier-border); border-radius: 8px 8px 0 0; font-weight:bold;`;
         header.innerText = t("ui_title"); panel.appendChild(header);

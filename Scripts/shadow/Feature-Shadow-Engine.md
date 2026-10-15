@@ -2,7 +2,7 @@
 name: Shadow 渲染引擎 (视觉层)
 description: 后台引擎：提供多图层阴影渲染。精准读取元素的静态 shadow 配置，并与 Hover 引擎无缝联动。
 author: ymjr
-version: 1.0.0
+version: 1.0.1
 license: MIT
 usage: 后台常驻引擎。读取并解析元素上的 `customData.shadow` 配置数组，利用 Canvas Context 原生绘制支持模糊和无限叠加的阴影效果。
 features:
@@ -28,7 +28,7 @@ var locales = {
 };
 const SCRIPT_ID = "ymjr.feature.shadow-engine";
 
-const applyShadowToContext = (element, shadow, context, zoom) => {
+const applyShadowToContext = (element, shadow, context, zoom, ea, api) => {
     if (!shadow) return;
 
     // 安全获取数值，避免 0 被判定为 false
@@ -95,7 +95,7 @@ const handleRenderElementBefore = (ctx) => {
         if (elementWithCanvas) {
             for (let i = 0; i < shadows.length - 1; i++) {
                 context.save();
-                applyShadowToContext(element, shadows[i], context, appState.zoom.value);
+                applyShadowToContext(element, shadows[i], context, appState.zoom.value, ea, api);
                 drawElementFromCanvas(elementWithCanvas, context, renderConfig, appState, allElementsMap);
                 context.restore();
             }
@@ -103,7 +103,7 @@ const handleRenderElementBefore = (ctx) => {
     }
 
     context.save();
-    applyShadowToContext(element, shadows[shadows.length - 1], context, appState.zoom.value);
+    applyShadowToContext(element, shadows[shadows.length - 1], context, appState.zoom.value, ea, api);
     element._needsShadowRestore = true; 
     
     return false; 

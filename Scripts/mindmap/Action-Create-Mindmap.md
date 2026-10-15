@@ -2,7 +2,7 @@
 name: 初始化脑图配置
 description: 将普通的连线节点组合转化为受引擎控制的脑图结构，并赋予默认样式。
 author: ymjr
-version: 1.0.0
+version: 1.0.1
 license: MIT
 usage: 选中希望作为脑图根节点的元素（也可以只选中一个），运行脚本后在弹窗中配置排版方向与主题，即可一键生成结构化脑图。
 features:
@@ -150,7 +150,7 @@ function getMindmapSettingsViaUI() {
     return new Promise((resolve) => {
         if (document.getElementById("ea-mindmap-init-panel")) return resolve(null);
         const panel = document.createElement('div'); panel.id = "ea-mindmap-init-panel";
-        panel.style.cssText = `position:fixed; top:150px; left:150px; width:300px; background:var(--background-primary); border:1px solid var(--background-modifier-border); box-shadow:0 4px 12px rgba(0,0,0,0.2); border-radius:8px; z-index:9999; display:flex; flex-direction:column;`;
+        panel.style.cssText = `position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:min(320px, 92vw); max-height:85vh; background:var(--background-primary); border:1px solid var(--background-modifier-border); box-shadow:0 8px 24px rgba(0,0,0,0.25); border-radius:8px; z-index:9999; display:flex; flex-direction:column; overflow:hidden;`;
 
         const header = document.createElement('div'); header.style.cssText = `padding:10px 15px; background:var(--background-secondary); cursor:move; border-bottom:1px solid var(--background-modifier-border); display:flex; justify-content:space-between; align-items:center; border-radius: 8px 8px 0 0;`;
         header.innerHTML = `<b>${t("ui_title")}</b><button style="background:none;border:none;cursor:pointer;color:var(--text-muted);">✕</button>`;
@@ -201,12 +201,42 @@ function getMindmapSettingsViaUI() {
         footer.appendChild(confirmBtn); panel.appendChild(footer); document.body.appendChild(panel);
 
         let isDragging = false, startX, startY, initLeft, initTop;
-        header.onmousedown = (e) => {
-            if(e.target.tagName === 'BUTTON') return;
-            isDragging = true; startX = e.clientX; startY = e.clientY; const rect = panel.getBoundingClientRect(); initLeft = rect.left; initTop = rect.top; e.preventDefault();
-            document.onmousemove = (e) => { if(!isDragging) return; panel.style.left = (initLeft + e.clientX - startX) + 'px'; panel.style.top = (initTop + e.clientY - startY) + 'px'; };
-            document.onmouseup = () => { isDragging = false; document.onmousemove = null; document.onmouseup = null; };
+        const startDrag = (clientX, clientY, target) => {
+            if (target && target.tagName === 'BUTTON') return;
+            isDragging = true; startX = clientX; startY = clientY;
+            const rect = panel.getBoundingClientRect(); initLeft = rect.left; initTop = rect.top;
+            panel.style.transform = 'none';
+            panel.style.left = `${initLeft}px`;
+            panel.style.top = `${initTop}px`;
         };
+        const doDrag = (clientX, clientY) => {
+            if (!isDragging) return;
+            const newLeft = Math.max(10, Math.min(window.innerWidth - panel.offsetWidth - 10, initLeft + clientX - startX));
+            const newTop = Math.max(10, Math.min(window.innerHeight - panel.offsetHeight - 10, initTop + clientY - startY));
+            panel.style.left = `${newLeft}px`;
+            panel.style.top = `${newTop}px`;
+        };
+        const endDrag = () => { isDragging = false; };
+
+        header.onmousedown = (e) => {
+            startDrag(e.clientX, e.clientY, e.target);
+            e.preventDefault();
+            document.onmousemove = (ev) => doDrag(ev.clientX, ev.clientY);
+            document.onmouseup = () => { endDrag(); document.onmousemove = null; document.onmouseup = null; };
+        };
+        header.ontouchstart = (e) => {
+            if (e.touches && e.touches.length === 1) {
+                startDrag(e.touches[0].clientX, e.touches[0].clientY, e.target);
+            }
+        };
+        header.ontouchmove = (e) => {
+            if (isDragging && e.touches && e.touches.length === 1) {
+                doDrag(e.touches[0].clientX, e.touches[0].clientY);
+                e.preventDefault();
+            }
+        };
+        header.ontouchend = () => endDrag();
+        header.ontouchcancel = () => endDrag();
     });
 }
 
