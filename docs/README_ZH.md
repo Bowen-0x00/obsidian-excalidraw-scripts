@@ -21,6 +21,8 @@
 4. 从分类表跳转到脚本详情，阅读说明与依赖，再点击安装按钮。自定义市场下载的脚本保存在已配置脚本目录下的 `Downloaded(Custom)/`。
 5. 除 `Action-*` 操作脚本外，还要安装它依赖的 `Feature-*-Engine`。Action 执行操作；Engine 提供后台渲染或交互。启用前检查脚本元数据中的 `dependencies`、`usage` 和 `autorun`。
 
+部分插件版本默认使用 [Gitee 市场地址](https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/index.md)。两个仓库必须同步：只更新 GitHub，不会更新这个默认目录。市场目录来源与内部脚本下载 URL 是两回事；当前生成目录中的脚本下载使用 GitHub raw。
+
 脚本会在 vault 内执行代码。请审查源码、备份重要绘图，并先在临时 vault 中尝试不熟悉的脚本。部分脚本会调用外部应用或服务，其安装与配置要求以对应脚本为准。
 
 ### 手动安装
@@ -57,6 +59,8 @@
 公开脚本位于 `Scripts/<分类>/`。`Scripts/index.md` 会被插件读取：前半部分是分类表格，后半部分是每个脚本的详情及 `excalidraw-script-install` 安装块。`Scripts/directory-info.json` 是更新检测清单，不是插件安装 manifest。
 
 Node.js 维护入口是 `node Scripts/get_json.js`，路径以工具自身所在目录为基准。修改脚本后重新生成清单和市场页，不手工修改生成的版本与下载 URL。遵守 `.gitignore` 并审查明确的发布文件清单，不把整个开发脚本目录直接镜像到发布仓库。测试文件、私人 prompt、凭据和 vault 状态不得发布。
+
+维护者应将同一份 `main` 提交同步到 [GitHub](https://github.com/Bowen-0x00/obsidian-excalidraw-scripts) 与 [Gitee](https://gitee.com/Bowen-0x00/obsidian-excalidraw-scripts)。为 `origin` 配置两个 HTTPS push URL，并设置仓库级 `remote.pushDefault=origin`、`branch.main.pushRemote=origin`、`push.default=simple`，即可在 `main` 分支执行一次 `git push` 推送两处。这些配置只在本机生效，新克隆需重新配置。推送后分别核对两边引用和 raw 市场文件；双平台非原子事务，一边成功不代表另一边也成功。
 
 ## 致谢与许可
 

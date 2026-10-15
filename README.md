@@ -21,6 +21,8 @@ Custom Excalidraw Automate scripts and libraries maintained by [Bowen-0x00](http
 4. Use the category tables to find a script, read its description and dependencies, and click its install button. Custom-market downloads are stored beneath the configured scripts folder in `Downloaded(Custom)/`.
 5. Install the required `Feature-*-Engine` scripts as well as the corresponding `Action-*` scripts. An Action performs an operation; an Engine provides background rendering or interaction. Review each script's `dependencies`, `usage` and `autorun` metadata before enabling it.
 
+Some plugin versions default to the [Gitee market URL](https://raw.giteeusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/raw/main/Scripts/index.md). Both repositories must be synchronized: updating GitHub alone does not update that default catalog. The catalog's source and its embedded script download URLs are separate; the current generated catalog downloads scripts from GitHub raw.
+
 Scripts execute code inside your vault. Review the source, back up important drawings, and try unfamiliar scripts in a disposable vault first. Some scripts communicate with external applications or services; their prerequisites are script-specific.
 
 ### Manual installation
@@ -57,6 +59,8 @@ If a download fails, check the custom-market URL, network access to `raw.githubu
 Published scripts live under `Scripts/<category>/`. `Scripts/index.md` is a plugin-consumed document: category tables come first, followed by one description and `excalidraw-script-install` block per script. `Scripts/directory-info.json` is the update-detection inventory, not an installation manifest.
 
 The Node.js maintenance entry is `node Scripts/get_json.js` (paths are resolved from the utility's own directory). Regenerate metadata and the market page after changing scripts; do not hand-edit generated versions or installation URLs. Respect `.gitignore`, review the explicit publication file list, and never mirror an entire development scripts folder into this repository. Test files, private prompts, credentials and vault state do not belong in a publication.
+
+Maintainers publish the same `main` commit to [GitHub](https://github.com/Bowen-0x00/obsidian-excalidraw-scripts) and [Gitee](https://gitee.com/Bowen-0x00/obsidian-excalidraw-scripts). Configure `origin` with both HTTPS push URLs and repository-local `remote.pushDefault=origin`, `branch.main.pushRemote=origin`, and `push.default=simple`; then run `git push` once from `main`. These settings are local, not inherited by new clones. Verify both remote refs and raw catalogs afterward: a multi-target push can succeed on one host and fail on the other.
 
 ## Credits and license
 
