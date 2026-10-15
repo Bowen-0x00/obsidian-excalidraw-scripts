@@ -40,7 +40,7 @@
   <tr>
     <td width="50%" valign="top">
       <h3><a href="../Scripts/library/">按需加载素材库</a></h3>
-      <p>绘图时加载和切换所需的可复用图元。</p>
+      <p>绘图时加载、切换和在画布上网格展示可复用图元。</p>
       <img src="../images/library2.gif" width="100%" alt="按需加载 Excalidraw 素材库并使用其中的图元">
     </td>
     <td width="50%" valign="top">

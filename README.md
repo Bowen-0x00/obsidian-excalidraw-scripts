@@ -40,7 +40,7 @@ These recordings show the capabilities behind the scripts: structured diagrams, 
   <tr>
     <td width="50%" valign="top">
       <h3><a href="Scripts/library/">On-demand libraries</a></h3>
-      <p>Load and switch reusable symbol libraries as you draw.</p>
+      <p>Load, switch, and lay out reusable symbol libraries as you draw.</p>
       <img src="images/library2.gif" width="100%" alt="Loading reusable shapes from Excalidraw libraries">
     </td>
     <td width="50%" valign="top">

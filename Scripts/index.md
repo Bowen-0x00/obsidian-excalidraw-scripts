@@ -208,6 +208,7 @@
 | Script | Details |
 | --- | --- |
 |<span>Action-Dynamic-Library.md</span>|[[#Action-Dynamic-Library]]|
+|<span>Action-Load-Library-To-Canvas.md</span>|[[#Action-Load-Library-To-Canvas]]|
 |<span>Feature-Calendar-Engine.md</span>|[[#Feature-Calendar-Engine]]|
 |<span>Feature-Library-Engine.md</span>|[[#Feature-Library-Engine]]|
 
@@ -1650,6 +1651,24 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
 </table>
 
+## Action-Load-Library-To-Canvas
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/library/Action-Load-Library-To-Canvas.md
+```
+<table>
+  <tr valign="top"><td class="label">Name</td><td class="data">加载素材库到画布</td></tr>
+  <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.0.0</td></tr>
+  <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/library/Action-Load-Library-To-Canvas.md">File on GitHub</a></td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">将 .excalidrawlib 素材库中的所有 item 以网格状平铺加载到画布，并在各组件上方自动标注名称与描述。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">运行脚本呼出素材库加载面板，选择或输入 .excalidrawlib 文件路径，配置网格列数与间距后，一键将库中所有组件呈网格状平铺排布到画布，并在组件上方添加文字标注。</td></tr>
+  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>完整解析 .excalidrawlib 素材库中的 libraryItems 列表（兼容 v1 与 v2 格式）</li><li>智能计算各素材组件的几何外接包围盒 (Bounding Box)</li><li>网格流式布局：x + width + margin 沿水平方向依次展示下一个 item，支持自适应换行</li><li>提取 item 的 name 与 description，在组件上方自动排版并添加标题与描述文本</li><li>自动克隆图元并重置所有 ID、内部 Group 及绑定引用，并为每个 item 创建组合群组</li><li>提供美观的图形交互面板，支持模糊搜索素材库、自定义列数、行列间距与排布模式</li></ul></td></tr>
+  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>无前置依赖</li></ul></td></tr>
+  <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
+  <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
+</table>
+
 ## Feature-Calendar-Engine
 
 ```excalidraw-script-install
@@ -1918,7 +1937,7 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">脑图核心引擎</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.1.0</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.1</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Feature-Mindmap-Engine.md">File on GitHub</a></td></tr>
   <tr valign="top"><td class="label">Description</td><td class="data">脑图折叠、排版与触控操作；按视图隔离，安全处理深层树和无效连线。</td></tr>
   <tr valign="top"><td class="label">Usage</td><td class="data">选中脑图节点，通过键盘或移动端操作条新增、编辑和折叠。根节点不支持新增同级节点。无效的循环或多父结构会提示错误，不修改画布。</td></tr>

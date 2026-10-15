@@ -2,7 +2,7 @@
 name: 脑图核心引擎
 description: 脑图折叠、排版与触控操作；按视图隔离，安全处理深层树和无效连线。
 author: ymjr
-version: 1.1.0
+version: 1.1.1
 license: MIT
 usage: 选中脑图节点，通过键盘或移动端操作条新增、编辑和折叠。根节点不支持新增同级节点。无效的循环或多父结构会提示错误，不修改画布。
 features:
@@ -622,7 +622,7 @@ function pointerUp(context) {
   if (c.dragging && g?.cancelled && c.drop) fire(reparent(c, c.drop));
   else if (!g.cancelled && (Number.isFinite(e.timeStamp) ? e.timeStamp : performance.now()) - g.time <= 500 && Math.hypot(e.clientX - g.x, e.clientY - g.y) <= 8) {
     const target = hitIcon(c, context.scenePointer, g.touch);
-    if (target?.id === g.target) fire(toggleFold(target, context.App, c.worker, e.ctrlKey || e.metaKey));
+    if (target && g.target && target.id === g.target) fire(toggleFold(target, context.App, c.worker, e.ctrlKey || e.metaKey));
   }
   c.dragging = false; c.drop = null;
   return false;
@@ -678,6 +678,12 @@ function afterDelete(context) {
   const live = indexScene(next), previous = context.App?.scene?.getNonDeletedElementsMap?.();
   const removed = new Set(next.filter(el => el.isDeleted && (!previous || previous.has(el.id))).map(el => el.id));
   const removedNodes = new Set(next.filter(el => removed.has(el.id) && el.customData?.mindmap).map(el => el.id));
+  const removedLinks = next.filter(el => {
+    if (!el.isDeleted || !removed.has(el.id) || !["arrow", "line"].includes(el.type)) return false;
+    const parentId = el.startBinding?.elementId, child = live.map.get(el.endBinding?.elementId);
+    return Boolean(parentId && child?.customData?.mindmap && child.customData.mindmap.parent === parentId);
+  });
+  if (!removedNodes.size && !removedLinks.length) return false;
   const affectedRoots = new Set(next.filter(el => removedNodes.has(el.id)).map(el => el.customData.mindmap.root));
   const orphans = new Set();
   const children = new Map();
@@ -685,7 +691,7 @@ function afterDelete(context) {
     const mm = el.customData.mindmap; append(children, mm.parent, el.id);
     if (!live.map.has(mm.root) || (mm.parent && mm.parent !== el.id && !live.map.has(mm.parent))) orphans.add(el.id);
   }
-  for (const el of next) if (el.isDeleted && ["arrow", "line"].includes(el.type) && removed.has(el.id) && live.map.get(el.endBinding?.elementId)?.customData?.mindmap?.parent === el.startBinding?.elementId) {
+  for (const el of removedLinks) {
     orphans.add(el.endBinding.elementId);
     affectedRoots.add(live.map.get(el.endBinding.elementId).customData.mindmap.root);
   }
