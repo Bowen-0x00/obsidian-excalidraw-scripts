@@ -2,7 +2,7 @@
 name: 初始化脑图配置
 description: 将普通的连线节点组合转化为受引擎控制的脑图结构，并赋予默认样式。
 author: ymjr
-version: 1.1.1
+version: 1.1.2
 license: MIT
 usage: 选中希望作为脑图根节点的元素（也可以只选中一个），运行脚本后在弹窗中配置排版方向与主题，即可一键生成结构化脑图。
 features:
