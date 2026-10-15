@@ -1,122 +1,68 @@
 ---
 name: 复制脑图为Markdown
-description: 将选中的脑图导出为层级结构的 Markdown 列表文本，并复制到剪贴板。
+description: 按脑图展开方向导出层级列表，剪贴板写入失败时显示可复制文本。
 author: ymjr
-version: 1.0.0
+version: 1.1.0
 license: MIT
-usage: 选中脑图节点，运行此脚本即可将整棵树导出为 Markdown 文本到剪贴板。
-features:
-  - 递归遍历脑图节点结构
-  - 将脑图节点内容转换为无序列表与标题格式
-  - 按画布Y坐标顺序导出同级节点
+usage: 选中任一脑图节点运行，导出整棵树，包含折叠内容。循环或多父结构会提示错误。
 dependencies:
-  - 无前置依赖
+  - 无依赖
 autorun: false
 ---
 /*
 ```javascript
 */
 var locales = {
-  zh: {
-    notice_select: "⚠️ 请先选中要复制的脑图节点！",
-    notice_not_mindmap: "⚠️ 当前选中的元素不是脑图节点！",
-    notice_no_root: "⚠️ 未找到该脑图的根节点！",
-    notice_success: "✨ 成功将脑图结构复制到剪贴板！",
-    log_fail: "剪贴板写入失败:",
-    notice_fail: "❌ 复制失败，请检查控制台报错。"
-  },
-  en: {
-    notice_select: "⚠️ Please select a mindmap node first!",
-    notice_not_mindmap: "⚠️ The selected element is not a mindmap node!",
-    notice_no_root: "⚠️ Root node not found for this mindmap!",
-    notice_success: "✨ Mindmap structure copied to clipboard!",
-    log_fail: "Clipboard write failed:",
-    notice_fail: "❌ Copy failed, please check console for errors."
-  }
+  zh: { select: "请先选中脑图节点。", invalid: "脑图结构无效：存在循环、多父节点或丢失的根节点。", done: "脑图已复制到剪贴板。", manual: "剪贴板不可用，请手动复制以下内容", error: "导出失败：{message}" },
+  en: { select: "Select a mindmap node first.", invalid: "Invalid mindmap: cycle, multiple parents, or missing root.", done: "Mindmap copied to clipboard.", manual: "Clipboard unavailable. Copy the text below", error: "Export failed: {message}" }
 };
-const { Notice } = ea.obsidian;
-
-const selectedEls = ea.getViewSelectedElements();
-if (selectedEls.length === 0) {
-    new Notice(t("notice_select"));
-    return;
+locales["zh-cn"] = locales.zh;
+locales["zh-tw"] = { select: "請先選取腦圖節點。", invalid: "腦圖結構無效：存在循環、多父節點或遺失的根節點。", done: "腦圖已複製到剪貼簿。", manual: "剪貼簿無法使用，請手動複製以下內容", error: "匯出失敗：{message}" };
+const { Modal, Notice } = ea.obsidian;
+const view = ea.targetView, api = view?.excalidrawAPI, filePath = view?.file?.path;
+const selected = ea.getViewSelectedElements().find(el => el.customData?.mindmap);
+if (!selected) { new Notice(t("select")); return; }
+/** Shared export convention: horizontal trees sort vertically; vertical trees sort horizontally. */
+function exportTree(elements, rootId) {
+  const map = new Map(elements.filter(el => !el.isDeleted).map(el => [el.id, el])), root = map.get(rootId), children = new Map(), parents = new Map();
+  if (!root?.customData?.mindmap) throw new Error(t("invalid"));
+  const horizontal = !["TD", "BU"].includes(root.customData.mindmap.settings?.direction);
+  const nodes = elements.filter(el => !el.isDeleted && el.customData?.mindmap?.root === rootId), ids = new Set(nodes.map(el => el.id));
+  for (const el of elements) {
+    const a = el.startBinding?.elementId, b = el.endBinding?.elementId;
+    if (el.isDeleted || !["arrow", "line"].includes(el.type) || !ids.has(a) || !ids.has(b)) continue;
+    if (parents.has(b) || a === b) throw new Error(t("invalid"));
+    parents.set(b, a); if (!children.has(a)) children.set(a, []); children.get(a).push(map.get(b));
+  }
+  const textOf = el => {
+    const text = el.type === "text" ? el : map.get(el.boundElements?.find(b => b.type === "text")?.id);
+    return String(text?.originalText || text?.text || `![[${filePath}#^group=${el.id}]]`).replace(/\r?\n/g, " ");
+  };
+  const lines = [], seen = new Set(), stack = [{ el: root, depth: 0 }];
+  while (stack.length) {
+    const { el, depth } = stack.pop(); if (seen.has(el.id)) throw new Error(t("invalid")); seen.add(el.id);
+    lines.push(`${depth ? "\t".repeat(depth - 1) + "- " : "## "}${textOf(el)}`);
+    const next = children.get(el.id) || []; next.sort((a, b) => horizontal ? a.y - b.y : a.x - b.x);
+    for (let i = next.length - 1; i >= 0; i--) stack.push({ el: next[i], depth: depth + 1 });
+  }
+  if (seen.size !== ids.size || parents.has(rootId)) throw new Error(t("invalid"));
+  return lines.join("\n") + "\n";
 }
-
-const selectedEl = selectedEls.find(el => el.customData?.mindmap) || selectedEls[0];
-if (!selectedEl?.customData?.mindmap) {
-    new Notice(t("notice_not_mindmap"));
-    return;
-}
-
-// 构建 elementsMap，修复前一版的报错
-const elements = ea.getViewElements();
-const elementsMap = new Map();
-elements.forEach(el => elementsMap.set(el.id, el));
-
-const rootId = selectedEl.customData.mindmap.root;
-const rootEl = elementsMap.get(rootId);
-
-if (!rootEl) {
-    new Notice(t("notice_no_root"));
-    return;
-}
-
-// 获取节点文本内容，并将多行文本的换行符替换为空格，防止破坏 Markdown 列表结构
-function getNodeText(element) {
-    if (!element) return "";
-    let text = "";
-    if (element.type === "text") {
-        text = element.originalText || element.text;
-    } else if (element.boundElements) {
-        const textBound = element.boundElements.find(b => b.type === "text");
-        if (textBound) {
-            const textEl = elementsMap.get(textBound.id);
-            text = textEl ? (textEl.originalText || textEl.text) : "";
-        }
-    }
-    if (!text) text = `![[${ea.targetView.file.path}#^group=${element.id}]]`;
-    return text.replace(/\n/g, " ");
-}
-
-let mdResult = "";
-
-function traverse(currentEl, depth) {
-    if (!currentEl) return;
-    
-    // 强制匹配格式：0级为 ## 标题，1级及以上为 - 列表
-    let prefix = "";
-    let indent = "";
-    if (depth === 0) {
-        prefix = "## ";
-    } else {
-        indent = "\t".repeat(Math.max(0, depth - 1));
-        prefix = "- ";
-    }
-    
-    mdResult += `${indent}${prefix}${getNodeText(currentEl)}\n`;
-
-    // 寻找连出的子节点
-    const startArrows = (currentEl.boundElements || [])
-        .filter(b => b.type === "arrow")
-        .map(b => elementsMap.get(b.id))
-        .filter(arrow => arrow && arrow.startBinding?.elementId === currentEl.id);
-
-    // 按照子节点在画布上的 Y 坐标（从上到下）排序导出
-    const children = startArrows
-        .map(arrow => elementsMap.get(arrow.endBinding?.elementId))
-        .filter(Boolean)
-        .sort((a, b) => a.y - b.y);
-
-    children.forEach(child => traverse(child, depth + 1));
-}
-
-// 开始遍历
-traverse(rootEl, 0);
-
 try {
-    await navigator.clipboard.writeText(mdResult);
-    new Notice(t("notice_success"));
-} catch (error) {
-    console.error(t("log_fail"), error);
-    new Notice(t("notice_fail"));
-}
+  if (!view._loaded || view.excalidrawAPI !== api || view.file?.path !== filePath) throw new Error(t("invalid"));
+  const markdown = exportTree(api.getSceneElements(), selected.customData.mindmap.root);
+  try { await view.containerEl.ownerDocument.defaultView.navigator.clipboard.writeText(markdown); new Notice(t("done")); }
+  catch {
+    await new Promise(resolve => {
+      class CopyModal extends Modal {
+        onOpen() {
+          this.setTitle(t("manual"));
+          const input = this.contentEl.createEl("textarea", { attr: { rows: "12", "aria-label": t("manual") } });
+          input.value = markdown; input.readOnly = true; input.setCssStyles({ width: "100%", minHeight: "180px" }); input.focus(); input.select();
+        }
+        onClose() { this.contentEl.empty(); resolve(); }
+      }
+      new CopyModal(ea.plugin.app).open();
+    });
+  }
+} catch (error) { console.error(error); new Notice(t("error", { message: error.message })); }

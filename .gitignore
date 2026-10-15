@@ -21,3 +21,10 @@ node_modules/
 /Scripts/generate/Action-Generate-Digital-Microarch-Items.md
 /Scripts/test*.md
 /Scripts/README*.md
+/Scripts/list.md
+/Scripts/TODO.md
+/Scripts/*.ps1
+/Scripts/*.txt
+/Scripts/needs_update.json
+/Scripts/unprocessed_scripts.txt
+/Scripts/脚本

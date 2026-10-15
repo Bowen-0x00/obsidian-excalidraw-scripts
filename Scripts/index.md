@@ -1802,12 +1802,11 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">修改脑图样式</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.1</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.0</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Action-Change-Mindmap-Style.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">弹出脑图样式与排版配置面板，支持修改当前选中脑图或全局默认配置。</td></tr>
-  <tr valign="top"><td class="label">Usage</td><td class="data">选中脑图的根节点运行，修改当前脑图的样式；不选任何元素运行，则修改全局新建脑图的默认样式配置。</td></tr>
-  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>提供可视化的脑图主题与排版编辑器UI</li><li>支持修改展开方向、连线样式、节点间距和连线长度</li><li>提供多套预设主题并支持自定义颜色与层级样式</li></ul></td></tr>
-  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>依赖 Feature-Mindmap_Engine 提供后台渲染与自动排版支持</li></ul></td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">使用原生设置弹窗修改当前脑图或全局主题与布局。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">选中脑图节点修改整棵树；不选节点则编辑全局默认值。支持创建、重命名、删除主题以及各层级文字、边框和字号。</td></tr>
+  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>Feature-Mindmap-Engine 1.1.0</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
 </table>
@@ -1820,12 +1819,11 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">初始化脑图配置</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.1</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.0</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Action-Create-Mindmap.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">将普通的连线节点组合转化为受引擎控制的脑图结构，并赋予默认样式。</td></tr>
-  <tr valign="top"><td class="label">Usage</td><td class="data">选中希望作为脑图根节点的元素（也可以只选中一个），运行脚本后在弹窗中配置排版方向与主题，即可一键生成结构化脑图。</td></tr>
-  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>自动递归遍历与根节点相连的元素，注入 mindmap 配置与层级结构</li><li>提供可视化的脑图初始化配置面板</li><li>基于所选主题自动应用节点颜色与连线样式</li></ul></td></tr>
-  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>依赖 Feature-Mindmap_Engine 引擎进行排版</li></ul></td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">将选中的连线节点转换为脑图，检测无效结构后再提交。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">选中节点及连线运行；已是脑图时移除选中分支的脑图属性。使用原生设置弹窗，关闭即取消。</td></tr>
+  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>Feature-Mindmap-Engine 1.1.0</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
 </table>
@@ -1838,10 +1836,10 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">解除脑图属性</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.2</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.0</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Action-Detach-Mindmap.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">将选中元素及其子节点从脑图结构中脱离，转换为普通元素，并修复原脑图排版。</td></tr>
-  <tr valign="top"><td class="label">Usage</td><td class="data">选中要解除的脑图节点，运行该脚本即可。</td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">安全解除选中分支的脑图属性，恢复隐藏内容并清理父级连线。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">选中脑图节点运行。引擎未运行时仍可解绑；不会删除其他 customData 字段。</td></tr>
 </table>
 
 ## Action-Export-Mindmap-To-Clipboard
@@ -1852,12 +1850,11 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">复制脑图为Markdown</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.0</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.0</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Action-Export-Mindmap-To-Clipboard.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">将选中的脑图导出为层级结构的 Markdown 列表文本，并复制到剪贴板。</td></tr>
-  <tr valign="top"><td class="label">Usage</td><td class="data">选中脑图节点，运行此脚本即可将整棵树导出为 Markdown 文本到剪贴板。</td></tr>
-  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>递归遍历脑图节点结构</li><li>将脑图节点内容转换为无序列表与标题格式</li><li>按画布Y坐标顺序导出同级节点</li></ul></td></tr>
-  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>无前置依赖</li></ul></td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">按脑图展开方向导出层级列表，剪贴板写入失败时显示可复制文本。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">选中任一脑图节点运行，导出整棵树，包含折叠内容。循环或多父结构会提示错误。</td></tr>
+  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>无依赖</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
 </table>
@@ -1870,12 +1867,11 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">导出脑图为Markdown文件</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.0</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.0</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Action-Export-Mindmap-To-Md.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">将选中的脑图导出为层级结构的 Markdown 列表文本，并保存为文件。</td></tr>
-  <tr valign="top"><td class="label">Usage</td><td class="data">选中脑图节点，运行此脚本即可将整棵树导出并保存为一个新的 Markdown 文件到当前文件夹中。</td></tr>
-  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>递归遍历脑图节点并转换为 Markdown 结构</li><li>弹窗询问并支持自定义导出的文件名</li><li>自动创建或覆盖同名 md 文件</li></ul></td></tr>
-  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>无前置依赖</li></ul></td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">安全导出整棵脑图为 Markdown，同名文件必须确认后才覆盖。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">选中脑图节点运行。取消不写入；支持库根目录，保护当前绘图文件不被覆盖。</td></tr>
+  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>无依赖</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
 </table>
@@ -1888,12 +1884,11 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">从剪贴板导入脑图</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.1</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.0</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Action-Import-Mindmap-From-Clipboard.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">将剪贴板中的 Markdown 列表文本解析为层级树结构，并在当前画布生成带样式的脑图。</td></tr>
-  <tr valign="top"><td class="label">Usage</td><td class="data">复制任意 Markdown 列表文本，运行此脚本。在弹出的面板中选择需要的排版方向、连线样式和主题配色，确认后脚本将在画布中心自动生成完整的脑图。</td></tr>
-  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>自动解析剪贴板内的 Markdown 缩进结构为 JSON Tree</li><li>支持调用 Feature-Mindmap_Engine 引擎进行完美的脑图渲染和布局</li><li>提供可视化的生成前配置面板</li></ul></td></tr>
-  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>必须依赖 Feature-Mindmap_Engine 提供后台渲染与自动排版支持</li></ul></td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">从 Markdown 大纲创建脑图；剪贴板不可读时可手动粘贴多行文本。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">复制 Markdown 标题或缩进列表后运行，在原生弹窗中粘贴、选择方向和主题，然后生成。</td></tr>
+  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>Feature-Mindmap-Engine 1.1.0</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
 </table>
@@ -1904,13 +1899,12 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Action-Rescue-And-Show-Mindmap.md
 ```
 <table>
-  <tr valign="top"><td class="label">Name</td><td class="data">解绑选中并强显全图脑图(深度联动版)</td></tr>
+  <tr valign="top"><td class="label">Name</td><td class="data">解绑选中并恢复脑图可见性</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.1.0</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.2.0</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Action-Rescue-And-Show-Mindmap.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">动作脚本：一键清除选中节点的附加数据，并全图深度扫描恢复所有隐形脑图节点、同组元素、绑定元素的可见性。</td></tr>
-  <tr valign="top"><td class="label">Usage</td><td class="data">当脑图因异常操作导致部分子节点、文字、同组图标、外框或连线无故“消失”隐形，或者需要重构时运行。</td></tr>
-  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>深度联动扫描：自动将脑图节点、其内部文本、同组(Group)的所有图元、绑定的所有线缆和图形全部解除隐藏</li><li>清除当前选中元素的所有 `customData` 状态，解除引擎绑定</li></ul></td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">恢复脑图及其附属元素的显示，解除选中分支的脑图属性，保留其他元数据。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">脑图节点意外隐藏或连线结构损坏时运行。不会清空 customData，也不会强制显示无关的隐藏元素。</td></tr>
   <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>无依赖</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
@@ -1924,12 +1918,12 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">脑图核心引擎</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.3</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.0</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Feature-Mindmap-Engine.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">后台引擎：提供脑图折叠、排版、快捷键创建节点及实时高亮渲染。</td></tr>
-  <tr valign="top"><td class="label">Usage</td><td class="data">后台常驻引擎，为带有 customData.mindmap 的元素提供折叠展开的右上角图标绘制，实现回车和 Tab 键的快捷节点生成与连线，实现方向键导航节点，以及监听节点的增删实现自动排版。</td></tr>
-  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>拦截 handleCanvasPointerDown/Up 实现点击展开/折叠按钮</li><li>拦截 onKeyDown 实现键盘方向键漫游脑图、Tab/Enter 快速新建节点、/键 折叠展开、空格键开始编辑</li><li>拦截 _renderInteractiveScene 在脑图根节点与父节点上绘制圆圈数字图标</li><li>提供 window.MindmapAPI 供脑图动作脚本调用进行连线刷新与布局重排</li></ul></td></tr>
-  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>被所有脑图相关的 Action 脚本依赖</li></ul></td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">脑图折叠、排版与触控操作；按视图隔离，安全处理深层树和无效连线。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">选中脑图节点，通过键盘或移动端操作条新增、编辑和折叠。根节点不支持新增同级节点。无效的循环或多父结构会提示错误，不修改画布。</td></tr>
+  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>按视图串行处理修改，切换文件或卸载后取消过期操作</li><li>迭代布局与树遍历，支持深层树并检测循环和多父节点</li><li>触控操作条、缩放补偿、拖挂预览及多指防误触</li><li>提供 window.MindmapAPI 供动作脚本调用</li><li>保留双击编辑与长按菜单；不抢占宿主手势</li></ul></td></tr>
+  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>EA_Core Hook 系统</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">true</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
 </table>
