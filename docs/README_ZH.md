@@ -8,6 +8,110 @@
 - **推荐宿主插件：**[Excalidraw-ymjr](https://github.com/Bowen-0x00/obsidian-excalidraw-plugin-ymjr)。很多 Feature 引擎依赖修改版的自定义 Hook；能否用于原版插件必须逐脚本核实。
 - **可直接打开的示例：**[示例 vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault)。
 
+## 功能演示
+
+让画布不止能画图：组织结构、承载代码与图表、展示动态关系，并通过交互展开细节。以下演示保留了这些能力的直观效果；部分录制于脚本重构之前，菜单和文件名可能不同，卡片链接均指向**当前脚本分类**。
+
+<table width="100%">
+  <tr>
+    <td width="50%" valign="top">
+      <h3><a href="../Scripts/mindmap/">交互式思维导图</a></h3>
+      <p>创建分支、展开与折叠节点，整理脑图布局。</p>
+      <img src="../images/mindmap2.gif" width="100%" alt="在 Excalidraw 中创建、折叠和排版思维导图">
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="../Scripts/mindmap/">Markdown ↔ 思维导图</a></h3>
+      <p>在 Markdown 大纲与可视化脑图之间转换。</p>
+      <img src="../images/md%20ex%20mindmap.gif" width="100%" alt="Markdown 大纲与 Excalidraw 思维导图之间的转换演示">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3><a href="../Scripts/code-highlight/">代码语法高亮</a></h3>
+      <p>将画布文字转换为带语言高亮和样式的代码块。</p>
+      <img src="../images/code.gif" width="100%" alt="Excalidraw 画布中的多语言代码语法高亮">
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="../Scripts/echarts/">画布中的 ECharts</a></h3>
+      <p>让数据图表与图解、说明出现在同一张画布。</p>
+      <img src="../images/echarts.gif" width="100%" alt="在 Excalidraw 画布中创建和编辑 ECharts 图表">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3><a href="../Scripts/library/">按需加载素材库</a></h3>
+      <p>绘图时加载和切换所需的可复用图元。</p>
+      <img src="../images/library2.gif" width="100%" alt="按需加载 Excalidraw 素材库并使用其中的图元">
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="../Scripts/animation/">连线与箭头动画</a></h3>
+      <p>用动态流向表达关系、过程和信息传递。</p>
+      <img src="../images/arrow%20flow%20animation.gif" width="100%" alt="Excalidraw 连线流动及箭头动画效果">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3><a href="../Scripts/connection/">灵活的图形连线</a></h3>
+      <p>使用直线、曲线和折线组织节点之间的关系。</p>
+      <img src="../images/switch%20connection%20shape2.gif" width="100%" alt="切换图形节点之间的连线形态">
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="../Scripts/arrow/">自定义箭头局部拉伸</a></h3>
+      <p>调整箭头的指定部分，同时保留需要的箭头形态。</p>
+      <img src="../images/fixedDragable.gif" width="100%" alt="拉伸自定义箭头并保持箭头头部形态">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3><a href="../Scripts/detail/">可展开的细节</a></h3>
+      <p>按需显示补充内容，让主图保持清晰。</p>
+      <img src="../images/detail2.gif" width="100%" alt="展开和收起画布中的补充说明与细节">
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="../Scripts/line-highlight/">关联连线高亮</a></h3>
+      <p>突出元素之间的关联与路径。</p>
+      <img src="../images/highlight%20link.gif" width="100%" alt="高亮显示图形元素之间的关联连线">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3><a href="../Scripts/export/">富内容 SVG 导出</a></h3>
+      <p>将包含嵌入内容的图解带出当前画布。</p>
+      <img src="../images/export%20svg.gif" width="100%" alt="导出包含文字、代码、图表等内容的 Excalidraw 绘图">
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="../Scripts/tag/">元素标签管理</a></h3>
+      <p>为画布元素添加、编辑和管理标签元数据。</p>
+      <img src="../images/tags.gif" width="100%" alt="为 Excalidraw 画布元素添加和管理标签">
+    </td>
+  </tr>
+</table>
+
+<details>
+<summary>更多演示：文字样式、画布排版与移动端</summary>
+
+### 文字样式
+
+[文字脚本](../Scripts/text/)提供全局和局部文字格式设置。
+
+<img src="../images/TextHookFeature.PNG" width="360" alt="文字加粗、局部变色等文字格式效果">
+
+### 给已有内容腾出空间
+
+通过[插入垂直空间](../Scripts/space/)移动已有内容，继续扩充画布。
+
+<img src="../images/insert%20vertical%20space.gif" width="720" alt="在画布已有元素之间插入垂直空白空间">
+
+### 移动端脑图
+
+这段历史移动端录屏展示交互方式，不代表当前版本已在所有手机和平板上完成验证。
+
+<img src="../images/mindmap2%20-%20mobile.gif" width="240" alt="历史录屏：在移动设备上操作 Excalidraw 思维导图">
+
+</details>
+
+后续会随脚本演进继续补充演示图片。更多内容见[全部演示素材](../images/)、[示例 vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault)与[视频演示](https://www.bilibili.com/video/BV1zN4y1H7Dx/)。
+
 ## 从自定义脚本市场安装
 
 1. 安装并启用 [Excalidraw-ymjr](https://github.com/Bowen-0x00/obsidian-excalidraw-plugin-ymjr/releases)。BRAT 和手动安装方法见插件仓库；本脚本仓库不负责安装宿主插件。
@@ -44,7 +148,7 @@
 | 动画与图表 | [`animation`](../Scripts/animation/)、[`gif`](../Scripts/gif/)、[`step-appear`](../Scripts/step-appear/)、[`echarts`](../Scripts/echarts/)、[`wave-drom`](../Scripts/wave-drom/) |
 | 工具与集成 | [`library`](../Scripts/library/)、[`latex`](../Scripts/latex/)、[`export`](../Scripts/export/)、[`clipboard`](../Scripts/clipboard/)、[`select`](../Scripts/select/)、[`distribute`](../Scripts/distribute/) |
 
-[`Library/`](../Library/) 提供额外 Excalidraw 素材库。[`images/`](../images/)、[演示视频](https://www.bilibili.com/video/BV1zN4y1H7Dx/)与 [B 站空间](https://space.bilibili.com/39231346/)中的历史演示可能使用旧界面或旧文件名。安装时请以当前市场目录为准，不再使用旧版 Encrypted 脚本链接。
+[`Library/`](../Library/) 提供额外 Excalidraw 素材库。上方图集将已有演示关联到当前脚本分类；安装步骤及脚本依赖请以市场目录为准。
 
 ## 版本与更新
 

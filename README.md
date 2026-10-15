@@ -8,6 +8,110 @@ Custom Excalidraw Automate scripts and libraries maintained by [Bowen-0x00](http
 - **Recommended plugin:** [Excalidraw-ymjr](https://github.com/Bowen-0x00/obsidian-excalidraw-plugin-ymjr). Many Feature engines require its custom hooks; compatibility with the original plugin must be checked per script.
 - **Ready-to-open examples:** [example vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault).
 
+## See it in action
+
+These recordings show the capabilities behind the scripts: structured diagrams, rich content, animation and interactive canvases. Some were recorded before the script refactor, so menus and filenames may differ; the links below lead to the **current script categories**.
+
+<table width="100%">
+  <tr>
+    <td width="50%" valign="top">
+      <h3><a href="Scripts/mindmap/">Interactive mindmaps</a></h3>
+      <p>Create branches, expand or collapse nodes, and arrange the tree.</p>
+      <img src="images/mindmap2.gif" width="100%" alt="Creating and arranging an interactive mindmap in Excalidraw">
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="Scripts/mindmap/">Markdown ↔ mindmap</a></h3>
+      <p>Move between Markdown outlines and a visual mindmap.</p>
+      <img src="images/md%20ex%20mindmap.gif" width="100%" alt="Converting between a Markdown outline and an Excalidraw mindmap">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3><a href="Scripts/code-highlight/">Syntax-highlighted code</a></h3>
+      <p>Turn canvas text into readable, styled code blocks.</p>
+      <img src="images/code.gif" width="100%" alt="Syntax-highlighted code blocks on an Excalidraw canvas">
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="Scripts/echarts/">ECharts on the canvas</a></h3>
+      <p>Bring data charts into the same drawing as your explanation.</p>
+      <img src="images/echarts.gif" width="100%" alt="Creating and editing ECharts charts inside Excalidraw">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3><a href="Scripts/library/">On-demand libraries</a></h3>
+      <p>Load and switch reusable symbol libraries as you draw.</p>
+      <img src="images/library2.gif" width="100%" alt="Loading reusable shapes from Excalidraw libraries">
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="Scripts/animation/">Animated connections</a></h3>
+      <p>Show direction and flow with animated lines and arrows.</p>
+      <img src="images/arrow%20flow%20animation.gif" width="100%" alt="Animated flows and moving arrows in an Excalidraw diagram">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3><a href="Scripts/connection/">Flexible connections</a></h3>
+      <p>Use straight, curved and elbow connectors to organize a diagram.</p>
+      <img src="images/switch%20connection%20shape2.gif" width="100%" alt="Changing the shapes of connections between diagram nodes">
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="Scripts/arrow/">Resizable custom arrows</a></h3>
+      <p>Stretch selected parts of an arrow while keeping its shape useful.</p>
+      <img src="images/fixedDragable.gif" width="100%" alt="Resizing custom arrows while preserving their arrowheads">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3><a href="Scripts/detail/">Expandable details</a></h3>
+      <p>Reveal supporting content without crowding the main diagram.</p>
+      <img src="images/detail2.gif" width="100%" alt="Expanding and collapsing supporting details in a drawing">
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="Scripts/line-highlight/">Connection highlighting</a></h3>
+      <p>Emphasize relationships and paths between elements.</p>
+      <img src="images/highlight%20link.gif" width="100%" alt="Highlighting connections between elements in a visual diagram">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3><a href="Scripts/export/">Rich-content SVG exports</a></h3>
+      <p>Take drawings with embedded content beyond the canvas.</p>
+      <img src="images/export%20svg.gif" width="100%" alt="Exporting an Excalidraw drawing containing text, code and charts">
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="Scripts/tag/">Tags on elements</a></h3>
+      <p>Organize canvas elements with editable tag metadata.</p>
+      <img src="images/tags.gif" width="100%" alt="Adding and managing tags on Excalidraw elements">
+    </td>
+  </tr>
+</table>
+
+<details>
+<summary>More demos: text styling, canvas layout and mobile</summary>
+
+### Text styling
+
+[Text scripts](Scripts/text/) provide global and partial text formatting.
+
+<img src="images/TextHookFeature.PNG" width="360" alt="Examples of bold text, partial text color and other text formatting">
+
+### Make room in a drawing
+
+[Insert vertical space](Scripts/space/) to move existing content out of the way.
+
+<img src="images/insert%20vertical%20space.gif" width="720" alt="Inserting vertical space between existing canvas elements">
+
+### Mobile mindmaps
+
+This historical mobile recording illustrates the interaction, not a verification of the current release on every phone or tablet.
+
+<img src="images/mindmap2%20-%20mobile.gif" width="240" alt="Historical mobile recording of an interactive Excalidraw mindmap">
+
+</details>
+
+More recordings can be added to this gallery as the scripts evolve. See all [demo assets](images/), the [example vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault), and the [video walkthrough](https://www.bilibili.com/video/BV1zN4y1H7Dx/).
+
 ## Install from the custom script market
 
 1. Install and enable [Excalidraw-ymjr](https://github.com/Bowen-0x00/obsidian-excalidraw-plugin-ymjr/releases). The plugin repository documents BRAT and manual installation; this repository does not install the plugin itself.
@@ -44,7 +148,7 @@ The [catalog](Scripts/index.md) is the complete, current list. Representative gr
 | Animation and charts | [`animation`](Scripts/animation/), [`gif`](Scripts/gif/), [`step-appear`](Scripts/step-appear/), [`echarts`](Scripts/echarts/), [`wave-drom`](Scripts/wave-drom/) |
 | Tools and integrations | [`library`](Scripts/library/), [`latex`](Scripts/latex/), [`export`](Scripts/export/), [`clipboard`](Scripts/clipboard/), [`select`](Scripts/select/), [`distribute`](Scripts/distribute/) |
 
-[`Library/`](Library/) contains additional Excalidraw libraries. Historical demonstrations are available in [`images/`](images/), [this video](https://www.bilibili.com/video/BV1zN4y1H7Dx/) and [Bilibili](https://space.bilibili.com/39231346/); they may show older interfaces or filenames. Use the current catalog, not old encrypted-script links, for installation.
+[`Library/`](Library/) contains additional Excalidraw libraries. The gallery above links existing demonstrations to current script categories; use the catalog for installation instructions and script dependencies.
 
 ## Versions and updates
 
