@@ -304,6 +304,29 @@ const getActiveExcalidrawView = () => {
     return null;
 };
 
+// 获取插件底层的 React 运行实例 (兼容独立窗口与最新插件打包)
+const getReact = (view) => {
+    if (typeof React !== "undefined" && React) return React;
+    if (typeof window !== "undefined" && window.React) return window.React;
+    if (view?.packages?.react) return view.packages.react;
+    if (ea?.targetView?.packages?.react) return ea.targetView.packages.react;
+    if (typeof ExcalidrawAutomate !== "undefined" && ExcalidrawAutomate.plugin) {
+        if (typeof ExcalidrawAutomate.plugin.getPackage === "function") {
+            try {
+                const pkg = ExcalidrawAutomate.plugin.getPackage(window);
+                if (pkg?.react) return pkg.react;
+            } catch (e) {}
+        }
+        if (ExcalidrawAutomate.plugin.packageManager?.getRuntimePackage) {
+            try {
+                const pkg = ExcalidrawAutomate.plugin.packageManager.getRuntimePackage();
+                if (pkg?.react) return pkg.react;
+            } catch (e) {}
+        }
+    }
+    return null;
+};
+
 // 预设推荐配色
 const PRESET_PALETTES = [
     { name: "经典蓝", color: "#5470c6" },
@@ -1043,7 +1066,12 @@ const setupCustomDocumentRenderer = () => {
     loadEcharts();
 
     const renderWebViewByData = (src, view, id, appState) => {
-        return React.createElement('iframe', {
+        const ReactInstance = getReact(view);
+        if (!ReactInstance) {
+            console.error("[Feature: Echarts] React instance not found");
+            return null;
+        }
+        return ReactInstance.createElement('iframe', {
             ref: (ref) => {
                 if (view && typeof view.updateEmbeddableRef === "function") {
                     view.updateEmbeddableRef(id, ref);
