@@ -158,6 +158,12 @@ The Markdown custom market currently uses the `fname` and `mtime` entries in [`S
 
 If a download fails, check the custom-market URL, network access to `raw.githubusercontent.com`, required plugin/engine versions and any duplicate local copies. Report the exact script filename, its version, plugin version, Obsidian version and reproduction steps in [Issues](https://github.com/Bowen-0x00/obsidian-excalidraw-scripts/issues). Never include tokens or private vault content.
 
+### Swimlane collapse fix — 1.0.1
+
+Update [Feature-Swimlane-Engine](Scripts/swimlane/Feature-Swimlane-Engine.md) and run the engine once again to replace its existing hooks. Collapse and expand now use the clicked drawing's EA instance instead of the instance captured at engine startup. This prevents edits from going to another drawing and keeps the controls working after the startup drawing closes. Existing swimlanes do not need to be marked again; no plugin update is required.
+
+Verified on Windows in an isolated Obsidian 1.14.4 vault with Excalidraw-ymjr 2.29.0-3: cross-drawing collapse leaves the other drawing unchanged, controls work after startup-view disposal, child visibility is restored on expansion, and a saved collapsed drawing can be reopened and expanded. Physical mobile devices were not tested.
+
 ## Repository maintenance
 
 Published scripts live under `Scripts/<category>/`. `Scripts/index.md` is a plugin-consumed document: category tables come first, followed by one description and `excalidraw-script-install` block per script. `Scripts/directory-info.json` is the update-detection inventory, not an installation manifest.

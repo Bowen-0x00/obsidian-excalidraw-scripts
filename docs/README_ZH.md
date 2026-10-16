@@ -158,6 +158,12 @@
 
 下载失败时，先检查自定义市场 URL、`raw.githubusercontent.com` 的网络连通性、宿主插件及依赖引擎版本，并排查重复安装。反馈到 [Issues](https://github.com/Bowen-0x00/obsidian-excalidraw-scripts/issues) 时，请提供准确脚本文件名、脚本版本、插件版本、Obsidian 版本和复现步骤；不要上传 token 或私人 vault 内容。
 
+### 泳道折叠修复 — 1.0.1
+
+更新 [Feature-Swimlane-Engine](../Scripts/swimlane/Feature-Swimlane-Engine.md) 后，请重新运行一次“泳道核心引擎”，替换已经挂载的旧 Hook。折叠和展开改用当前点击画布的 EA 实例，不再使用引擎启动时捕获的实例，避免改动被写入其他画布，并保证启动画布关闭后按钮仍然可用。已有泳道无需重新标记，也无需更新插件。
+
+已在 Windows 隔离的 Obsidian 1.14.4 vault、Excalidraw-ymjr 2.29.0-3 中验证：跨画布折叠不改动另一画布；启动画布关闭后仍可操作；展开时子元素恢复显示；折叠状态保存并重开后仍可展开。未验证实体移动设备。
+
 ## 仓库维护
 
 公开脚本位于 `Scripts/<分类>/`。`Scripts/index.md` 会被插件读取：前半部分是分类表格，后半部分是每个脚本的详情及 `excalidraw-script-install` 安装块。`Scripts/directory-info.json` 是更新检测清单，不是插件安装 manifest。

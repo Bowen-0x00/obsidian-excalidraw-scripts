@@ -2,7 +2,7 @@
 name: 泳道核心引擎
 description: 提供泳道的自定义渲染、彻底防干扰收起展开(PointerDown级拦截)、子元素跟随及标题自适应排版。
 author: ymjr
-version: 1.0.0
+version: 1.0.1
 license: MIT
 usage: 后台常驻引擎，为带有 customData.swimlane 的矩形元素提供强大的容器行为模式。包括自动吞并移入的元素、双击展开/折叠、自适应标题高度等。
 features:
@@ -234,14 +234,15 @@ const handleCanvasPointerDown = (ctx) => {
                 event.preventDefault(); 
                 event.stopPropagation(); 
             }
-            toggleSwimlaneCollapse(App, el);
+            toggleSwimlaneCollapse(App, el, ea);
             return true; 
         }
     }
     return false;
 };
 
-const toggleSwimlaneCollapse = async (App, container) => {
+//ymjr: Use the event-scoped EA, not the engine's potentially closed startup view.
+const toggleSwimlaneCollapse = async (App, container, ea) => {
     const isCollapsing = !container.customData.isCollapsed;
     const headerHeight = container.customData.swimlaneHeaderHeight || 40;
     
