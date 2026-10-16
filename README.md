@@ -8,6 +8,43 @@ Custom Excalidraw Automate scripts and libraries maintained by [Bowen-0x00](http
 - **Recommended plugin:** [Excalidraw-ymjr](https://github.com/Bowen-0x00/obsidian-excalidraw-plugin-ymjr). Many Feature engines require its custom hooks; compatibility with the original plugin must be checked per script.
 - **Ready-to-open examples:** [example vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault).
 
+## Native tables: themes and templates
+
+Requires **Excalidraw-ymjr 2.29.0-4 or later**. These are real canvas exports and Obsidian screenshots, not mockups.
+
+<table width="100%">
+  <tr>
+    <td width="50%" valign="top">
+      <h3>Eight one-click palettes</h3>
+      <a href="images/table-appearance/themes-overview.png"><img src="images/table-appearance/themes-overview.png" width="100%" alt="Light, dark, Morandi, academic and sketch table palettes"></a>
+      <p><a href="examples/table-appearance/themes-overview.excalidraw">Editable theme overview</a></p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>Five composable border templates</h3>
+      <a href="images/table-appearance/borders-overview.png"><img src="images/table-appearance/borders-overview.png" width="100%" alt="Grid, framed, dashed, three-line and borderless tables"></a>
+      <p><a href="examples/table-appearance/borders-overview.excalidraw">Editable border overview</a></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>Images, diagrams and source-preserving ellipsis</h3>
+      <img src="images/table-appearance/content-comparison.png" width="100%" alt="Native image and diagram cells alongside fixed-height ellipsis">
+      <p><a href="examples/table-appearance/content-comparison.excalidraw">Editable content examples</a></p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>Floating appearance controls</h3>
+      <img src="images/table-appearance/theme-gallery.png" width="100%" alt="Actual Obsidian table theme and appearance controls">
+      <p><a href="images/table-appearance/fills-overview.png">Native fills</a> · <a href="images/table-appearance/shadow-comparison.png">Soft shadow</a> · <a href="images/table-appearance/theme-gallery-narrow.png">Narrow-window UI</a></p>
+    </td>
+  </tr>
+</table>
+
+- Automatic rows grow and shrink with content; fixed rows show ellipsis while retaining the full editable text. Images and diagram groups remain native editable elements.
+- Create tables from the host command palette, paste Markdown, or install [`Action-Table-Generate` 1.1.0](Scripts/table/Action-Table-Generate.md). [`Action-Table-Modify` 1.1.0](Scripts/table/Action-Table-Modify.md) provides row/column and properties shortcuts. The host owns layout and interaction; no table Engine is required.
+- **Upgrade:** stop and remove old `Feature-Table-Engine.md` and `Feature-Table-Paste-MD.md`, then restart Obsidian before opening old tables. Retiring catalog entries does not uninstall existing files. Back up drawings before automatic migration.
+- [All 26 portable editable examples](examples/table-appearance/) embed their image resources. Exact three-line borders, native fills and one table-paper shadow survive PNG/SVG export. Switching themes is one undoable operation.
+- Verified in Windows Obsidian 1.14.4. The 430px screenshot is desktop viewport emulation, not physical mobile validation. Version 2.29.0-3 and older do not include this native-table implementation.
+
 ## See it in action
 
 These recordings show the capabilities behind the scripts: structured diagrams, rich content, animation and interactive canvases. Some were recorded before the script refactor, so menus and filenames may differ; the links below lead to the **current script categories**.

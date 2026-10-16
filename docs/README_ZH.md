@@ -8,6 +8,43 @@
 - **推荐宿主插件：**[Excalidraw-ymjr](https://github.com/Bowen-0x00/obsidian-excalidraw-plugin-ymjr)。很多 Feature 引擎依赖修改版的自定义 Hook；能否用于原版插件必须逐脚本核实。
 - **可直接打开的示例：**[示例 vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault)。
 
+## 原生表格：主题与模板
+
+依赖 **Excalidraw-ymjr 2.29.0-4 或更高版本**。以下均为真实画布导出与 Obsidian 界面截图，不是概念效果图。
+
+<table width="100%">
+  <tr>
+    <td width="50%" valign="top">
+      <h3>八套一键配色</h3>
+      <a href="../images/table-appearance/themes-overview.png"><img src="../images/table-appearance/themes-overview.png" width="100%" alt="亮色、暗色、莫兰迪、学术与暖色手绘表格主题"></a>
+      <p><a href="../examples/table-appearance/themes-overview.excalidraw">可编辑主题总览</a></p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>五种可组合边框</h3>
+      <a href="../images/table-appearance/borders-overview.png"><img src="../images/table-appearance/borders-overview.png" width="100%" alt="网格、外粗内细、内部虚线、三线表与无边框"></a>
+      <p><a href="../examples/table-appearance/borders-overview.excalidraw">可编辑边框总览</a></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>图片、组合图形与保留原文的省略显示</h3>
+      <img src="../images/table-appearance/content-comparison.png" width="100%" alt="原生图片、组合图形单元格与固定行高省略">
+      <p><a href="../examples/table-appearance/content-comparison.excalidraw">可编辑图文示例</a></p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>浮动外观控制面板</h3>
+      <img src="../images/table-appearance/theme-gallery.png" width="100%" alt="真实 Obsidian 表格主题与外观操作面板">
+      <p><a href="../images/table-appearance/fills-overview.png">原生填充</a> · <a href="../images/table-appearance/shadow-comparison.png">柔和阴影</a> · <a href="../images/table-appearance/theme-gallery-narrow.png">窄窗口布局</a></p>
+    </td>
+  </tr>
+</table>
+
+- 自动行高随内容增减；固定行高省略显示，完整原文仍可编辑。图片与组合图形保持原生可编辑元素，不将整表转成截图。
+- 使用宿主命令面板创建、粘贴 Markdown，或安装 [`Action-Table-Generate` 1.1.0](../Scripts/table/Action-Table-Generate.md)。[`Action-Table-Modify` 1.1.0](../Scripts/table/Action-Table-Modify.md) 提供行列与属性快捷入口；布局和交互由宿主管理，无需表格 Engine。
+- **升级已有安装：**先停用并移除旧 `Feature-Table-Engine.md`、`Feature-Table-Paste-MD.md`，重启 Obsidian 后再打开旧表格。市场退休条目不会自动卸载本地文件；自动迁移前请备份绘图。
+- [全部 26 组独立可编辑示例](../examples/table-appearance/) 已内嵌图片资源。真实三线边框、填充及整体阴影可导出 PNG／SVG；一次主题切换可一次撤销。
+- 已验证 Windows Obsidian 1.14.4。430px 截图来自桌面视口仿真，不代表实机移动端验收。2.29.0-3 及更早版本不包含这套原生表格。
+
 ## 功能演示
 
 让画布不止能画图：组织结构、承载代码与图表、展示动态关系，并通过交互展开细节。以下演示保留了这些能力的直观效果；部分录制于脚本重构之前，菜单和文件名可能不同，卡片链接均指向**当前脚本分类**。

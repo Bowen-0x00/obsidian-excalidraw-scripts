@@ -333,8 +333,6 @@
 | --- | --- |
 |<span>Action-Table-Generate.md</span>|[[#Action-Table-Generate]]|
 |<span>Action-Table-Modify.md</span>|[[#Action-Table-Modify]]|
-|<span>Feature-Table-Engine.md</span>|[[#Feature-Table-Engine]]|
-|<span>Feature-Table-Paste-MD.md</span>|[[#Feature-Table-Paste-MD]]|
 
 ## Tag
 **Keywords**: Tag
@@ -2236,11 +2234,13 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/table/Action-Table-Generate.md
 ```
 <table>
-  <tr valign="top"><td class="label">Name</td><td class="data">生成表格面板</td></tr>
+  <tr valign="top"><td class="label">Name</td><td class="data">创建表格</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.0</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.0</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/table/Action-Table-Generate.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">呼出悬浮美观的面板来实时生成并调整表格。</td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">打开原生表格创建面板；支持自动行高、固定行高省略和图片内容。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">先升级宿主并移除旧 Feature-Table-Engine / Feature-Table-Paste-MD，再运行此动作创建表格。</td></tr>
+  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>Excalidraw-ymjr 2.29.0-4 or later with native table support</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
 </table>
@@ -2253,45 +2253,11 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">修改表格行列</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.0</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.0</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/table/Action-Table-Modify.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">在选中的表格单元格处插入新的行或列。</td></tr>
-  <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
-</table>
-
-## Feature-Table-Engine
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/table/Feature-Table-Engine.md
-```
-<table>
-  <tr valign="top"><td class="label">Name</td><td class="data">模拟表格核心引擎</td></tr>
-  <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.0</td></tr>
-  <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/table/Feature-Table-Engine.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">后台引擎：提供表格行列拖拽大小同步、边界约束、文本换行自适应及 Tab/方向键快速切换单元格功能。支持免编组(Group)全局识别。</td></tr>
-  <tr valign="top"><td class="label">Usage</td><td class="data">后台常驻引擎，专门处理 customData.table 数据结构元素的交互行为。</td></tr>
-  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>拦截 handleTextWysiwyg 监听输入，实现单元格文本换行时整行高度自适应及下方行自动排版</li><li>拦截 afterTransformElements 实现表格宽高联动</li><li>拦截 dragSelectedElements 限制特定连线行为并支持绑定框拖拽</li><li>拦截 onKeyDown 实现 Tab/Shift+Tab 以及 上下左右方向键 在表格单元格间光标穿梭</li></ul></td></tr>
-  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>无</li></ul></td></tr>
-  <tr valign="top"><td class="label">Autorun</td><td class="data">true</td></tr>
-  <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
-</table>
-
-## Feature-Table-Paste-MD
-
-```excalidraw-script-install
-https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/table/Feature-Table-Paste-MD.md
-```
-<table>
-  <tr valign="top"><td class="label">Name</td><td class="data">粘贴 Markdown 表格解析引擎</td></tr>
-  <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.2.0</td></tr>
-  <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/table/Feature-Table-Paste-MD.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">后台引擎：拦截并解析粘贴板中的 Markdown 表格，自动转化为支持行列拖拽与内容自适应的 Excalidraw 模拟表格元素。</td></tr>
-  <tr valign="top"><td class="label">Usage</td><td class="data">后台常驻。在画板中按下 Ctrl+V 粘贴 Markdown 语法的表格时，自动识别并生成对应的表格方块组。</td></tr>
-  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>采用“二次排版扫描”，先让原生引擎计算真实容器高度，再执行二次校准，彻底解决文本换行导致的重叠错位问题。</li><li>自动剔除 Markdown 干扰符号。</li></ul></td></tr>
-  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>需配合「模拟表格核心引擎」共同使用以获得行列同步拖拽体验。</li></ul></td></tr>
-  <tr valign="top"><td class="label">Autorun</td><td class="data">true</td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">在当前逻辑单元格处插入行列，或打开表格属性面板。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">选中表格单元格后运行；先升级宿主并移除旧表格后台引擎。</td></tr>
+  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>Excalidraw-ymjr 2.29.0-4 or later with native table support</li></ul></td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
 </table>
 
