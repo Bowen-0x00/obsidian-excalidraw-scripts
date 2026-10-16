@@ -1,14 +1,18 @@
 ---
 name: Echarts 核心引擎
-description: 后台引擎：提供 Echarts 图表生成所需的完整离线库渲染、粘贴拦截与 SVG 导出支持。
+description: 后台引擎：提供 Echarts 图表生成所需的完整离线库渲染、双击编辑、实时预览、粘贴拦截与 SVG 导出支持。
 author: ymjr
-version: 1.0.0
+version: 1.1.0
 license: MIT
-usage: 后台常驻引擎。解决 Excalidraw 原生不支持复杂数据可视化的问题，为 Echarts 图表提供底层 API 支持和画布上的 iframe 渲染能力。
+usage: 后台常驻引擎。解决 Excalidraw 原生不支持复杂数据可视化的问题，为 Echarts 图表提供底层 API 支持、实时可视化编辑和画布上的 iframe 渲染能力。
 features:
-  - 注入庞大的 Apache Echarts 核心依赖与渲染环境
-  - 拦截 `onPaste` 钩子，支持直接粘贴 Excel 数据表格自动唤起生成弹窗
-  - 拦截 `renderElementToSvg` 支持带图表的画板离线导出
+  - 注入完整的 Apache Echarts 离线渲染内核与实时预览支持
+  - 彻底修复画布渲染时 contentEl 为空的报错，全面适配最新插件生命周期
+  - 拦截画布双击事件，双击图元即可无缝唤起高级可视化编辑器进行原地修改
+  - 全新升级可视化编辑器：支持双向数据绑定、实时交互预览与一键预设配色
+  - 支持快捷切换柱状图、条形图、折线图、面积图、饼图、环形图、散点图及自定义配置
+  - 拦截 onPaste 钩子，支持直接粘贴表格或数据自动唤起生成
+  - 拦截 renderElementToSvg 支持带图表的画板离线导出
 dependencies:
   - 独立运行，供 Action-Echarts-Manager 动作脚本调用
 autorun: true
@@ -18,20 +22,28 @@ autorun: true
 */
 var locales = {
   zh: {
-    ui_title: "📊 Echarts 高级编辑器",
+    ui_title: "📊 Echarts 可视化编辑器",
     ui_chart_type: "图表类型",
     ui_bar: "柱状图 (Bar)",
+    ui_horizontal_bar: "条形图 (Horizontal Bar)",
     ui_line: "折线图 (Line)",
+    ui_area: "面积图 (Area)",
     ui_pie: "饼图 (Pie)",
+    ui_donut: "环形图 (Donut)",
     ui_scatter: "散点图 (Scatter)",
-    ui_custom: "自定义 JSON",
+    ui_custom: "自定义 JSON (Custom)",
     ui_chart_title: "图表标题",
     ui_title_placeholder: "留空则不显示标题",
     ui_cancel: "取消",
-    ui_generate: "生成图表",
+    ui_generate: "生成/更新图表",
     ui_theme_color: "🎨 主题色:",
-    ui_show_legend: "显示图例",
-    ui_show_labels: "显示数据标签",
+    ui_preset_colors: "推荐配色:",
+    ui_quick_samples: "快捷模板:",
+    ui_sample_trend: "📈 季度趋势",
+    ui_sample_share: "🥧 份额占比",
+    ui_sample_rank: "🏆 排名对比",
+    ui_show_legend: "图例",
+    ui_show_labels: "数据标签",
     ui_smooth_line: "平滑曲线",
     ui_symbol_shape: "图标形状:",
     ui_empty_circle: "空心圆",
@@ -39,14 +51,17 @@ var locales = {
     ui_rect: "方块",
     ui_triangle: "三角",
     ui_diamond: "菱形",
-    ui_text_input_label: "纯文本快捷输入 (支持逗号/制表符/空格)",
-    ui_data_panel_label: "数据面板 (支持独立色彩覆盖)",
+    ui_text_input_label: "纯文本快捷输入 (类目,数值)",
+    ui_data_panel_label: "数据明细 (可独立配置颜色)",
     ui_category_name: "类目名",
     ui_value: "数值",
     ui_checkbox_color_title: "勾选后可为此项配置独立颜色",
     ui_delete: "🗑️",
     ui_add_row: "➕ 添加一行",
-    notice_success: "✨ Echarts 生成成功！",
+    ui_live_preview: "📈 实时交互预览",
+    ui_toggle_preview_theme: "☀️/🌙 切换深浅预览",
+    ui_preview_tip: "💡 提示: 预览区支持鼠标悬浮、点击图例联动及缩放交互",
+    notice_success: "✨ Echarts 图表已更新！",
     log_svg_render_failed: "[Feature: Echarts] SVG 渲染失败:",
     log_no_core: "❌ EA_Core 未运行，请先启动引擎！",
     log_unmounted: "[{id}] 🔌 已卸载",
@@ -54,35 +69,46 @@ var locales = {
     custom_title_fallback: "自定义图表"
   },
   en: {
-    ui_title: "📊 Echarts Advanced Editor",
+    ui_title: "📊 Echarts Visual Editor",
     ui_chart_type: "Chart Type",
     ui_bar: "Bar Chart",
+    ui_horizontal_bar: "Horizontal Bar",
     ui_line: "Line Chart",
+    ui_area: "Area Chart",
     ui_pie: "Pie Chart",
+    ui_donut: "Donut Chart",
     ui_scatter: "Scatter Chart",
     ui_custom: "Custom JSON",
     ui_chart_title: "Chart Title",
     ui_title_placeholder: "Leave empty for no title",
     ui_cancel: "Cancel",
-    ui_generate: "Generate",
+    ui_generate: "Generate / Update",
     ui_theme_color: "🎨 Theme Color:",
-    ui_show_legend: "Show Legend",
-    ui_show_labels: "Show Labels",
-    ui_smooth_line: "Smooth Curve",
+    ui_preset_colors: "Presets:",
+    ui_quick_samples: "Quick Templates:",
+    ui_sample_trend: "📈 Trend",
+    ui_sample_share: "🥧 Share",
+    ui_sample_rank: "🏆 Ranking",
+    ui_show_legend: "Legend",
+    ui_show_labels: "Labels",
+    ui_smooth_line: "Smooth",
     ui_symbol_shape: "Symbol Shape:",
     ui_empty_circle: "Empty Circle",
     ui_circle: "Circle",
     ui_rect: "Rectangle",
     ui_triangle: "Triangle",
     ui_diamond: "Diamond",
-    ui_text_input_label: "Quick Text Input (CSV/TSV/Space supported)",
-    ui_data_panel_label: "Data Panel (Supports custom color override)",
+    ui_text_input_label: "Quick Text Input (Category,Value)",
+    ui_data_panel_label: "Data Rows (Per-item color override)",
     ui_category_name: "Category",
     ui_value: "Value",
     ui_checkbox_color_title: "Check to enable custom color for this item",
     ui_delete: "🗑️",
     ui_add_row: "➕ Add Row",
-    notice_success: "✨ Echarts generated successfully!",
+    ui_live_preview: "📈 Live Interactive Preview",
+    ui_toggle_preview_theme: "☀️/🌙 Theme Toggle",
+    ui_preview_tip: "💡 Tip: Preview supports hover tooltips, legend toggling, and zoom",
+    notice_success: "✨ Echarts updated successfully!",
     log_svg_render_failed: "[Feature: Echarts] SVG render failed:",
     log_no_core: "❌ EA_Core not running, please start engine first!",
     log_unmounted: "[{id}] 🔌 Unmounted",
@@ -90,6 +116,7 @@ var locales = {
     custom_title_fallback: "Custom Chart"
   }
 };
+
 const SCRIPT_ID = "ymjr.feature.echarts-engine";
 
 ExcalidrawAutomate.plugin._ymjr_echarts = ExcalidrawAutomate.plugin._ymjr_echarts || {};
@@ -116,82 +143,358 @@ EchartsCore.parseTextToData = (text) => {
             values.push(0);
         }
     }
-    return validCount >= 2 ? { labels, values } : null;
+    return validCount >= 1 ? { labels, values } : null;
+};
+
+// 样式与配置生成器
+EchartsCore.generateEchartsOptions = (data, isDark = false) => {
+    if (data.type === 'custom') {
+        return data.customOptions;
+    }
+
+    const textColor = isDark ? '#ddd' : '#333';
+    const subTextColor = isDark ? '#888' : '#666';
+    const splitLineColor = isDark ? 'rgba(255, 255, 255, 0.12)' : '#eee';
+    const axisLineColor = isDark ? 'rgba(255, 255, 255, 0.2)' : '#ccc';
+
+    const defaultPalettes = [
+        data.themeColor || '#5470c6',
+        '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'
+    ];
+
+    const baseOptions = {
+        backgroundColor: 'transparent',
+        animation: true,
+        color: defaultPalettes,
+        title: data.chartTitle ? {
+            text: data.chartTitle,
+            left: 'center',
+            top: 6,
+            textStyle: { fontSize: 15, fontWeight: 'bold', color: textColor }
+        } : undefined,
+        tooltip: {
+            trigger: (data.type === 'pie' || data.type === 'donut') ? 'item' : 'axis',
+            axisPointer: { type: 'shadow' }
+        },
+        legend: {
+            show: data.showLegend !== false,
+            bottom: 4,
+            textStyle: { color: subTextColor, fontSize: 11 }
+        },
+        grid: {
+            top: data.chartTitle ? 42 : 24,
+            left: '4%',
+            right: '5%',
+            bottom: data.showLegend !== false ? 34 : 16,
+            containLabel: true
+        }
+    };
+
+    const labelConfig = {
+        show: Boolean(data.showLabel),
+        position: (data.type === 'pie' || data.type === 'donut') ? 'outside' : (data.type === 'horizontalBar' ? 'right' : 'top'),
+        color: textColor,
+        fontSize: 11
+    };
+
+    const isPieFamily = data.type === 'pie' || data.type === 'donut';
+
+    const seriesData = (data.labels || []).map((label, index) => {
+        const val = (data.values && data.values[index] !== undefined) ? data.values[index] : 0;
+        const itemColor = data.colors ? data.colors[index] : undefined;
+
+        if (isPieFamily) {
+            const item = { value: val, name: label };
+            if (itemColor) item.itemStyle = { color: itemColor };
+            return item;
+        }
+
+        if (itemColor) {
+            return { value: val, itemStyle: { color: itemColor } };
+        }
+        return val;
+    });
+
+    if (isPieFamily) {
+        return JSON.stringify({
+            ...baseOptions,
+            series: [{
+                name: data.chartTitle || '数据',
+                type: 'pie',
+                radius: data.type === 'donut' ? ['42%', '70%'] : '68%',
+                center: ['50%', '52%'],
+                itemStyle: {
+                    borderRadius: data.type === 'donut' ? 6 : 4,
+                    borderColor: isDark ? '#1e1e1e' : '#fff',
+                    borderWidth: 2
+                },
+                label: labelConfig,
+                data: seriesData
+            }]
+        });
+    }
+
+    if (data.type === 'horizontalBar') {
+        return JSON.stringify({
+            ...baseOptions,
+            xAxis: {
+                type: 'value',
+                axisLine: { lineStyle: { color: axisLineColor } },
+                axisLabel: { color: subTextColor },
+                splitLine: { lineStyle: { color: splitLineColor, type: 'dashed' } }
+            },
+            yAxis: {
+                type: 'category',
+                data: data.labels,
+                axisLine: { lineStyle: { color: axisLineColor } },
+                axisLabel: { color: subTextColor }
+            },
+            series: [{
+                type: 'bar',
+                data: seriesData,
+                label: labelConfig,
+                itemStyle: { borderRadius: [0, 4, 4, 0] }
+            }]
+        });
+    }
+
+    const isLineOrArea = data.type === 'line' || data.type === 'area';
+    return JSON.stringify({
+        ...baseOptions,
+        xAxis: {
+            type: 'category',
+            data: data.labels,
+            axisLine: { lineStyle: { color: axisLineColor } },
+            axisLabel: { color: subTextColor }
+        },
+        yAxis: {
+            type: 'value',
+            axisLine: { lineStyle: { color: axisLineColor } },
+            axisLabel: { color: subTextColor },
+            splitLine: { lineStyle: { color: splitLineColor, type: 'dashed' } }
+        },
+        series: [{
+            type: isLineOrArea ? 'line' : data.type,
+            data: seriesData,
+            smooth: Boolean(data.smoothLine),
+            label: labelConfig,
+            areaStyle: data.type === 'area' ? { opacity: 0.32 } : undefined,
+            itemStyle: { borderRadius: data.type === 'bar' ? [4, 4, 0, 0] : 0 },
+            symbol: data.symbolType || 'emptyCircle',
+            symbolSize: data.type === 'scatter' ? 12 : 6
+        }]
+    });
 };
 
 const { Modal, Setting } = ea.obsidian;
 
+// 安全解析并获取当前活跃的 ExcalidrawView
+const getActiveExcalidrawView = () => {
+    if (ea.targetView) return ea.targetView;
+    if (window.app?.workspace) {
+        const activeLeaf = window.app.workspace.activeLeaf;
+        if (activeLeaf?.view?.getViewType?.() === "excalidraw") {
+            return activeLeaf.view;
+        }
+        const leaves = window.app.workspace.getLeavesOfType?.("excalidraw");
+        if (leaves && leaves.length > 0 && leaves[0].view) {
+            return leaves[0].view;
+        }
+    }
+    return null;
+};
+
+// 预设推荐配色
+const PRESET_PALETTES = [
+    { name: "经典蓝", color: "#5470c6" },
+    { name: "清新绿", color: "#3ba272" },
+    { name: "活力橙", color: "#fa541c" },
+    { name: "优雅紫", color: "#722ed1" },
+    { name: "珊瑚红", color: "#ee6666" },
+    { name: "青竹碧", color: "#13c2c2" }
+];
+
+// 预设快捷数据示例
+const QUICK_TEMPLATES = {
+    trend: {
+        type: 'line',
+        title: '季度营收趋势 (万元)',
+        labels: ['第一季度', '第二季度', '第三季度', '第四季度'],
+        values: [120, 185, 240, 310]
+    },
+    share: {
+        type: 'donut',
+        title: '产品市场份额占比',
+        labels: ['产品 A', '产品 B', '产品 C', '其他品类'],
+        values: [42, 28, 18, 12]
+    },
+    rank: {
+        type: 'horizontalBar',
+        title: '城市业务指标排行',
+        labels: ['杭州', '广州', '深圳', '上海', '北京'],
+        values: [76, 82, 88, 93, 98]
+    }
+};
+
 class EchartsEditorModal extends Modal {
     constructor(app, initialData, onSave) {
         super(app);
-        this.initialData = initialData || { type: 'bar', labels: ['类目1', '类目2'], values: [10, 20] };
+        this.initialData = initialData || { 
+            type: 'bar', 
+            labels: ['类目1', '类目2', '类目3'], 
+            values: [100, 200, 150] 
+        };
         this.onSave = onSave;
         
-        this.currentType = this.initialData.type;
-        this.labels = [...this.initialData.labels];
-        this.values = [...this.initialData.values];
+        this.currentType = this.initialData.type || 'bar';
+        this.labels = [...(this.initialData.labels || ['A', 'B', 'C'])];
+        this.values = [...(this.initialData.values || [100, 200, 150])];
         this.colors = [...(this.initialData.colors || [])];
         
         this.chartTitle = this.initialData.chartTitle || "";
         this.themeColor = this.initialData.themeColor || "#5470c6";
-        this.showLabel = this.initialData.showLabel || false;
+        this.showLabel = Boolean(this.initialData.showLabel);
         this.showLegend = this.initialData.showLegend !== false;
         this.smoothLine = this.initialData.smoothLine !== false;
         this.symbolType = this.initialData.symbolType || "emptyCircle";
 
         this.isCustom = this.currentType === 'custom';
-        this.customOptions = this.initialData.customOptions || `{\n  title: { text: '${t("custom_title_fallback")}' },\n  series: []\n}`;
+        this.customOptions = this.initialData.customOptions || `{\n  "title": { "text": "${t("custom_title_fallback")}", "left": "center" },\n  "xAxis": { "type": "category", "data": ["周一", "周二", "周三", "周四", "周五"] },\n  "yAxis": { "type": "value" },\n  "series": [{\n    "data": [120, 200, 150, 80, 70],\n    "type": "bar",\n    "itemStyle": { "borderRadius": [4, 4, 0, 0] }\n  }]\n}`;
+
+        this.previewDark = false;
+        this.previewChart = null;
+        this._previewTimer = null;
     }
 
     onOpen() {
+        if (this.modalEl) {
+            this.modalEl.style.width = "940px";
+            this.modalEl.style.maxWidth = "95vw";
+            this.modalEl.style.maxHeight = "90vh";
+        }
+
         const { contentEl } = this;
         contentEl.empty();
         contentEl.addClass("ymjr-echarts-editor");
 
-        contentEl.createEl("h2", { text: t("ui_title") });
+        contentEl.createEl("h2", { 
+            text: t("ui_title"), 
+            style: "margin-top: 0; margin-bottom: 12px; font-size: 1.25em; border-bottom: 1px solid var(--background-modifier-border); padding-bottom: 8px;" 
+        });
 
-        const headerPanel = contentEl.createDiv({ style: "display: flex; gap: 20px; align-items: center; margin-bottom: 15px;" });
+        // 两栏布局：左侧控制与数据，右侧实时交互预览
+        const mainContainer = contentEl.createDiv({ 
+            style: "display: flex; gap: 16px; align-items: stretch; min-height: 480px; max-height: calc(85vh - 120px); overflow: hidden;" 
+        });
+
+        // ===== 左侧面板 =====
+        const leftPanel = mainContainer.createDiv({ 
+            style: "flex: 1.15; min-width: 380px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 4px;" 
+        });
+
+        // 1. 图表类型与标题
+        const headerRow = leftPanel.createDiv({ style: "display: flex; gap: 12px; align-items: center;" });
         
-        const typeContainer = headerPanel.createDiv({ style: "flex: 1;" });
+        const typeContainer = headerRow.createDiv({ style: "flex: 1.1;" });
         new Setting(typeContainer)
             .setName(t("ui_chart_type"))
             .addDropdown(drop => {
                 drop.addOption("bar", t("ui_bar"))
+                    .addOption("horizontalBar", t("ui_horizontal_bar"))
                     .addOption("line", t("ui_line"))
+                    .addOption("area", t("ui_area"))
                     .addOption("pie", t("ui_pie"))
+                    .addOption("donut", t("ui_donut"))
                     .addOption("scatter", t("ui_scatter"))
                     .addOption("custom", t("ui_custom"))
                     .setValue(this.currentType)
                     .onChange(value => {
                         this.currentType = value;
                         this.isCustom = (value === 'custom');
-                        this.renderEditor();
+                        this.renderStyleSettings();
+                        this.renderDataEditor();
+                        this.debouncedPreview();
                     });
             });
 
-        const titleContainer = headerPanel.createDiv({ style: "flex: 1;" });
+        const titleContainer = headerRow.createDiv({ style: "flex: 1.2;" });
         new Setting(titleContainer)
             .setName(t("ui_chart_title"))
             .addText(text => {
                 text.setPlaceholder(t("ui_title_placeholder"))
                     .setValue(this.chartTitle)
-                    .onChange(val => { this.chartTitle = val; });
+                    .onChange(val => { 
+                        this.chartTitle = val; 
+                        this.debouncedPreview();
+                    });
             });
 
-        this.stylePanel = contentEl.createDiv({ style: "background: var(--background-secondary-alt); padding: 5px 15px; border-radius: 8px;" });
-        this.renderStyleSettings();
+        // 2. 样式面板 (配色、图例、平滑等)
+        this.stylePanel = leftPanel.createDiv({ 
+            style: "background: var(--background-secondary); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--background-modifier-border);" 
+        });
 
-        this.editorContainer = contentEl.createDiv({ style: "display: flex; gap: 15px; margin-top: 15px;" });
-        this.renderEditor();
+        // 3. 快捷模板栏
+        this.sampleBar = leftPanel.createDiv({ 
+            style: "display: flex; align-items: center; gap: 8px; font-size: 0.85em;" 
+        });
+        this.renderQuickSamples();
 
-        const footer = contentEl.createDiv({ style: "display: flex; justify-content: flex-end; margin-top: 20px; gap: 10px;" });
+        // 4. 数据编辑区
+        this.editorContainer = leftPanel.createDiv({ 
+            style: "flex: 1; display: flex; flex-direction: column; min-height: 250px;" 
+        });
+
+        // ===== 右侧面板 (实时可视化预览) =====
+        const rightPanel = mainContainer.createDiv({ 
+            style: "flex: 1.05; min-width: 360px; display: flex; flex-direction: column; background: var(--background-secondary-alt); border: 1px solid var(--background-modifier-border); border-radius: 8px; padding: 12px; position: relative;" 
+        });
+
+        const previewHeader = rightPanel.createDiv({ 
+            style: "display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid var(--background-modifier-border); padding-bottom: 6px;" 
+        });
+        previewHeader.createEl("b", { text: t("ui_live_preview"), style: "font-size: 0.95em;" });
+
+        const themeToggleBtn = previewHeader.createEl("button", { 
+            text: t("ui_toggle_preview_theme"), 
+            style: "font-size: 0.8em; padding: 2px 8px; cursor: pointer;" 
+        });
+        themeToggleBtn.onclick = () => {
+            this.previewDark = !this.previewDark;
+            rightPanel.style.background = this.previewDark ? "#1a1a1a" : "var(--background-secondary-alt)";
+            if (this.previewChart) {
+                this.previewChart.dispose();
+                this.previewChart = null;
+            }
+            this.renderLivePreview();
+        };
+
+        this.previewErrorEl = rightPanel.createDiv({
+            style: "display: none; background: rgba(220, 50, 50, 0.15); color: #e63c3c; padding: 6px 10px; border-radius: 4px; font-size: 0.85em; margin-bottom: 6px;"
+        });
+
+        this.previewContainer = rightPanel.createDiv({ 
+            id: "ymjr-echarts-modal-preview",
+            style: "flex: 1; width: 100%; min-height: 360px;" 
+        });
+
+        rightPanel.createEl("div", { 
+            text: t("ui_preview_tip"), 
+            style: "font-size: 0.75em; color: var(--text-muted); margin-top: 6px; text-align: center;" 
+        });
+
+        // ===== 底部按钮 =====
+        const footer = contentEl.createDiv({ 
+            style: "display: flex; justify-content: flex-end; margin-top: 14px; gap: 10px; border-top: 1px solid var(--background-modifier-border); padding-top: 10px;" 
+        });
         const cancelBtn = footer.createEl("button", { text: t("ui_cancel") });
         cancelBtn.onclick = () => this.close();
         
         const saveBtn = footer.createEl("button", { text: t("ui_generate"), cls: "mod-cta" });
         saveBtn.onclick = () => {
             if (this.isCustom) {
-                this.onSave({ type: 'custom', customOptions: this.rawTextArea.value });
+                const optVal = this.rawTextArea ? this.rawTextArea.value : this.customOptions;
+                this.onSave({ type: 'custom', customOptions: optVal });
             } else {
                 this.onSave({ 
                     type: this.currentType, 
@@ -208,6 +511,47 @@ class EchartsEditorModal extends Modal {
             }
             this.close();
         };
+
+        // 渲染内部组件与初始预览
+        this.renderStyleSettings();
+        this.renderDataEditor();
+
+        // 延迟触发确保容器已挂载
+        setTimeout(() => {
+            this.renderLivePreview();
+        }, 80);
+    }
+
+    renderQuickSamples() {
+        this.sampleBar.empty();
+        if (this.isCustom) {
+            this.sampleBar.style.display = "none";
+            return;
+        }
+        this.sampleBar.style.display = "flex";
+
+        this.sampleBar.createEl("span", { text: t("ui_quick_samples"), style: "color: var(--text-muted); font-size: 0.85em;" });
+
+        const addSampleBtn = (label, tmpl) => {
+            const btn = this.sampleBar.createEl("button", { 
+                text: label, 
+                style: "font-size: 0.8em; padding: 2px 7px; border-radius: 4px; cursor: pointer;" 
+            });
+            btn.onclick = () => {
+                this.currentType = tmpl.type;
+                this.chartTitle = tmpl.title;
+                this.labels = [...tmpl.labels];
+                this.values = [...tmpl.values];
+                this.colors = tmpl.labels.map(() => undefined);
+                this.renderStyleSettings();
+                this.renderDataEditor();
+                this.debouncedPreview();
+            };
+        };
+
+        addSampleBtn(t("ui_sample_trend"), QUICK_TEMPLATES.trend);
+        addSampleBtn(t("ui_sample_share"), QUICK_TEMPLATES.share);
+        addSampleBtn(t("ui_sample_rank"), QUICK_TEMPLATES.rank);
     }
 
     renderStyleSettings() {
@@ -218,109 +562,224 @@ class EchartsEditorModal extends Modal {
         }
         this.stylePanel.style.display = "block";
 
-        const flexRow = this.stylePanel.createDiv({ style: "display: flex; flex-wrap: wrap; gap: 10px; align-items: center;" });
+        const flexRow = this.stylePanel.createDiv({ 
+            style: "display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;" 
+        });
 
-        const colorDiv = flexRow.createDiv({ style: "display: flex; align-items: center; gap: 5px; margin-right: 15px;" });
-        colorDiv.createEl("span", { text: t("ui_theme_color") });
-        const colorPicker = colorDiv.createEl("input", { type: "color", value: this.themeColor });
-        colorPicker.onchange = (e) => { this.themeColor = e.target.value; };
+        // 主题色与推荐色色块
+        const colorSection = flexRow.createDiv({ style: "display: flex; align-items: center; gap: 6px;" });
+        colorSection.createEl("span", { text: t("ui_theme_color"), style: "font-size: 0.85em; color: var(--text-muted);" });
+        
+        PRESET_PALETTES.forEach(pal => {
+            const dot = colorSection.createEl("span", {
+                title: pal.name,
+                style: `display: inline-block; width: 16px; height: 16px; border-radius: 50%; background: ${pal.color}; cursor: pointer; border: ${this.themeColor === pal.color ? '2px solid var(--text-normal)' : '1px solid rgba(0,0,0,0.2)'};`
+            });
+            dot.onclick = () => {
+                this.themeColor = pal.color;
+                this.renderStyleSettings();
+                this.debouncedPreview();
+            };
+        });
+
+        const colorPicker = colorSection.createEl("input", { 
+            type: "color", 
+            value: this.themeColor,
+            style: "width: 24px; height: 20px; padding: 0; border: none; cursor: pointer; vertical-align: middle;" 
+        });
+        colorPicker.onchange = (e) => { 
+            this.themeColor = e.target.value; 
+            this.debouncedPreview();
+        };
+
+        // 开关组
+        const togglesGroup = flexRow.createDiv({ style: "display: flex; gap: 12px; align-items: center;" });
 
         const createToggle = (parent, label, value, onChange) => {
-            const wrap = parent.createDiv({ style: "display: flex; align-items: center; gap: 5px; margin-right: 15px;" });
-            wrap.createEl("span", { text: label });
+            const wrap = parent.createDiv({ style: "display: flex; align-items: center; gap: 4px;" });
             const toggle = wrap.createEl("input", { type: "checkbox", checked: value });
+            wrap.createEl("span", { text: label, style: "font-size: 0.85em; cursor: pointer;" }).onclick = () => {
+                toggle.checked = !toggle.checked;
+                onChange(toggle.checked);
+            };
             toggle.onchange = (e) => onChange(e.target.checked);
         };
 
-        createToggle(flexRow, t("ui_show_legend"), this.showLegend, (v) => this.showLegend = v);
-        createToggle(flexRow, t("ui_show_labels"), this.showLabel, (v) => this.showLabel = v);
+        createToggle(togglesGroup, t("ui_show_legend"), this.showLegend, (v) => {
+            this.showLegend = v;
+            this.debouncedPreview();
+        });
 
-        if (this.currentType === 'line') {
-            createToggle(flexRow, t("ui_smooth_line"), this.smoothLine, (v) => this.smoothLine = v);
+        createToggle(togglesGroup, t("ui_show_labels"), this.showLabel, (v) => {
+            this.showLabel = v;
+            this.debouncedPreview();
+        });
+
+        if (this.currentType === 'line' || this.currentType === 'area') {
+            createToggle(togglesGroup, t("ui_smooth_line"), this.smoothLine, (v) => {
+                this.smoothLine = v;
+                this.debouncedPreview();
+            });
         }
 
-        if (this.currentType === 'line' || this.currentType === 'scatter') {
-            const symDiv = flexRow.createDiv({ style: "display: flex; align-items: center; gap: 5px;" });
-            symDiv.createEl("span", { text: t("ui_symbol_shape") });
-            const select = symDiv.createEl("select");
-            const options = { 'emptyCircle': t("ui_empty_circle"), 'circle': t("ui_circle"), 'rect': t("ui_rect"), 'triangle': t("ui_triangle"), 'diamond': t("ui_diamond") };
+        if (this.currentType === 'line' || this.currentType === 'area' || this.currentType === 'scatter') {
+            const symDiv = togglesGroup.createDiv({ style: "display: flex; align-items: center; gap: 4px;" });
+            symDiv.createEl("span", { text: t("ui_symbol_shape"), style: "font-size: 0.85em; color: var(--text-muted);" });
+            const select = symDiv.createEl("select", { style: "font-size: 0.8em; padding: 1px 4px;" });
+            const options = { 
+                'emptyCircle': t("ui_empty_circle"), 
+                'circle': t("ui_circle"), 
+                'rect': t("ui_rect"), 
+                'triangle': t("ui_triangle"), 
+                'diamond': t("ui_diamond") 
+            };
             Object.entries(options).forEach(([k, v]) => {
                 const opt = select.createEl("option", { value: k, text: v });
                 if (k === this.symbolType) opt.selected = true;
             });
-            select.onchange = (e) => this.symbolType = e.target.value;
+            select.onchange = (e) => {
+                this.symbolType = e.target.value;
+                this.debouncedPreview();
+            };
         }
     }
 
-    renderEditor() {
+    renderDataEditor() {
         this.editorContainer.empty();
-        this.renderStyleSettings();
 
         if (this.isCustom) {
+            this.editorContainer.createEl("b", { 
+                text: "Echarts Option JSON:", 
+                style: "margin-bottom: 6px; font-size: 0.9em;" 
+            });
             const rawArea = this.editorContainer.createEl("textarea", {
                 text: this.customOptions,
-                style: "width: 100%; height: 300px; font-family: monospace; padding: 10px;"
+                style: "width: 100%; flex: 1; min-height: 320px; font-family: monospace; font-size: 0.88em; padding: 10px; border-radius: 6px; border: 1px solid var(--background-modifier-border); resize: none;"
             });
             this.rawTextArea = rawArea;
+            rawArea.addEventListener("input", (e) => {
+                this.customOptions = e.target.value;
+                this.debouncedPreview();
+            });
             return;
         }
 
-        const leftPanel = this.editorContainer.createDiv({ style: "flex: 1; display: flex; flex-direction: column;" });
-        leftPanel.createEl("b", { text: t("ui_text_input_label"), style: "margin-bottom: 5px;" });
-        const rawTextArea = leftPanel.createEl("textarea", {
-            style: "flex: 1; min-height: 250px; white-space: pre; font-family: monospace; padding: 10px;"
+        const dataSplit = this.editorContainer.createDiv({ 
+            style: "display: flex; gap: 12px; flex: 1; align-items: stretch; min-height: 260px;" 
         });
-        
+
+        // 左侧快捷文本框
+        const textPanel = dataSplit.createDiv({ 
+            style: "flex: 1; display: flex; flex-direction: column;" 
+        });
+        textPanel.createEl("b", { 
+            text: t("ui_text_input_label"), 
+            style: "margin-bottom: 4px; font-size: 0.85em; color: var(--text-muted);" 
+        });
+        const rawTextArea = textPanel.createEl("textarea", {
+            style: "flex: 1; width: 100%; white-space: pre; font-family: monospace; font-size: 0.88em; padding: 8px; border-radius: 6px; border: 1px solid var(--background-modifier-border); resize: none;"
+        });
+        this.rawTextArea = rawTextArea;
+
         const updateTextArea = () => {
             rawTextArea.value = this.labels.map((l, i) => `${l},${this.values[i]}`).join('\n');
         };
         updateTextArea();
 
-        const rightPanel = this.editorContainer.createDiv({ style: "flex: 1.2; border: 1px solid var(--background-modifier-border); border-radius: 4px; padding: 10px; max-height: 280px; overflow-y: auto;" });
-        rightPanel.createEl("b", { text: t("ui_data_panel_label"), style: "display: block; margin-bottom: 10px;" });
-        
+        // 右侧表格列表
+        const tablePanel = dataSplit.createDiv({ 
+            style: "flex: 1.15; border: 1px solid var(--background-modifier-border); border-radius: 6px; padding: 8px; overflow-y: auto; max-height: 290px; background: var(--background-primary);" 
+        });
+        tablePanel.createEl("b", { 
+            text: t("ui_data_panel_label"), 
+            style: "display: block; margin-bottom: 8px; font-size: 0.85em; color: var(--text-muted);" 
+        });
+
         const renderTable = () => {
-            rightPanel.querySelectorAll(".ymjr-row").forEach(e => e.remove());
+            tablePanel.querySelectorAll(".ymjr-row").forEach(e => e.remove());
             this.labels.forEach((l, i) => {
-                const row = rightPanel.createDiv({ cls: "ymjr-row", style: "display: flex; gap: 5px; margin-bottom: 5px; align-items: center;" });
+                const row = tablePanel.createDiv({ 
+                    cls: "ymjr-row", 
+                    style: "display: flex; gap: 6px; margin-bottom: 6px; align-items: center;" 
+                });
                 
-                const labelInput = row.createEl("input", { type: "text", value: l, style: "flex: 2;", title: t("ui_category_name") });
-                labelInput.onchange = (e) => { this.labels[i] = e.target.value; updateTextArea(); };
+                const labelInput = row.createEl("input", { 
+                    type: "text", 
+                    value: l, 
+                    style: "flex: 2; padding: 3px 6px; font-size: 0.85em; border-radius: 4px; border: 1px solid var(--background-modifier-border);", 
+                    title: t("ui_category_name") 
+                });
+                labelInput.oninput = (e) => { 
+                    this.labels[i] = e.target.value; 
+                    updateTextArea(); 
+                    this.debouncedPreview();
+                };
                 
-                const valueInput = row.createEl("input", { type: "number", value: this.values[i], style: "flex: 2;", title: t("ui_value") });
-                valueInput.onchange = (e) => { this.values[i] = parseFloat(e.target.value) || 0; updateTextArea(); };
+                const valueInput = row.createEl("input", { 
+                    type: "number", 
+                    value: this.values[i], 
+                    style: "flex: 1.8; padding: 3px 6px; font-size: 0.85em; border-radius: 4px; border: 1px solid var(--background-modifier-border);", 
+                    title: t("ui_value") 
+                });
+                valueInput.oninput = (e) => { 
+                    this.values[i] = parseFloat(e.target.value) || 0; 
+                    updateTextArea(); 
+                    this.debouncedPreview();
+                };
                 
-                const colorDiv = row.createDiv({ style: "display: flex; align-items: center; gap: 2px; flex: 1;" });
-                const hasCustomColor = !!this.colors[i];
-                const colorCheckbox = colorDiv.createEl("input", { type: "checkbox", checked: hasCustomColor, title: t("ui_checkbox_color_title") });
+                const colorDiv = row.createDiv({ style: "display: flex; align-items: center; gap: 3px;" });
+                const hasCustomColor = Boolean(this.colors[i]);
+                const colorCheckbox = colorDiv.createEl("input", { 
+                    type: "checkbox", 
+                    checked: hasCustomColor, 
+                    title: t("ui_checkbox_color_title") 
+                });
                 const colorInput = colorDiv.createEl("input", { 
                     type: "color", 
                     value: this.colors[i] || this.themeColor || "#5470c6", 
                     disabled: !hasCustomColor,
-                    style: "width: 25px; padding: 0; border: none;"
+                    style: "width: 22px; height: 22px; padding: 0; border: none; cursor: pointer;" 
                 });
                 
                 colorCheckbox.onchange = (e) => {
                     const isChecked = e.target.checked;
                     colorInput.disabled = !isChecked;
                     this.colors[i] = isChecked ? colorInput.value : undefined;
+                    this.debouncedPreview();
                 };
                 colorInput.onchange = (e) => {
-                    if (!colorInput.disabled) this.colors[i] = e.target.value;
+                    if (!colorInput.disabled) {
+                        this.colors[i] = e.target.value;
+                        this.debouncedPreview();
+                    }
                 };
 
-                const delBtn = row.createEl("button", { text: t("ui_delete"), style: "padding: 0 5px;" });
+                const delBtn = row.createEl("button", { 
+                    text: t("ui_delete"), 
+                    style: "padding: 2px 6px; font-size: 0.85em; cursor: pointer; border: none; background: transparent; opacity: 0.7;" 
+                });
                 delBtn.onclick = () => {
-                    this.labels.splice(i, 1); this.values.splice(i, 1); this.colors.splice(i, 1);
-                    renderTable(); updateTextArea();
+                    this.labels.splice(i, 1); 
+                    this.values.splice(i, 1); 
+                    this.colors.splice(i, 1);
+                    renderTable(); 
+                    updateTextArea();
+                    this.debouncedPreview();
                 };
             });
-            const addBtn = rightPanel.createEl("button", { text: t("ui_add_row"), cls: "ymjr-row", style: "width: 100%; margin-top: 5px;" });
+
+            const addBtn = tablePanel.createEl("button", { 
+                text: t("ui_add_row"), 
+                cls: "ymjr-row", 
+                style: "width: 100%; margin-top: 6px; font-size: 0.85em; padding: 4px; border-radius: 4px; border: 1px dashed var(--background-modifier-border); cursor: pointer; background: transparent;" 
+            });
             addBtn.onclick = () => {
                 this.labels.push(`${t("ui_category_name")}${this.labels.length + 1}`);
-                this.values.push(0);
+                this.values.push(100);
                 this.colors.push(undefined);
-                renderTable(); updateTextArea();
+                renderTable(); 
+                updateTextArea();
+                this.debouncedPreview();
             };
         };
         renderTable();
@@ -332,73 +791,137 @@ class EchartsEditorModal extends Modal {
                 this.values = parsed.values;
                 this.colors = this.labels.map((_, i) => this.colors[i]);
                 renderTable(); 
+                this.debouncedPreview();
             }
         });
+    }
+
+    debouncedPreview() {
+        clearTimeout(this._previewTimer);
+        this._previewTimer = setTimeout(() => {
+            this.renderLivePreview();
+        }, 120);
+    }
+
+    renderLivePreview() {
+        if (!this.previewContainer) return;
+        const echartsLib = window.echarts;
+        if (!echartsLib) return;
+
+        if (!this.previewChart) {
+            this.previewChart = echartsLib.init(this.previewContainer, this.previewDark ? 'dark' : null, { renderer: 'svg' });
+        }
+
+        try {
+            let optStr;
+            if (this.isCustom) {
+                optStr = this.rawTextArea ? this.rawTextArea.value : this.customOptions;
+            } else {
+                optStr = EchartsCore.generateEchartsOptions({
+                    type: this.currentType,
+                    chartTitle: this.chartTitle,
+                    labels: this.labels,
+                    values: this.values,
+                    colors: this.colors,
+                    themeColor: this.themeColor,
+                    showLabel: this.showLabel,
+                    showLegend: this.showLegend,
+                    smoothLine: this.smoothLine,
+                    symbolType: this.symbolType
+                }, this.previewDark);
+            }
+
+            const opt = typeof optStr === 'string' ? JSON.parse(optStr) : optStr;
+            if (opt) {
+                if (!opt.backgroundColor || opt.backgroundColor === '#100c2a' || opt.backgroundColor === '#333') {
+                    opt.backgroundColor = 'transparent';
+                }
+                this.previewChart.setOption(opt, true);
+                if (this.previewErrorEl) this.previewErrorEl.style.display = "none";
+            }
+        } catch (e) {
+            if (this.previewErrorEl) {
+                this.previewErrorEl.textContent = "⚠️ " + (e.message || "JSON 格式待完善");
+                this.previewErrorEl.style.display = "block";
+            }
+        }
+    }
+
+    onClose() {
+        clearTimeout(this._previewTimer);
+        if (this.previewChart) {
+            this.previewChart.dispose();
+            this.previewChart = null;
+        }
     }
 }
 EchartsCore.EchartsEditorModal = EchartsEditorModal;
 
-EchartsCore.generateEchartsOptions = (data) => {
-    if (data.type === 'custom') return data.customOptions;
+// 原地或新建打开图表编辑器的核心通用方法
+EchartsCore.openEditorForElement = (el, view) => {
+    const currentEcharts = el?.customData?.echarts;
+    if (!currentEcharts) return;
 
-    const colorPalette = data.themeColor 
-        ? [data.themeColor, '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'] 
-        : undefined;
-
-    const baseOptions = {
-        title: data.chartTitle ? { text: data.chartTitle, left: 'center', textStyle: { fontSize: 16 } } : undefined,
-        color: colorPalette,
-        tooltip: { trigger: data.type === 'pie' ? 'item' : 'axis' },
-        legend: { 
-            show: data.showLegend, 
-            bottom: '0%', 
-            icon: data.symbolType !== 'emptyCircle' ? data.symbolType : 'circle' 
-        },
-        grid: { 
-            left: '3%', right: '4%', 
-            bottom: data.showLegend ? '10%' : '3%', 
-            top: data.chartTitle ? '15%' : '5%', 
-            containLabel: true 
-        }
+    let initialData = { 
+        type: 'bar', 
+        chartTitle: '',
+        labels: ['类目A', '类目B', '类目C'], 
+        values: [100, 200, 150],
+        colors: [],
+        themeColor: '#5470c6',
+        showLabel: false,
+        showLegend: true,
+        smoothLine: true,
+        symbolType: 'emptyCircle'
     };
 
-    const labelConfig = { show: data.showLabel, position: data.type === 'pie' ? 'outside' : 'top' };
+    if (currentEcharts.rawData) {
+        initialData = { ...initialData, ...currentEcharts.rawData };
+    } else if (currentEcharts.type === 'custom') {
+        initialData.type = 'custom';
+        initialData.customOptions = currentEcharts.value;
+    } else {
+        try {
+            initialData.type = currentEcharts.type || 'bar';
+            const config = typeof currentEcharts.value === 'string' ? JSON.parse(currentEcharts.value) : currentEcharts.value;
+            initialData.chartTitle = config.title?.text || '';
+            initialData.themeColor = config.color ? config.color[0] : '#5470c6';
+            initialData.showLegend = config.legend?.show !== false;
+            initialData.showLabel = config.series?.[0]?.label?.show || false;
+            initialData.symbolType = config.series?.[0]?.symbol || 'emptyCircle';
+            initialData.smoothLine = config.series?.[0]?.smooth !== false;
 
-    const seriesData = data.values.map((val, i) => {
-        const item = { value: val, name: data.labels[i] };
-        if (data.colors && data.colors[i]) {
-            item.itemStyle = { color: data.colors[i] };
+            const seriesData = config.series?.[0]?.data;
+            if (Array.isArray(seriesData)) {
+                initialData.values = seriesData.map(d => typeof d === 'object' && d !== null ? d.value : d);
+                initialData.labels = (initialData.type === 'pie' || initialData.type === 'donut')
+                    ? seriesData.map(d => d.name) 
+                    : (config.xAxis?.data || seriesData.map((_, i) => `Item ${i + 1}`));
+                initialData.colors = seriesData.map(d => typeof d === 'object' && d?.itemStyle?.color ? d.itemStyle.color : undefined);
+            }
+        } catch (e) {
+            console.warn(t("log_parse_failed"), e);
+            const legacyData = EchartsCore.parseTextToData(currentEcharts.value);
+            if (legacyData) {
+                initialData.labels = legacyData.labels;
+                initialData.values = legacyData.values;
+            }
         }
-        return item;
-    });
-
-    if (data.type === 'pie') {
-        return JSON.stringify({
-            ...baseOptions,
-            series: [{ 
-                type: 'pie', 
-                radius: ['40%', '70%'], 
-                itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 }, 
-                label: labelConfig,
-                data: seriesData 
-            }]
-        });
     }
 
-    return JSON.stringify({
-        ...baseOptions,
-        xAxis: { type: 'category', data: data.labels, axisLine: { lineStyle: { color: '#999' } } },
-        yAxis: { type: 'value', splitLine: { lineStyle: { type: 'dashed' } } },
-        series: [{
-            type: data.type,
-            data: seriesData,
-            smooth: data.smoothLine, 
-            label: labelConfig,
-            itemStyle: { borderRadius: data.type === 'bar' ? [4, 4, 0, 0] : 0 }, 
-            symbol: data.symbolType || 'emptyCircle',
-            symbolSize: data.type === 'scatter' ? 12 : 6 
-        }]
-    });
+    new EchartsCore.EchartsEditorModal(app, initialData, async (result) => {
+        const finalOptions = EchartsCore.generateEchartsOptions(result);
+        ea.clear();
+        el.customData = el.customData || {};
+        el.customData.echarts = {
+            type: result.type,
+            value: finalOptions,
+            rawData: result
+        };
+        ea.copyViewElementsToEAforEditing([el]);
+        await ea.addElementsToView(false, false, false);
+        new Notice(t("notice_success"));
+    }).open();
 };
 
 const handlePaste = async (context) => {
@@ -424,13 +947,19 @@ const handlePaste = async (context) => {
                 const finalOptions = EchartsCore.generateEchartsOptions(result);
                 
                 ea.clear(); 
-
                 ea.style.backgroundColor = "transparent";
                 ea.style.strokeColor = "transparent"; 
                 const id = ea.addRect(0, 0, 500, 350);
                 const el = ea.getElement(id);
                 
-                el.customData = { ...el.customData, echarts: { type: result.type, value: finalOptions } };
+                el.customData = { 
+                    ...el.customData, 
+                    echarts: { 
+                        type: result.type, 
+                        value: finalOptions,
+                        rawData: result 
+                    } 
+                };
                 
                 payload.text = '';
                 ea.copyViewElementsToEAforEditing([el]);
@@ -443,7 +972,6 @@ const handlePaste = async (context) => {
     return false;
 };
 
-
 const handleSvgRender = async (contextPayload) => {
     const { ea, api } = contextPayload;
     if (!ea || !api) return;
@@ -452,20 +980,29 @@ const handleSvgRender = async (contextPayload) => {
     
     if (element?.customData?.echarts) {
         try {
-            const container = document.getElementById(element.id);
-            if (!container) return false;
-            
-            const iframe = container.querySelector("iframe.excalidraw__embeddable");
-            if (!iframe || !iframe.contentDocument) return false;
-            
-            const svg = iframe.contentDocument.querySelector("svg");
-            if (!svg) return false;
+            const iframes = Array.from(document.querySelectorAll("iframe.excalidraw__embeddable"));
+            const targetIframe = iframes.find(f => {
+                try {
+                    return f.contentDocument?.getElementById("main");
+                } catch(e) {
+                    return false;
+                }
+            });
 
-            const clonedSvg = svg.cloneNode(true);
-            const gElement = document.createElementNS('[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)', 'g');
+            if (!targetIframe || !targetIframe.contentDocument) return false;
+
+            const chartSvg = targetIframe.contentDocument.querySelector("svg");
+            if (!chartSvg) return false;
+
+            const clonedSvg = chartSvg.cloneNode(true);
+            const gElement = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            gElement.innerHTML = clonedSvg.innerHTML;
             
-            Array.from(clonedSvg.attributes).forEach(attr => gElement.setAttribute(attr.name, attr.value));
-            while (clonedSvg.firstChild) gElement.appendChild(clonedSvg.firstChild);
+            Array.from(clonedSvg.attributes).forEach(attr => {
+                if (attr.name !== "transform") {
+                    gElement.setAttribute(attr.name, attr.value);
+                }
+            });
 
             gElement.setAttribute(
                 "transform",
@@ -473,6 +1010,7 @@ const handleSvgRender = async (contextPayload) => {
             );
             
             addToRoot(gElement, element);
+            return true;
         } catch (e) {
             console.error(t("log_svg_render_failed"), e);
         }
@@ -484,30 +1022,52 @@ const setupCustomDocumentRenderer = () => {
     const echartContent = getEcharts(); 
 
     const loadEcharts = (doAfterLoaded) => {
+        if (window.echarts) {
+            if (doAfterLoaded) doAfterLoaded();
+            return;
+        }
         if (document.getElementById("script-echarts")) return;
-        let script = document.createElement("script");
-        script.id = "script-echarts";
-        script.onload = doAfterLoaded ? doAfterLoaded : null;
-        script.textContent = echartContent;
-        ea.targetView.contentEl.appendChild(script);
-        return script;
+        try {
+            let script = document.createElement("script");
+            script.id = "script-echarts";
+            script.onload = doAfterLoaded ? doAfterLoaded : null;
+            script.textContent = echartContent;
+            (document.head || document.body || document.documentElement).appendChild(script);
+            return script;
+        } catch (e) {
+            console.error("[Feature: Echarts] Failed to inject echarts script:", e);
+        }
     };
+
+    // 挂载时立即执行一次预加载，确保全局 window.echarts 就绪
+    loadEcharts();
 
     const renderWebViewByData = (src, view, id, appState) => {
         return React.createElement('iframe', {
-            ref: (ref) => view.updateEmbeddableRef(id, ref),
+            ref: (ref) => {
+                if (view && typeof view.updateEmbeddableRef === "function") {
+                    view.updateEmbeddableRef(id, ref);
+                }
+            },
             className: 'excalidraw__embeddable',
             title: 'Excalidraw Echarts Content',
             allowFullScreen: true,
             src: null,
-            style: { overflow: 'hidden', borderRadius: 'var(--embeddable-radius)' },
+            style: { 
+                overflow: 'hidden', 
+                borderRadius: 'var(--embeddable-radius)', 
+                border: 'none', 
+                width: '100%', 
+                height: '100%' 
+            },
             srcDoc: src,
         });
     };
 
     const renderCustomDocument = function(element, appState) {
         if (element?.customData?.document) {
-            return renderWebViewByData(element.customData.document, ea.targetView, element.id, appState);
+            const view = getActiveExcalidrawView();
+            return renderWebViewByData(element.customData.document, view, element.id, appState);
         }
         
         if (element?.customData?.echarts) {
@@ -516,29 +1076,71 @@ const setupCustomDocumentRenderer = () => {
             const echartsData = element.customData.echarts;
             let optionStr = echartsData.value;
 
-            if (!optionStr.startsWith("{")) {
+            if (!optionStr || typeof optionStr !== "string" || !optionStr.trim().startsWith("{")) {
                 const legacyData = EchartsCore.parseTextToData(optionStr);
-                if (legacyData) optionStr = EchartsCore.generateEchartsOptions({type: echartsData.type, ...legacyData});
+                if (legacyData) {
+                    optionStr = EchartsCore.generateEchartsOptions({type: echartsData.type, ...legacyData});
+                }
             }
 
+            const isDark = appState?.theme === "dark" || document.body?.classList?.contains("theme-dark");
+
             const htmlSrc = `
+                <!DOCTYPE html>
                 <html>
-                <head><meta charset="utf-8" /></head>
-                <body style="overflow:hidden; margin:0; padding:0;">
-                    <div id="main" style="width: ${element.width - 16}px; height: ${element.height - 16}px;"></div>
-                    <script type="text/javascript">
-                        window.onload = function() {
-                            if (!parent.echarts) return;
-                            var myChart = parent.echarts.init(document.getElementById('main'), null, { renderer: 'svg' });
-                            var option = ${optionStr};
-                            myChart.setOption(option);
-                            window.addEventListener('resize', () => myChart.resize());
+                <head>
+                    <meta charset="utf-8" />
+                    <style>
+                        html, body {
+                            margin: 0;
+                            padding: 0;
+                            width: 100%;
+                            height: 100%;
+                            overflow: hidden;
+                            background: transparent;
                         }
+                        #main {
+                            width: 100%;
+                            height: 100%;
+                            box-sizing: border-box;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div id="main"></div>
+                    <script type="text/javascript">
+                        (function() {
+                            function initChart() {
+                                if (!parent || !parent.echarts) {
+                                    setTimeout(initChart, 60);
+                                    return;
+                                }
+                                var chartDom = document.getElementById('main');
+                                if (!chartDom) return;
+                                var myChart = parent.echarts.init(chartDom, ${isDark ? "'dark'" : "null"}, { renderer: 'svg' });
+                                var rawOption = ${optionStr};
+                                if (rawOption) {
+                                    if (!rawOption.backgroundColor || rawOption.backgroundColor === '#100c2a' || rawOption.backgroundColor === '#333') {
+                                        rawOption.backgroundColor = 'transparent';
+                                    }
+                                    myChart.setOption(rawOption);
+                                }
+                                window.addEventListener('resize', function() {
+                                    if (myChart) myChart.resize();
+                                });
+                            }
+                            if (document.readyState === 'complete') {
+                                initChart();
+                            } else {
+                                window.addEventListener('load', initChart);
+                            }
+                        })();
                     </script>
                 </body>
                 </html>
             `;
-            return renderWebViewByData(htmlSrc, ea.targetView, element.id, appState);
+            const view = getActiveExcalidrawView();
+            return renderWebViewByData(htmlSrc, view, element.id, appState);
         }
         return null;
     };
@@ -560,16 +1162,46 @@ const handleCustomDocumentRender = (context) => {
     }
 };
 
+// 画布双击拦截：双击图表直接唤起可视化编辑器原地修改
+const handleCanvasDoubleClick = (ctx) => {
+    const { ea, api } = ctx;
+    if (!ea || !api) return false;
+
+    const { App, sceneX, sceneY } = ctx;
+    if (!App?.scene) return false;
+    const elements = App.scene.getNonDeletedElements();
+
+    for (let i = elements.length - 1; i >= 0; i--) {
+        const el = elements[i];
+        if (!el?.customData?.echarts) continue;
+
+        // 检查点击坐标是否落在图表矩形包围盒内
+        const minX = el.x;
+        const maxX = el.x + el.width;
+        const minY = el.y;
+        const maxY = el.y + el.height;
+
+        if (sceneX >= minX && sceneX <= maxX && sceneY >= minY && sceneY <= maxY) {
+            const view = getActiveExcalidrawView();
+            EchartsCore.openEditorForElement?.(el, view);
+            return true; // 拦截事件，避免进入普通双击编辑
+        }
+    }
+    return false;
+};
+
 async function mountFeature() {
     if (!window.EA_Core) return console.warn(t("log_no_core"));
-    if (typeof ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] === "function") ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`]();
+    if (typeof ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] === "function") {
+        ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`]();
+    }
 
     setupCustomDocumentRenderer();
 
     window.EA_Core.registerHook(SCRIPT_ID, 'onPaste', handlePaste, 50); 
     window.EA_Core.registerHook(SCRIPT_ID, 'renderElementToSvg', handleSvgRender, 60);
-    
     window.EA_Core.registerHook(SCRIPT_ID, 'renderCustomDocument', handleCustomDocumentRender, 50);
+    window.EA_Core.registerHook(SCRIPT_ID, 'handleCanvasDoubleClick', handleCanvasDoubleClick, 80);
 
     ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] = () => {
         if (window.EA_Core) window.EA_Core.unregisterHook(SCRIPT_ID);

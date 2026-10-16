@@ -879,7 +879,7 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">切换代码高亮</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.0</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.0.1</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/code-highlight/Action-Toggle-Code-Highlight.md">File on GitHub</a></td></tr>
   <tr valign="top"><td class="label">Description</td><td class="data">选中文本，自动识别语言并应用高亮；若已高亮则取消。</td></tr>
   <tr valign="top"><td class="label">Usage</td><td class="data">选中画板中的一个或多个文本元素，点击运行脚本。如果是普通文本，将自动识别语言并转换为代码高亮图片；如果是已高亮的图片，将恢复为普通文本。</td></tr>
@@ -1112,11 +1112,11 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">Echarts 图表生成面板</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.0</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.0</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/echarts/Action-Echarts-Manager.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">动作脚本：唤起 Echarts 图表编辑器，基于选中的文字生成图表或编辑现有图表。</td></tr>
-  <tr valign="top"><td class="label">Usage</td><td class="data">选中包含逗号/制表符分隔数据的文本元素，或选中已有的 Echarts 图表容器，运行此脚本即可唤起高级配置面板进行图表生成与修改。</td></tr>
-  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>提供数据表格双向绑定的交互式面板</li><li>支持快捷切换柱状图、折线图、饼图、散点图</li><li>支持自定义 Echarts JSON 配置项</li></ul></td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">动作脚本：唤起 Echarts 图表可视化编辑器，基于选中的文字生成图表、原地编辑现有图表或插入新图表。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">选中包含逗号/制表符分隔数据的文本元素，或选中已有的 Echarts 图表容器，运行此脚本即可唤起带实时预览的高级配置面板进行图表生成与修改。</td></tr>
+  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>提供数据表格双向绑定的交互式面板与实时交互预览</li><li>支持快捷切换柱状图、条形图、折线图、面积图、饼图、环形图、散点图</li><li>支持快捷主题色与推荐配色一键应用</li><li>选中已有图表时支持原地无损读取与更新</li><li>支持自定义 Echarts JSON 配置项</li></ul></td></tr>
   <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>必须配合 Feature-Echarts-Engine 引擎使用</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
@@ -1130,11 +1130,11 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">Echarts 核心引擎</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.0</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.0</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/echarts/Feature-Echarts-Engine.md">File on GitHub</a></td></tr>
-  <tr valign="top"><td class="label">Description</td><td class="data">后台引擎：提供 Echarts 图表生成所需的完整离线库渲染、粘贴拦截与 SVG 导出支持。</td></tr>
-  <tr valign="top"><td class="label">Usage</td><td class="data">后台常驻引擎。解决 Excalidraw 原生不支持复杂数据可视化的问题，为 Echarts 图表提供底层 API 支持和画布上的 iframe 渲染能力。</td></tr>
-  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>注入庞大的 Apache Echarts 核心依赖与渲染环境</li><li>拦截 `onPaste` 钩子，支持直接粘贴 Excel 数据表格自动唤起生成弹窗</li><li>拦截 `renderElementToSvg` 支持带图表的画板离线导出</li></ul></td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">后台引擎：提供 Echarts 图表生成所需的完整离线库渲染、双击编辑、实时预览、粘贴拦截与 SVG 导出支持。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">后台常驻引擎。解决 Excalidraw 原生不支持复杂数据可视化的问题，为 Echarts 图表提供底层 API 支持、实时可视化编辑和画布上的 iframe 渲染能力。</td></tr>
+  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>注入完整的 Apache Echarts 离线渲染内核与实时预览支持</li><li>彻底修复画布渲染时 contentEl 为空的报错，全面适配最新插件生命周期</li><li>拦截画布双击事件，双击图元即可无缝唤起高级可视化编辑器进行原地修改</li><li>全新升级可视化编辑器：支持双向数据绑定、实时交互预览与一键预设配色</li><li>支持快捷切换柱状图、条形图、折线图、面积图、饼图、环形图、散点图及自定义配置</li><li>拦截 onPaste 钩子，支持直接粘贴表格或数据自动唤起生成</li><li>拦截 renderElementToSvg 支持带图表的画板离线导出</li></ul></td></tr>
   <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>独立运行，供 Action-Echarts-Manager 动作脚本调用</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">true</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
@@ -1839,7 +1839,7 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">初始化脑图配置</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.1.1</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.2</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Action-Create-Mindmap.md">File on GitHub</a></td></tr>
   <tr valign="top"><td class="label">Description</td><td class="data">将普通的连线节点组合转化为受引擎控制的脑图结构，并赋予默认样式。</td></tr>
   <tr valign="top"><td class="label">Usage</td><td class="data">选中希望作为脑图根节点的元素（也可以只选中一个），运行脚本后在弹窗中配置排版方向与主题，即可一键生成结构化脑图。</td></tr>
@@ -1857,7 +1857,7 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">解除脑图属性</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.1.1</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.2</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Action-Detach-Mindmap.md">File on GitHub</a></td></tr>
   <tr valign="top"><td class="label">Description</td><td class="data">将选中元素及其子节点从脑图结构中脱离，转换为普通元素，并修复原脑图排版。</td></tr>
   <tr valign="top"><td class="label">Usage</td><td class="data">选中要解除的脑图节点，运行该脚本即可。</td></tr>
@@ -1871,7 +1871,7 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">复制脑图为Markdown</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.1.1</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.1.2</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/mindmap/Action-Export-Mindmap-To-Clipboard.md">File on GitHub</a></td></tr>
   <tr valign="top"><td class="label">Description</td><td class="data">将选中的脑图导出为层级结构的 Markdown 列表文本，并复制到剪贴板。</td></tr>
   <tr valign="top"><td class="label">Usage</td><td class="data">选中脑图节点，运行此脚本即可将整棵树导出为 Markdown 文本到剪贴板。</td></tr>

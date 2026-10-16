@@ -360,6 +360,11 @@ class LoadLibraryToCanvasManager {
       if (copy.frameId && idMap.has(copy.frameId)) {
         copy.frameId = idMap.get(copy.frameId);
       }
+      if (copy.type === "text") {
+        if (copy.text === undefined) copy.text = "";
+        if (copy.rawText === undefined) copy.rawText = copy.text;
+        if (copy.originalText === undefined) copy.originalText = copy.text;
+      }
 
       return copy;
     });
@@ -556,6 +561,16 @@ class LoadLibraryToCanvasManager {
           if (!el.groupIds) el.groupIds = [];
           el.groupIds.push(itemGroupId);
           this.ea.elementsDict[el.id] = el;
+        }
+      }
+
+      // 防御：确保所有文本元素的 rawText/originalText/text 均为合法字符串，防止插件 parseCheckbox 抛错
+      for (const elId in this.ea.elementsDict) {
+        const el = this.ea.elementsDict[elId];
+        if (el && el.type === "text") {
+          if (el.text === undefined) el.text = "";
+          if (el.rawText === undefined) el.rawText = el.text;
+          if (el.originalText === undefined) el.originalText = el.text;
         }
       }
 
