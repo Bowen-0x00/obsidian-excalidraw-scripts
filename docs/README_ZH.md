@@ -15,6 +15,18 @@
 <table width="100%">
   <tr>
     <td width="50%" valign="top">
+      <h3><a href="../Scripts/echarts/">ECharts 1.3.0 图表能力</a></h3>
+      <p>十六个真实样例：十二种可视化图表、多系列分组/堆叠，以及自定义 JSON 热力图。</p>
+      <a href="../images/echarts-1.3.0/overview.png"><img src="../images/echarts-1.3.0/overview.png" width="100%" alt="当前 ECharts 1.3.0 引擎实际导出的十六个图表示例"></a>
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="../Scripts/echarts/Action-Echarts-Manager.md">可视化编辑与实时预览</a></h3>
+      <p>真实 Obsidian 界面：配置系列、柱线混合图和独立 Y 轴，不是界面示意图。</p>
+      <a href="../images/echarts-1.3.0/editor-dark.png"><img src="../images/echarts-1.3.0/editor-dark.png" width="100%" alt="真实 ECharts 编辑器中的混合双轴配置及图表预览"></a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
       <h3><a href="../Scripts/mindmap/">交互式思维导图</a></h3>
       <p>创建分支、展开与折叠节点，整理脑图布局。</p>
       <img src="../images/mindmap2.gif" width="100%" alt="在 Excalidraw 中创建、折叠和排版思维导图">
@@ -111,6 +123,21 @@
 </details>
 
 后续会随脚本演进继续补充演示图片。更多内容见[全部演示素材](../images/)、[示例 vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault)与[视频演示](https://www.bilibili.com/video/BV1zN4y1H7Dx/)。
+
+### ECharts 1.3.0
+
+请同时更新 [`Feature-Echarts-Engine.md`](../Scripts/echarts/Feature-Echarts-Engine.md) 与 [`Action-Echarts-Manager.md`](../Scripts/echarts/Action-Echarts-Manager.md)，先重新运行核心引擎，再打开编辑器。
+
+- 多个系列可命名、配色，支持分组比较与柱状/面积堆叠。
+- 混合图逐系列选择柱、线、面积与左/右 Y 轴；在原有常见图表之外增加数值 XY 散点、雷达、漏斗、仪表盘和玫瑰图。
+- 带表头的 CSV / Excel TSV、多列数值与引号解析，表格双向编辑、坐标轴标题和数据缩放。
+- 保存后保留完整系列配置；只有 option 的旧图以自定义 JSON 打开，不再丢弃第二条系列。饼图、漏斗、仪表盘只选择展示指标，不删除其他数据。
+- SVG 按每个图表自身配置导出，不再依赖第一个实时 iframe。
+
+[下载可编辑总览画布](../images/echarts-1.3.0/overview.excalidraw.md) · [查看 CSV 录入界面](../images/echarts-1.3.0/editor-csv.png)。画布实时显示需要当前 ECharts 核心引擎。数据均为演示样例；热力图使用自定义 JSON，不宣称已有专用表单。
+
+实测环境：Obsidian **1.14.4**、Excalidraw-ymjr **2.29.0-3**、ECharts **5.4.3**。已实际验证画布插入/编辑、保存文件重开、十六个图表示例导出及编辑器截图。窄屏检查使用桌面视口，不代表手机实机兼容性验收。
+
 
 ## 从自定义脚本市场安装
 

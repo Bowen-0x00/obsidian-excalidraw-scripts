@@ -2,16 +2,17 @@
 name: Echarts 核心引擎
 description: 后台引擎：提供 Echarts 图表生成所需的完整离线库渲染、双击编辑、实时预览、粘贴拦截与 SVG 导出支持。
 author: ymjr
-version: 1.1.0
+version: 1.3.0
 license: MIT
 usage: 后台常驻引擎。解决 Excalidraw 原生不支持复杂数据可视化的问题，为 Echarts 图表提供底层 API 支持、实时可视化编辑和画布上的 iframe 渲染能力。
 features:
   - 注入完整的 Apache Echarts 离线渲染内核与实时预览支持
   - 彻底修复画布渲染时 contentEl 为空的报错，全面适配最新插件生命周期
   - 拦截画布双击事件，双击图元即可无缝唤起高级可视化编辑器进行原地修改
-  - 全新升级可视化编辑器：支持双向数据绑定、实时交互预览与一键预设配色
-  - 支持快捷切换柱状图、条形图、折线图、面积图、饼图、环形图、散点图及自定义配置
+  - 自适应双栏编辑器，表格与批量文本页签切换、固定操作栏、实时预览及输入错误提示
+  - 多系列分组与堆叠、柱线混合与双轴、XY 散点、雷达、漏斗、仪表盘与玫瑰图
   - 拦截 onPaste 钩子，支持直接粘贴表格或数据自动唤起生成
+  - CSV / TSV 表头与引号解析、系列命名配色、坐标轴标题、数据缩放及完整配置往返编辑
   - 拦截 renderElementToSvg 支持带图表的画板离线导出
 dependencies:
   - 独立运行，供 Action-Echarts-Manager 动作脚本调用
@@ -22,7 +23,52 @@ autorun: true
 */
 var locales = {
   zh: {
-    ui_title: "📊 Echarts 可视化编辑器",
+    ui_title: "ECharts 图表编辑器",
+    ui_editor_hint: "编辑数据与样式，预览确认后再保存到画布。",
+    ui_data: "图表数据",
+    ui_mode_table: "表格",
+    ui_mode_text: "批量文本",
+    ui_color: "颜色",
+    ui_text_hint: "首行可写：类目,收入,成本。后续每行一个类目和各系列数值；支持 CSV 引号、Excel 制表符。",
+    ui_invalid_data: "请提供至少一行完整数据；系列名称须非空且不重复，所有数值须有效。",
+    ui_invalid_json: "配置必须是 JSON 对象。",
+    ui_library_missing: "ECharts 内核未加载，请重新运行核心引擎。",
+    ui_series: "系列",
+    ui_series_name: "系列名称",
+    ui_series_color: "系列颜色",
+    ui_series_type: "系列图形",
+    ui_series_axis: "系列坐标轴",
+    ui_add_series: "添加系列",
+    ui_remove_series: "删除系列",
+    ui_mixed: "柱线混合图",
+    ui_radar: "雷达图",
+    ui_funnel: "漏斗图",
+    ui_gauge: "仪表盘",
+    ui_rose: "玫瑰图",
+    ui_stacked: "堆叠系列",
+    ui_zoom: "数据缩放",
+    ui_axes: "坐标轴标题",
+    ui_x_axis: "X 轴标题",
+    ui_y_axis: "Y 轴标题",
+    ui_left_axis: "左 Y 轴",
+    ui_right_axis: "右 Y 轴",
+    ui_metric: "展示指标",
+    ui_single_metric_hint: "此图展示所选系列；其他系列仍保留，可切回对比图。",
+    ui_min: "量程下限",
+    ui_max: "量程上限",
+    ui_gauge_row: "展示数据行",
+    ui_xy_hint: "格式：类目,X,系列A,系列B。X 与各 Y 列均为数值，支持 CSV 或 Excel 制表符。",
+    ui_invalid_xy: "散点图需要每行一个有效 X 坐标与各系列的 Y 数值。",
+    ui_invalid_type: "不支持的图表类型，请使用自定义 JSON。",
+    ui_invalid_radar: "雷达图至少需要三个维度。",
+    ui_nonnegative: "此图需要非负数值，饼图、玫瑰图和漏斗图还需至少一个正值。",
+    ui_invalid_gauge: "仪表盘要求下限小于上限，且所选数值位于量程内。",
+    ui_sample_mixed: "双轴对比",
+    ui_sample_radar: "多维对比",
+    ui_sample_scatter: "XY 相关性",
+    ui_sample_funnel: "转化漏斗",
+    ui_sample_gauge: "指标进度",
+    notice_save_failed: "图表写入失败，请确认目标画布仍然打开。",
     ui_chart_type: "图表类型",
     ui_bar: "柱状图 (Bar)",
     ui_horizontal_bar: "条形图 (Horizontal Bar)",
@@ -56,11 +102,11 @@ var locales = {
     ui_category_name: "类目名",
     ui_value: "数值",
     ui_checkbox_color_title: "勾选后可为此项配置独立颜色",
-    ui_delete: "🗑️",
+    ui_delete: "删除行",
     ui_add_row: "➕ 添加一行",
     ui_live_preview: "📈 实时交互预览",
     ui_toggle_preview_theme: "☀️/🌙 切换深浅预览",
-    ui_preview_tip: "💡 提示: 预览区支持鼠标悬浮、点击图例联动及缩放交互",
+    ui_preview_tip: "悬浮查看数值，点击图例切换显示。",
     notice_success: "✨ Echarts 图表已更新！",
     log_svg_render_failed: "[Feature: Echarts] SVG 渲染失败:",
     log_no_core: "❌ EA_Core 未运行，请先启动引擎！",
@@ -69,7 +115,52 @@ var locales = {
     custom_title_fallback: "自定义图表"
   },
   en: {
-    ui_title: "📊 Echarts Visual Editor",
+    ui_title: "ECharts chart editor",
+    ui_editor_hint: "Edit data and appearance, then save the preview to your canvas.",
+    ui_data: "Chart data",
+    ui_mode_table: "Table",
+    ui_mode_text: "Bulk text",
+    ui_color: "Color",
+    ui_text_hint: "Optional header: Category,Revenue,Cost. One category and all series values per row. CSV quoting and Excel tabs are supported.",
+    ui_invalid_data: "Provide at least one complete row, unique nonempty series names, and valid numeric values.",
+    ui_invalid_json: "The configuration must be a JSON object.",
+    ui_library_missing: "ECharts is not loaded. Run the core engine again.",
+    ui_series: "Series",
+    ui_series_name: "Series name",
+    ui_series_color: "Series color",
+    ui_series_type: "Series chart",
+    ui_series_axis: "Series axis",
+    ui_add_series: "Add series",
+    ui_remove_series: "Remove series",
+    ui_mixed: "Mixed bar / line",
+    ui_radar: "Radar",
+    ui_funnel: "Funnel",
+    ui_gauge: "Gauge",
+    ui_rose: "Rose",
+    ui_stacked: "Stack series",
+    ui_zoom: "Data zoom",
+    ui_axes: "Axis titles",
+    ui_x_axis: "X axis title",
+    ui_y_axis: "Y axis title",
+    ui_left_axis: "Left Y",
+    ui_right_axis: "Right Y",
+    ui_metric: "Displayed metric",
+    ui_single_metric_hint: "This chart displays the selected series; other series are retained for comparison charts.",
+    ui_min: "Minimum",
+    ui_max: "Maximum",
+    ui_gauge_row: "Displayed row",
+    ui_xy_hint: "Format: Category,X,Series A,Series B. X and all Y columns must be numeric. CSV and Excel tabs are supported.",
+    ui_invalid_xy: "Scatter requires a numeric X coordinate and each series Y value on every row.",
+    ui_invalid_type: "Unsupported chart type. Use custom JSON.",
+    ui_invalid_radar: "Radar requires at least three dimensions.",
+    ui_nonnegative: "This chart requires nonnegative values; pie, rose and funnel also require a positive value.",
+    ui_invalid_gauge: "Gauge requires minimum < maximum and a selected value inside that range.",
+    ui_sample_mixed: "Dual-axis",
+    ui_sample_radar: "Radar comparison",
+    ui_sample_scatter: "XY correlation",
+    ui_sample_funnel: "Conversion",
+    ui_sample_gauge: "Progress",
+    notice_save_failed: "Could not write the chart. Check that the target drawing is still open.",
     ui_chart_type: "Chart Type",
     ui_bar: "Bar Chart",
     ui_horizontal_bar: "Horizontal Bar",
@@ -103,11 +194,11 @@ var locales = {
     ui_category_name: "Category",
     ui_value: "Value",
     ui_checkbox_color_title: "Check to enable custom color for this item",
-    ui_delete: "🗑️",
+    ui_delete: "Delete row",
     ui_add_row: "➕ Add Row",
     ui_live_preview: "📈 Live Interactive Preview",
     ui_toggle_preview_theme: "☀️/🌙 Theme Toggle",
-    ui_preview_tip: "💡 Tip: Preview supports hover tooltips, legend toggling, and zoom",
+    ui_preview_tip: "Hover for values. Click legend entries to toggle visibility.",
     notice_success: "✨ Echarts updated successfully!",
     log_svg_render_failed: "[Feature: Echarts] SVG render failed:",
     log_no_core: "❌ EA_Core not running, please start engine first!",
@@ -122,171 +213,249 @@ const SCRIPT_ID = "ymjr.feature.echarts-engine";
 ExcalidrawAutomate.plugin._ymjr_echarts = ExcalidrawAutomate.plugin._ymjr_echarts || {};
 const EchartsCore = ExcalidrawAutomate.plugin._ymjr_echarts;
 
-EchartsCore.parseTextToData = (text) => {
-    if (!text) return null;
-    const lines = text.split('\n').map(l => l.trim()).filter(l => l);
-    if (lines.length === 0) return null;
-
-    const labels = [];
-    const values = [];
-    let validCount = 0;
-    const regex = /^(.*?)(?:[,\t:\|]+|\s+)(-?\d+(?:\.\d+)?)$/;
-
-    for (const line of lines) {
-        const match = line.match(regex);
-        if (match) {
-            labels.push(match[1].trim());
-            values.push(parseFloat(match[2]));
-            validCount++;
-        } else {
-            labels.push(line);
-            values.push(0);
-        }
-    }
-    return validCount >= 1 ? { labels, values } : null;
+//ymjr: Migrate legacy single-value data only at the import boundary.
+EchartsCore.normalizeChartData = (input = {}) => {
+    const labels = [...(input.labels || ['A', 'B', 'C'])];
+    const source = input.series || [{name:t('ui_series') + ' 1',values:input.values || [100, 200, 150]}];
+    return {
+        schemaVersion:2, type:input.type || 'bar', chartTitle:input.chartTitle || '',
+        labels,
+        series:source.map((series, i) => ({
+            name:series.name ?? `${t('ui_series')} ${i + 1}`,
+            values:[...(series.values || [])], type:series.type || (i ? 'line' : 'bar'),
+            color:series.color || '', yAxisIndex:series.yAxisIndex === 1 ? 1 : 0
+        })),
+        colors:[...(input.colors || [])],
+        xValues:input.xValues ? [...input.xValues] : labels.map((label, i) =>
+            String(label).trim() && Number.isFinite(Number(label)) ? Number(label) : i + 1),
+        themeColor:input.themeColor || '#5470c6',
+        showLabel:!!input.showLabel, showLegend:input.showLegend !== false,
+        smoothLine:input.smoothLine !== false, symbolType:input.symbolType || 'emptyCircle',
+        stacked:!!input.stacked, dataZoom:!!input.dataZoom,
+        xAxisName:input.xAxisName || '', yAxisName:input.yAxisName || '',
+        secondaryAxisName:input.secondaryAxisName || '',
+        valueSeriesIndex:input.valueSeriesIndex ?? 0, gaugeRow:input.gaugeRow ?? 0,
+        gaugeMin:input.gaugeMin ?? 0, gaugeMax:input.gaugeMax ?? 100,
+        customOptions:input.customOptions || ''
+    };
 };
 
-// 样式与配置生成器
-EchartsCore.generateEchartsOptions = (data, isDark = false) => {
+//ymjr: Strict table parsing keeps invalid cells from becoming fabricated zero values.
+const chartNumber = value => typeof value === 'string' &&
+    /^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(value.trim()) &&
+    Number.isFinite(Number(value));
+
+EchartsCore.parseTextToData = (text, {xy = false} = {}) => {
+    if (typeof text !== 'string' || !text.trim()) return null;
+    text = text.replace(/^\uFEFF/, '');
+    const firstLine = text.split(/\r?\n/, 1)[0];
+    const delimiter = firstLine.includes('\t') ? '\t' : firstLine.includes(',') ? ',' :
+        firstLine.includes(';') ? ';' : firstLine.includes('|') ? '|' : firstLine.includes(':') ? ':' : null;
+    let rows = [];
+    if (!delimiter) {
+        rows = text.split(/\r?\n/).filter(line => line.trim()).map(line => {
+            const match = line.trim().match(/^(.*?)\s+([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?)$/i);
+            return match ? [match[1], match[2]] : [];
+        });
+    } else {
+        let row = [], cell = '', quoted = false, afterQuote = false;
+        for (let i = 0; i < text.length; i++) {
+            const char = text[i];
+            if (quoted) {
+                if (char === '"') {
+                    if (text[i + 1] === '"') { cell += '"'; i++; }
+                    else { quoted = false; afterQuote = true; }
+                } else cell += char;
+            } else if (char === '"' && !cell && !afterQuote) {
+                quoted = true;
+            } else if (char === delimiter || char === '\n' || char === '\r') {
+                row.push(cell); cell = ''; afterQuote = false;
+                if (char !== delimiter) {
+                    if (row.some(value => value.trim())) rows.push(row);
+                    row = [];
+                    if (char === '\r' && text[i + 1] === '\n') i++;
+                }
+            } else {
+                if (char === '"' || (afterQuote && char.trim())) return null;
+                if (!afterQuote) cell += char;
+            }
+        }
+        if (quoted) return null;
+        row.push(cell);
+        if (row.some(value => value.trim())) rows.push(row);
+    }
+    const minimum = xy ? 3 : 2;
+    if (!rows.length || rows[0].length < minimum) return null;
+    const width = rows[0].length;
+    if (rows.some(row => row.length !== width)) return null;
+    const start = xy ? 2 : 1;
+    const explicitHeader=[t('ui_category_name'),'Category','类目名','类目'].includes(rows[0][0].trim());
+    const numeric=rows[0].slice(1).map(chartNumber);
+    if (!explicitHeader && numeric.some(Boolean) && !numeric.every(Boolean)) return null;
+    const hasHeader=explicitHeader || numeric.every(value=>!value);
+    let names;
+    if (hasHeader) names = rows.shift().slice(start).map(value => value.trim());
+    else names = Array.from({length:width - start}, (_, i) => `${t('ui_series')} ${i + 1}`);
+    if (!rows.length || names.some(name => !name) || new Set(names).size !== names.length ||
+        rows.some(row => !row[0].trim() || row.slice(1).some(value => !chartNumber(value)))) return null;
+    const result = {
+        labels:rows.map(row => row[0]),
+        series:names.map((name, i) => ({name,values:rows.map(row => Number(row[start + i]))}))
+    };
+    if (xy) result.xValues = rows.map(row => Number(row[1]));
+    return result;
+};
+
+EchartsCore.serializeDataTable = data => {
+    const xy = data.type === 'scatter';
+    const quote = value => {
+        const text = String(value);
+        return /[",\r\n]/.test(text) || text !== text.trim() ? `"${text.replace(/"/g, '""')}"` : text;
+    };
+    const rows = [[t('ui_category_name'), ...(xy ? ['X'] : []), ...data.series.map(series => series.name)]];
+    data.labels.forEach((label, i) => rows.push([
+        label, ...(xy ? [data.xValues[i]] : []), ...data.series.map(series => series.values[i])
+    ]));
+    return rows.map(row => row.map(quote).join(',')).join('\n');
+};
+
+EchartsCore.validateChartData = data => {
+    const fail = key => { throw new Error(t(key)); };
     if (data.type === 'custom') {
-        return data.customOptions;
+        const option = typeof data.customOptions === 'string' ? JSON.parse(data.customOptions) : data.customOptions;
+        if (!option || Array.isArray(option) || typeof option !== 'object') fail('ui_invalid_json');
+        return;
     }
-
-    const textColor = isDark ? '#ddd' : '#333';
-    const subTextColor = isDark ? '#888' : '#666';
-    const splitLineColor = isDark ? 'rgba(255, 255, 255, 0.12)' : '#eee';
-    const axisLineColor = isDark ? 'rgba(255, 255, 255, 0.2)' : '#ccc';
-
-    const defaultPalettes = [
-        data.themeColor || '#5470c6',
-        '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'
-    ];
-
-    const baseOptions = {
-        backgroundColor: 'transparent',
-        animation: true,
-        color: defaultPalettes,
-        title: data.chartTitle ? {
-            text: data.chartTitle,
-            left: 'center',
-            top: 6,
-            textStyle: { fontSize: 15, fontWeight: 'bold', color: textColor }
-        } : undefined,
-        tooltip: {
-            trigger: (data.type === 'pie' || data.type === 'donut') ? 'item' : 'axis',
-            axisPointer: { type: 'shadow' }
-        },
-        legend: {
-            show: data.showLegend !== false,
-            bottom: 4,
-            textStyle: { color: subTextColor, fontSize: 11 }
-        },
-        grid: {
-            top: data.chartTitle ? 42 : 24,
-            left: '4%',
-            right: '5%',
-            bottom: data.showLegend !== false ? 34 : 16,
-            containLabel: true
-        }
-    };
-
-    const labelConfig = {
-        show: Boolean(data.showLabel),
-        position: (data.type === 'pie' || data.type === 'donut') ? 'outside' : (data.type === 'horizontalBar' ? 'right' : 'top'),
-        color: textColor,
-        fontSize: 11
-    };
-
-    const isPieFamily = data.type === 'pie' || data.type === 'donut';
-
-    const seriesData = (data.labels || []).map((label, index) => {
-        const val = (data.values && data.values[index] !== undefined) ? data.values[index] : 0;
-        const itemColor = data.colors ? data.colors[index] : undefined;
-
-        if (isPieFamily) {
-            const item = { value: val, name: label };
-            if (itemColor) item.itemStyle = { color: itemColor };
-            return item;
-        }
-
-        if (itemColor) {
-            return { value: val, itemStyle: { color: itemColor } };
-        }
-        return val;
-    });
-
-    if (isPieFamily) {
-        return JSON.stringify({
-            ...baseOptions,
-            series: [{
-                name: data.chartTitle || '数据',
-                type: 'pie',
-                radius: data.type === 'donut' ? ['42%', '70%'] : '68%',
-                center: ['50%', '52%'],
-                itemStyle: {
-                    borderRadius: data.type === 'donut' ? 6 : 4,
-                    borderColor: isDark ? '#1e1e1e' : '#fff',
-                    borderWidth: 2
-                },
-                label: labelConfig,
-                data: seriesData
-            }]
-        });
+    if (!['bar','horizontalBar','line','area','pie','donut','scatter','mixed','radar','funnel','gauge','rose'].includes(data.type))
+        fail('ui_invalid_type');
+    if (!data.labels?.length || !data.series?.length || data.labels.some(label => typeof label !== 'string' || !label.trim()) ||
+        data.series.some(series => !series.name?.trim() || series.values?.length !== data.labels.length ||
+            series.values.some(value => !Number.isFinite(value))) ||
+        new Set(data.series.map(series => series.name)).size !== data.series.length) fail('ui_invalid_data');
+    if (data.type === 'scatter' && (data.xValues?.length !== data.labels.length ||
+        data.xValues.some(value => !Number.isFinite(value)))) fail('ui_invalid_xy');
+    if (data.type === 'mixed' && data.series.some(series =>
+        !['bar','line','area'].includes(series.type) || ![0,1].includes(series.yAxisIndex))) fail('ui_invalid_data');
+    if (data.type === 'radar') {
+        if (data.labels.length < 3) fail('ui_invalid_radar');
+        if (data.series.some(series => series.values.some(value => value < 0))) fail('ui_nonnegative');
     }
-
-    if (data.type === 'horizontalBar') {
-        return JSON.stringify({
-            ...baseOptions,
-            xAxis: {
-                type: 'value',
-                axisLine: { lineStyle: { color: axisLineColor } },
-                axisLabel: { color: subTextColor },
-                splitLine: { lineStyle: { color: splitLineColor, type: 'dashed' } }
-            },
-            yAxis: {
-                type: 'category',
-                data: data.labels,
-                axisLine: { lineStyle: { color: axisLineColor } },
-                axisLabel: { color: subTextColor }
-            },
-            series: [{
-                type: 'bar',
-                data: seriesData,
-                label: labelConfig,
-                itemStyle: { borderRadius: [0, 4, 4, 0] }
-            }]
-        });
+    if (['pie','donut','rose','funnel','gauge'].includes(data.type)) {
+        const series = data.series[data.valueSeriesIndex];
+        if (!series) fail('ui_invalid_data');
+        if (data.type === 'gauge') {
+            const value = series.values[data.gaugeRow];
+            if (!Number.isFinite(data.gaugeMin) || !Number.isFinite(data.gaugeMax) ||
+                data.gaugeMin >= data.gaugeMax || !Number.isFinite(value) ||
+                value < data.gaugeMin || value > data.gaugeMax) fail('ui_invalid_gauge');
+        } else if (series.values.some(value => value < 0) || !series.values.some(value => value > 0)) fail('ui_nonnegative');
     }
-
-    const isLineOrArea = data.type === 'line' || data.type === 'area';
-    return JSON.stringify({
-        ...baseOptions,
-        xAxis: {
-            type: 'category',
-            data: data.labels,
-            axisLine: { lineStyle: { color: axisLineColor } },
-            axisLabel: { color: subTextColor }
-        },
-        yAxis: {
-            type: 'value',
-            axisLine: { lineStyle: { color: axisLineColor } },
-            axisLabel: { color: subTextColor },
-            splitLine: { lineStyle: { color: splitLineColor, type: 'dashed' } }
-        },
-        series: [{
-            type: isLineOrArea ? 'line' : data.type,
-            data: seriesData,
-            smooth: Boolean(data.smoothLine),
-            label: labelConfig,
-            areaStyle: data.type === 'area' ? { opacity: 0.32 } : undefined,
-            itemStyle: { borderRadius: data.type === 'bar' ? [4, 4, 0, 0] : 0 },
-            symbol: data.symbolType || 'emptyCircle',
-            symbolSize: data.type === 'scatter' ? 12 : 6
-        }]
-    });
 };
 
-const { Modal, Setting } = ea.obsidian;
+//ymjr: All visual modes consume the same canonical model; no series is discarded on save.
+EchartsCore.generateEchartsOptions = (data, isDark = false) => {
+    EchartsCore.validateChartData(data);
+    if (data.type === 'custom') return typeof data.customOptions === 'string'
+        ? data.customOptions : JSON.stringify(data.customOptions);
+    const textColor = isDark ? '#ddd' : '#333';
+    const muted = isDark ? '#aaa' : '#666';
+    const palette = [data.themeColor, '#91cc75','#fac858','#ee6666','#73c0de','#3ba272','#fc8452','#9a60b4','#ea7ccc'];
+    const cartesian = ['bar','horizontalBar','line','area','mixed','scatter'].includes(data.type);
+    const option = {
+        backgroundColor:'transparent', color:palette,
+        title:{text:data.chartTitle,left:'center',top:6,textStyle:{fontSize:15,color:textColor}},
+        tooltip:{trigger:cartesian && data.type !== 'scatter' ? 'axis' : 'item',confine:true},
+        legend:{show:data.showLegend && data.type !== 'gauge',type:'scroll',bottom:4,textStyle:{color:muted,fontSize:11}},
+        textStyle:{color:textColor}
+    };
+    if (cartesian) {
+        const horizontal = data.type === 'horizontalBar';
+        const scatter = data.type === 'scatter';
+        const second = data.type === 'mixed' && data.series.some(series => series.yAxisIndex === 1);
+        const valueAxis = name => ({
+            type:'value',name,nameTextStyle:{color:muted},axisLabel:{color:muted},
+            splitLine:{lineStyle:{color:isDark ? '#ffffff20' : '#e8e8e8',type:'dashed'}}
+        });
+        const categoryAxis = name => ({type:'category',name,data:data.labels,axisLabel:{color:muted},
+            nameTextStyle:{color:muted},axisLine:{lineStyle:{color:isDark ? '#666' : '#ccc'}}});
+        option.grid = {top:data.chartTitle ? 56 : 38,left:18,right:second ? 48 : horizontal&&data.dataZoom ? 42 : 24,
+            bottom:data.dataZoom&&!horizontal ? 76 : data.showLegend ? 42 : 20,containLabel:true};
+        option.xAxis = horizontal ? valueAxis(data.xAxisName) : scatter ? valueAxis(data.xAxisName) : categoryAxis(data.xAxisName);
+        option.yAxis = horizontal ? categoryAxis(data.yAxisName) : [
+            valueAxis(data.yAxisName), ...(second ? [{...valueAxis(data.secondaryAxisName),position:'right',splitLine:{show:false}}] : [])
+        ];
+        if (data.dataZoom) option.dataZoom = [
+            {type:'inside',...(horizontal ? {yAxisIndex:0} : {xAxisIndex:0})},
+            {type:'slider',...(horizontal
+                ? {yAxisIndex:0,orient:'vertical',width:18,right:2,top:44,bottom:42}
+                : {xAxisIndex:0,bottom:data.showLegend ? 30 : 8,height:18})}
+        ];
+        option.series = data.series.map((series, index) => {
+            const visual = data.type === 'mixed' ? series.type : data.type;
+            const type = visual === 'area' ? 'line' : visual === 'horizontalBar' ? 'bar' : visual;
+            const color = series.color || (data.series.length === 1 ? data.themeColor : palette[index % palette.length]);
+            return {
+                name:series.name,type,
+                yAxisIndex:data.type === 'mixed' ? series.yAxisIndex : 0,
+                stack:data.stacked && !scatter && data.type !== 'mixed' ? 'total' : undefined,
+                smooth:data.smoothLine,areaStyle:visual === 'area' ? {opacity:.25} : undefined,
+                symbol:data.symbolType,symbolSize:scatter ? 10 : 6,
+                itemStyle:{color,borderRadius:type === 'bar' && !data.stacked ? 3 : undefined},
+                label:{show:data.showLabel,position:horizontal ? 'right' : 'top',color:textColor},
+                data:series.values.map((value, i) => ({
+                    value:scatter ? [data.xValues[i],value] : value,
+                    ...(scatter ? {name:data.labels[i]} : {}),
+                    ...(data.series.length === 1 && data.colors[i] ? {itemStyle:{color:data.colors[i]}} : {})
+                }))
+            };
+        });
+    } else if (data.type === 'radar') {
+        option.radar = {
+            center:['50%','54%'],radius:'60%',
+            indicator:data.labels.map((name, i) => ({
+                name,max:Math.max(1, ...data.series.map(series => series.values[i])) * 1.15
+            })),axisName:{color:muted}
+        };
+        option.series = [{
+            type:'radar',label:{show:data.showLabel,color:textColor},
+            data:data.series.map((series, index) => ({
+                name:series.name,value:series.values,
+                itemStyle:{color:series.color || palette[index % palette.length]},areaStyle:{opacity:.12}
+            }))
+        }];
+    } else {
+        const series = data.series[data.valueSeriesIndex];
+        const items = series.values.map((value, i) => ({
+            name:data.labels[i],value,...(data.colors[i] ? {itemStyle:{color:data.colors[i]}} : {})
+        }));
+        if (data.type === 'gauge') {
+            option.series = [{
+                type:'gauge',min:data.gaugeMin,max:data.gaugeMax,
+                radius:'82%',center:['50%','57%'],progress:{show:true},
+                itemStyle:{color:series.color || data.themeColor},
+                axisLabel:{color:muted},title:{color:textColor,fontSize:13,offsetCenter:[0,'60%']},
+                detail:{color:textColor,fontSize:26,valueAnimation:true,offsetCenter:[0,'25%']},
+                data:[items[data.gaugeRow]]
+            }];
+        } else if (data.type === 'funnel') {
+            option.series = [{
+                name:series.name,type:'funnel',top:data.chartTitle ? 52 : 28,bottom:data.showLegend ? 48 : 24,
+                left:'15%',width:'70%',sort:'descending',gap:3,
+                label:{show:data.showLabel,position:'inside',color:textColor},data:items
+            }];
+        } else {
+            option.series = [{
+                name:series.name,type:'pie',roseType:data.type === 'rose' ? 'radius' : undefined,
+                radius:data.type === 'donut' ? ['42%','68%'] : data.type === 'rose' ? ['12%','65%'] : '66%',
+                center:['50%','52%'],label:{show:data.showLabel,color:textColor},
+                itemStyle:{borderRadius:4,borderColor:isDark ? '#1e1e1e' : '#fff',borderWidth:2},data:items
+            }];
+        }
+    }
+    return JSON.stringify(option);
+};
+
+const { Modal } = ea.obsidian;
 
 // 安全解析并获取当前活跃的 ExcalidrawView
 const getActiveExcalidrawView = () => {
@@ -343,7 +512,7 @@ const QUICK_TEMPLATES = {
         type: 'line',
         title: '季度营收趋势 (万元)',
         labels: ['第一季度', '第二季度', '第三季度', '第四季度'],
-        values: [120, 185, 240, 310]
+        series:[{name:'2025',values:[100,150,210,260]}, {name:'2026',values:[120,185,240,310]}]
     },
     share: {
         type: 'donut',
@@ -356,689 +525,646 @@ const QUICK_TEMPLATES = {
         title: '城市业务指标排行',
         labels: ['杭州', '广州', '深圳', '上海', '北京'],
         values: [76, 82, 88, 93, 98]
-    }
+    },
+    mixed: {
+        type:'mixed',title:'收入与利润率',labels:['Q1','Q2','Q3','Q4'],
+        yAxisName:'收入',secondaryAxisName:'利润率 %',
+        series:[{name:'收入',type:'bar',values:[120,185,240,310],yAxisIndex:0},
+            {name:'利润率',type:'line',values:[18,22,21,26],yAxisIndex:1}]
+    },
+    radar: {
+        type:'radar',title:'能力维度对比',labels:['质量','效率','成本','服务','可靠性'],
+        series:[{name:'方案 A',values:[80,70,65,90,85]},{name:'方案 B',values:[70,90,80,75,80]}]
+    },
+    scatter: {
+        type:'scatter',title:'投入与产出',labels:['A','B','C','D','E'],
+        xValues:[1,2.5,4,6,8],values:[12,18,25,41,48],xAxisName:'投入',yAxisName:'产出'
+    },
+    funnel: {
+        type:'funnel',title:'转化流程',labels:['访问','注册','试用','付费'],values:[1000,600,320,180],
+        showLabel:true
+    },
+    gauge: {type:'gauge',title:'目标达成',labels:['完成率'],values:[76],gaugeMin:0,gaugeMax:100}
 };
 
+//ymjr: Use scoped CSS and native DOM properties; DomElementInfo ignores style/checked/disabled.
 class EchartsEditorModal extends Modal {
-    constructor(app, initialData, onSave) {
+    constructor(app, initialData = {}, onSave, onCancel = () => {}) {
         super(app);
-        this.initialData = initialData || { 
-            type: 'bar', 
-            labels: ['类目1', '类目2', '类目3'], 
-            values: [100, 200, 150] 
-        };
+        this.data = EchartsCore.normalizeChartData(initialData);
+        this.customOptions = initialData.customOptions || '{}';
+        this.customDirty = !!initialData.customOptions;
         this.onSave = onSave;
-        
-        this.currentType = this.initialData.type || 'bar';
-        this.labels = [...(this.initialData.labels || ['A', 'B', 'C'])];
-        this.values = [...(this.initialData.values || [100, 200, 150])];
-        this.colors = [...(this.initialData.colors || [])];
-        
-        this.chartTitle = this.initialData.chartTitle || "";
-        this.themeColor = this.initialData.themeColor || "#5470c6";
-        this.showLabel = Boolean(this.initialData.showLabel);
-        this.showLegend = this.initialData.showLegend !== false;
-        this.smoothLine = this.initialData.smoothLine !== false;
-        this.symbolType = this.initialData.symbolType || "emptyCircle";
+        this.onCancel = onCancel;
+        this.inputMode = 'table';
+        this.textDraft = EchartsCore.serializeDataTable(this.data);
+        this.draftDirty = false;
+        this.previewDark = this.contentEl.ownerDocument.body.classList.contains('theme-dark');
+    }
 
-        this.isCustom = this.currentType === 'custom';
-        this.customOptions = this.initialData.customOptions || `{\n  "title": { "text": "${t("custom_title_fallback")}", "left": "center" },\n  "xAxis": { "type": "category", "data": ["周一", "周二", "周三", "周四", "周五"] },\n  "yAxis": { "type": "value" },\n  "series": [{\n    "data": [120, 200, 150, 80, 70],\n    "type": "bar",\n    "itemStyle": { "borderRadius": [4, 4, 0, 0] }\n  }]\n}`;
+    node(parent, tag, cls, text) {
+        const el = parent.ownerDocument.createElement(tag);
+        if (cls) el.className = cls;
+        if (text !== undefined) el.textContent = text;
+        parent.appendChild(el);
+        return el;
+    }
 
-        this.previewDark = false;
-        this.previewChart = null;
-        this._previewTimer = null;
+    button(parent, text, action, cls = '') {
+        const button = this.node(parent, 'button', cls, text);
+        button.type = 'button';
+        button.onclick = action;
+        return button;
+    }
+
+    field(parent, text, tag = 'input') {
+        const label = this.node(parent, 'label', 'ec-field');
+        this.node(label, 'span', '', text);
+        return this.node(label, tag);
     }
 
     onOpen() {
-        if (this.modalEl) {
-            this.modalEl.style.width = "940px";
-            this.modalEl.style.maxWidth = "95vw";
-            this.modalEl.style.maxHeight = "90vh";
+        this.closed = false;
+        this.modalEl.classList.add('ymjr-ec-modal');
+        this.contentEl.replaceChildren();
+        this.contentEl.classList.add('ymjr-ec-editor');
+        const style = this.node(this.contentEl, 'style');
+        style.textContent = `
+            .ymjr-ec-modal {width:1080px;max-width:calc(100vw - 32px);height:760px;max-height:calc(100dvh - 40px);padding:24px;overflow:hidden;container-type:inline-size;}
+            .ymjr-ec-modal .modal-content.ymjr-ec-editor {display:flex;flex-direction:column;gap:18px;min-height:0;height:100%;margin:0;overflow:hidden;font-size:14px;color:var(--text-normal);}
+            .ymjr-ec-editor * {box-sizing:border-box;}
+            .ymjr-ec-editor [hidden] {display:none!important;}
+            .ymjr-ec-editor h2 {margin:0!important;font-size:21px!important;line-height:1.4;color:var(--text-normal)!important;font-weight:650;}
+            .ymjr-ec-editor h3 {margin:0;font-size:14px;font-weight:600;color:var(--text-normal);}
+            .ymjr-ec-editor .ec-muted {font-size:12px;line-height:1.6;color:var(--text-muted);}
+            .ymjr-ec-editor .ec-body {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;flex:1;min-height:0;overflow:auto;}
+            .ymjr-ec-editor .ec-controls {display:flex;flex-direction:column;gap:16px;min-width:0;overflow:auto;padding:1px 4px 4px 1px;}
+            .ymjr-ec-editor .ec-fields {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:12px;}
+            .ymjr-ec-editor .ec-field {display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--text-muted);min-width:0;}
+            .ymjr-ec-editor input:not([type=checkbox]):not([type=color]),.ymjr-ec-editor select {width:100%;min-width:0;height:34px;padding:6px 9px;font-size:13px;color:var(--text-normal);}
+            .ymjr-ec-editor button {min-height:30px;height:auto;padding:5px 10px;font-size:12px;line-height:1.4;white-space:normal;}
+            .ymjr-ec-editor button:focus-visible {outline:2px solid var(--interactive-accent);outline-offset:2px;}
+            .ymjr-ec-editor .ec-card {border:1px solid var(--background-modifier-border);border-radius:10px;padding:14px;background:var(--background-secondary);}
+            .ymjr-ec-editor .ec-row {display:flex;align-items:center;flex-wrap:wrap;gap:10px;}
+            .ymjr-ec-editor .ec-style {display:flex;flex-direction:column;gap:14px;}
+            .ymjr-ec-editor .ec-swatches {display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+            .ymjr-ec-editor button.ec-swatch {width:22px;height:22px;min-height:22px;padding:0;border:2px solid var(--background-primary);border-radius:50%;box-shadow:0 0 0 1px var(--background-modifier-border);background:var(--ec-color);}
+            .ymjr-ec-editor button.ec-swatch[aria-pressed=true] {box-shadow:0 0 0 2px var(--interactive-accent);}
+            .ymjr-ec-editor input[type=color] {width:28px;height:28px;padding:2px;border:1px solid var(--background-modifier-border);border-radius:5px;}
+            .ymjr-ec-editor .ec-check {display:inline-flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;white-space:nowrap;}
+            .ymjr-ec-editor input[type=checkbox] {margin:0;flex:none;}
+            .ymjr-ec-editor .ec-data {display:flex;flex-direction:column;gap:12px;flex:1;min-height:230px;}
+            .ymjr-ec-editor .ec-data-head,.ymjr-ec-editor .ec-preview-head {display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+            .ymjr-ec-editor .ec-tabs {display:flex;gap:3px;padding:3px;border-radius:7px;background:var(--background-secondary);}
+            .ymjr-ec-editor .ec-tabs button {box-shadow:none;background:transparent;color:var(--text-muted);border:0;}
+            .ymjr-ec-editor .ec-tabs button[aria-pressed=true] {background:var(--background-primary);color:var(--text-normal);box-shadow:var(--input-shadow);}
+            .ymjr-ec-editor .ec-table-scroll {overflow-x:auto;min-width:0;padding-bottom:6px;}
+            .ymjr-ec-editor .ec-table {display:flex;flex-direction:column;gap:7px;min-width:100%;}
+            .ymjr-ec-editor .ec-table-row {display:grid;grid-template-columns:var(--ec-columns);align-items:center;gap:8px;}
+            .ymjr-ec-editor .ec-table-labels span {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+            .ymjr-ec-editor .ec-series-settings {display:flex;flex-direction:column;gap:10px;}
+            .ymjr-ec-editor .ec-series-list {display:flex;flex-direction:column;gap:8px;}
+            .ymjr-ec-editor .ec-series-row {display:grid;grid-template-columns:minmax(90px,1fr) 48px 30px;gap:8px;align-items:center;}
+            .ymjr-ec-editor .ec-series-row.ec-mixed-row {grid-template-columns:minmax(90px,1fr) 38px 80px 76px 26px;}
+            .ymjr-ec-editor details > summary {cursor:pointer;margin:4px 0;}
+            .ymjr-ec-editor .ec-table-labels {font-size:11px;color:var(--text-muted);}
+            .ymjr-ec-editor .ec-color-cell {display:flex;align-items:center;gap:4px;}
+            .ymjr-ec-editor button.ec-delete {padding:4px;color:var(--text-muted);box-shadow:none;background:transparent;font-size:18px;}
+            .ymjr-ec-editor textarea {display:block;min-height:200px;width:100%;flex:1;resize:vertical;padding:12px;font:13px/1.7 var(--font-monospace);tab-size:2;}
+            .ymjr-ec-editor .ec-preview {display:flex;flex-direction:column;gap:12px;min-width:0;min-height:330px;overflow:hidden;background:var(--background-secondary);border:1px solid var(--background-modifier-border);border-radius:12px;padding:16px;}
+            .ymjr-ec-editor .ec-chart {flex:1;min-height:260px;width:100%;border-radius:7px;overflow:hidden;}
+            .ymjr-ec-editor .ec-footer {display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px;flex-shrink:0;border-top:1px solid var(--background-modifier-border);padding-top:14px;}
+            .ymjr-ec-editor .ec-error {color:var(--text-error);font-size:12px;line-height:1.5;overflow-wrap:anywhere;}
+            .ymjr-ec-editor .ec-footer .ec-error {flex-basis:100%;margin-right:auto;}
+            .ymjr-ec-editor .ec-error:empty {display:none;}
+            @container (max-width:740px) {
+                .ymjr-ec-editor .ec-body {grid-template-columns:minmax(0,1fr);align-content:start;}
+                .ymjr-ec-editor .ec-controls {overflow:visible;}
+                .ymjr-ec-editor .ec-preview {height:460px;min-height:460px;}
+                .ymjr-ec-editor .ec-chart {min-height:0;}
+            }
+            @container (max-width:380px) {
+                .ymjr-ec-editor .ec-fields {grid-template-columns:minmax(0,1fr);}
+                .ymjr-ec-editor .ec-series-row.ec-mixed-row {grid-template-columns:minmax(0,1fr) 38px 26px;grid-template-areas:"name color remove" "type axis axis";}
+                .ymjr-ec-editor .ec-mixed-row input:not([type=color]) {grid-area:name;}
+                .ymjr-ec-editor .ec-mixed-row input[type=color] {grid-area:color;}
+                .ymjr-ec-editor .ec-mixed-row select:nth-of-type(1) {grid-area:type;}
+                .ymjr-ec-editor .ec-mixed-row select:nth-of-type(2) {grid-area:axis;}
+                .ymjr-ec-editor .ec-mixed-row button {grid-area:remove;}
+            }
+        `;
+        const header = this.node(this.contentEl, 'header');
+        this.node(header, 'h2', '', t('ui_title'));
+        this.node(header, 'div', 'ec-muted', t('ui_editor_hint'));
+        const body = this.node(this.contentEl, 'div', 'ec-body');
+        const controls = this.node(body, 'div', 'ec-controls');
+        const fields = this.node(controls, 'div', 'ec-fields');
+        this.typeSelect = this.field(fields, t('ui_chart_type'), 'select');
+        const types = {bar:'ui_bar',horizontalBar:'ui_horizontal_bar',line:'ui_line',area:'ui_area',
+            pie:'ui_pie',donut:'ui_donut',rose:'ui_rose',scatter:'ui_scatter',mixed:'ui_mixed',
+            radar:'ui_radar',funnel:'ui_funnel',gauge:'ui_gauge',custom:'ui_custom'};
+        for (const [value, key] of Object.entries(types)) {
+            this.node(this.typeSelect, 'option', '', t(key)).value = value;
         }
-
-        const { contentEl } = this;
-        contentEl.empty();
-        contentEl.addClass("ymjr-echarts-editor");
-
-        contentEl.createEl("h2", { 
-            text: t("ui_title"), 
-            style: "margin-top: 0; margin-bottom: 12px; font-size: 1.25em; border-bottom: 1px solid var(--background-modifier-border); padding-bottom: 8px;" 
-        });
-
-        // 两栏布局：左侧控制与数据，右侧实时交互预览
-        const mainContainer = contentEl.createDiv({ 
-            style: "display: flex; gap: 16px; align-items: stretch; min-height: 480px; max-height: calc(85vh - 120px); overflow: hidden;" 
-        });
-
-        // ===== 左侧面板 =====
-        const leftPanel = mainContainer.createDiv({ 
-            style: "flex: 1.15; min-width: 380px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 4px;" 
-        });
-
-        // 1. 图表类型与标题
-        const headerRow = leftPanel.createDiv({ style: "display: flex; gap: 12px; align-items: center;" });
-        
-        const typeContainer = headerRow.createDiv({ style: "flex: 1.1;" });
-        new Setting(typeContainer)
-            .setName(t("ui_chart_type"))
-            .addDropdown(drop => {
-                drop.addOption("bar", t("ui_bar"))
-                    .addOption("horizontalBar", t("ui_horizontal_bar"))
-                    .addOption("line", t("ui_line"))
-                    .addOption("area", t("ui_area"))
-                    .addOption("pie", t("ui_pie"))
-                    .addOption("donut", t("ui_donut"))
-                    .addOption("scatter", t("ui_scatter"))
-                    .addOption("custom", t("ui_custom"))
-                    .setValue(this.currentType)
-                    .onChange(value => {
-                        this.currentType = value;
-                        this.isCustom = (value === 'custom');
-                        this.renderStyleSettings();
-                        this.renderDataEditor();
-                        this.debouncedPreview();
-                    });
+        this.typeSelect.value = this.data.type;
+        this.typeSelect.onchange = () => {
+            const next = this.typeSelect.value;
+            if (this.data.type !== 'custom' && !this.readTextDraft()) {
+                this.typeSelect.value = this.data.type;
+                this.previewErrorEl.textContent = t('ui_invalid_data');
+                return;
+            }
+            if (next === 'custom' && !this.customDirty) {
+                try { this.customOptions = JSON.stringify(JSON.parse(
+                    EchartsCore.generateEchartsOptions(this.data, this.previewDark)), null, 2); }
+                catch (error) {
+                    this.typeSelect.value = this.data.type;
+                    this.previewErrorEl.textContent = error.message;
+                    return;
+                }
+            }
+            this.data.type = next;
+            this.syncDraft();
+            this.refreshControls();
+        };
+        this.titleInput = this.field(fields, t('ui_chart_title'));
+        this.titleInput.value = this.data.chartTitle;
+        this.titleInput.placeholder = t('ui_title_placeholder');
+        this.titleInput.oninput = () => {
+            this.data.chartTitle = this.titleInput.value;
+            this.debouncedPreview();
+        };
+        this.stylePanel = this.node(controls, 'div', 'ec-card ec-style');
+        this.sampleBar = this.node(controls, 'div', 'ec-row');
+        this.node(this.sampleBar, 'span', 'ec-muted', t('ui_quick_samples'));
+        for (const [key, template] of Object.entries(QUICK_TEMPLATES)) {
+            this.button(this.sampleBar, t(`ui_sample_${key}`), () => {
+                this.data = EchartsCore.normalizeChartData({...template,chartTitle:template.title});
+                this.syncDraft();
+                this.typeSelect.value = this.data.type;
+                this.titleInput.value = this.data.chartTitle;
+                this.refreshControls();
             });
-
-        const titleContainer = headerRow.createDiv({ style: "flex: 1.2;" });
-        new Setting(titleContainer)
-            .setName(t("ui_chart_title"))
-            .addText(text => {
-                text.setPlaceholder(t("ui_title_placeholder"))
-                    .setValue(this.chartTitle)
-                    .onChange(val => { 
-                        this.chartTitle = val; 
-                        this.debouncedPreview();
-                    });
-            });
-
-        // 2. 样式面板 (配色、图例、平滑等)
-        this.stylePanel = leftPanel.createDiv({ 
-            style: "background: var(--background-secondary); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--background-modifier-border);" 
-        });
-
-        // 3. 快捷模板栏
-        this.sampleBar = leftPanel.createDiv({ 
-            style: "display: flex; align-items: center; gap: 8px; font-size: 0.85em;" 
-        });
-        this.renderQuickSamples();
-
-        // 4. 数据编辑区
-        this.editorContainer = leftPanel.createDiv({ 
-            style: "flex: 1; display: flex; flex-direction: column; min-height: 250px;" 
-        });
-
-        // ===== 右侧面板 (实时可视化预览) =====
-        const rightPanel = mainContainer.createDiv({ 
-            style: "flex: 1.05; min-width: 360px; display: flex; flex-direction: column; background: var(--background-secondary-alt); border: 1px solid var(--background-modifier-border); border-radius: 8px; padding: 12px; position: relative;" 
-        });
-
-        const previewHeader = rightPanel.createDiv({ 
-            style: "display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid var(--background-modifier-border); padding-bottom: 6px;" 
-        });
-        previewHeader.createEl("b", { text: t("ui_live_preview"), style: "font-size: 0.95em;" });
-
-        const themeToggleBtn = previewHeader.createEl("button", { 
-            text: t("ui_toggle_preview_theme"), 
-            style: "font-size: 0.8em; padding: 2px 8px; cursor: pointer;" 
-        });
-        themeToggleBtn.onclick = () => {
+        }
+        this.seriesPanel = this.node(controls, 'section', 'ec-card ec-series-settings');
+        this.editorContainer = this.node(controls, 'section', 'ec-data');
+        this.previewPanel = this.node(body, 'section', 'ec-preview');
+        const previewHead = this.node(this.previewPanel, 'div', 'ec-preview-head');
+        this.node(previewHead, 'h3', '', t('ui_live_preview'));
+        this.button(previewHead, t('ui_toggle_preview_theme'), () => {
             this.previewDark = !this.previewDark;
-            rightPanel.style.background = this.previewDark ? "#1a1a1a" : "var(--background-secondary-alt)";
-            if (this.previewChart) {
-                this.previewChart.dispose();
-                this.previewChart = null;
-            }
+            this.previewChart?.dispose();
+            this.previewChart = null;
             this.renderLivePreview();
-        };
-
-        this.previewErrorEl = rightPanel.createDiv({
-            style: "display: none; background: rgba(220, 50, 50, 0.15); color: #e63c3c; padding: 6px 10px; border-radius: 4px; font-size: 0.85em; margin-bottom: 6px;"
         });
-
-        this.previewContainer = rightPanel.createDiv({ 
-            id: "ymjr-echarts-modal-preview",
-            style: "flex: 1; width: 100%; min-height: 360px;" 
-        });
-
-        rightPanel.createEl("div", { 
-            text: t("ui_preview_tip"), 
-            style: "font-size: 0.75em; color: var(--text-muted); margin-top: 6px; text-align: center;" 
-        });
-
-        // ===== 底部按钮 =====
-        const footer = contentEl.createDiv({ 
-            style: "display: flex; justify-content: flex-end; margin-top: 14px; gap: 10px; border-top: 1px solid var(--background-modifier-border); padding-top: 10px;" 
-        });
-        const cancelBtn = footer.createEl("button", { text: t("ui_cancel") });
-        cancelBtn.onclick = () => this.close();
-        
-        const saveBtn = footer.createEl("button", { text: t("ui_generate"), cls: "mod-cta" });
-        saveBtn.onclick = () => {
-            if (this.isCustom) {
-                const optVal = this.rawTextArea ? this.rawTextArea.value : this.customOptions;
-                this.onSave({ type: 'custom', customOptions: optVal });
-            } else {
-                this.onSave({ 
-                    type: this.currentType, 
-                    chartTitle: this.chartTitle,
-                    labels: this.labels, 
-                    values: this.values,
-                    colors: this.colors,
-                    themeColor: this.themeColor,
-                    showLabel: this.showLabel,
-                    showLegend: this.showLegend,
-                    smoothLine: this.smoothLine,
-                    symbolType: this.symbolType
-                });
+        this.previewContainer = this.node(this.previewPanel, 'div', 'ec-chart');
+        this.node(this.previewPanel, 'div', 'ec-muted', t('ui_preview_tip'));
+        const footer = this.node(this.contentEl, 'footer', 'ec-footer');
+        this.previewErrorEl = this.node(footer, 'div', 'ec-error');
+        this.previewErrorEl.setAttribute('role', 'status');
+        this.button(footer, t('ui_cancel'), () => this.close());
+        this.saveBtn = this.button(footer, t('ui_generate'), () => this.save(), 'mod-cta');
+        this.refreshControls();
+        const win = this.contentEl.ownerDocument.defaultView;
+        this.resizeObserver = new win.ResizeObserver(() => {
+            if (!this.closed) {
+                if (this.previewChart) this.previewChart.resize();
+                else this.renderLivePreview();
             }
-            this.close();
-        };
-
-        // 渲染内部组件与初始预览
-        this.renderStyleSettings();
-        this.renderDataEditor();
-
-        // 延迟触发确保容器已挂载
-        setTimeout(() => {
-            this.renderLivePreview();
-        }, 80);
+        });
+        this.resizeObserver.observe(this.previewContainer);
     }
 
-    renderQuickSamples() {
-        this.sampleBar.empty();
-        if (this.isCustom) {
-            this.sampleBar.style.display = "none";
-            return;
-        }
-        this.sampleBar.style.display = "flex";
-
-        this.sampleBar.createEl("span", { text: t("ui_quick_samples"), style: "color: var(--text-muted); font-size: 0.85em;" });
-
-        const addSampleBtn = (label, tmpl) => {
-            const btn = this.sampleBar.createEl("button", { 
-                text: label, 
-                style: "font-size: 0.8em; padding: 2px 7px; border-radius: 4px; cursor: pointer;" 
-            });
-            btn.onclick = () => {
-                this.currentType = tmpl.type;
-                this.chartTitle = tmpl.title;
-                this.labels = [...tmpl.labels];
-                this.values = [...tmpl.values];
-                this.colors = tmpl.labels.map(() => undefined);
-                this.renderStyleSettings();
-                this.renderDataEditor();
-                this.debouncedPreview();
-            };
-        };
-
-        addSampleBtn(t("ui_sample_trend"), QUICK_TEMPLATES.trend);
-        addSampleBtn(t("ui_sample_share"), QUICK_TEMPLATES.share);
-        addSampleBtn(t("ui_sample_rank"), QUICK_TEMPLATES.rank);
+    refreshControls() {
+        this.stylePanel.hidden = this.sampleBar.hidden = this.seriesPanel.hidden = this.data.type === 'custom';
+        this.titleInput.disabled = this.data.type === 'custom';
+        this.renderStyleSettings();
+        this.renderSeriesSettings();
+        this.renderDataEditor();
+        this.debouncedPreview();
     }
 
     renderStyleSettings() {
-        this.stylePanel.empty();
-        if (this.isCustom) {
-            this.stylePanel.style.display = "none";
-            return;
-        }
-        this.stylePanel.style.display = "block";
-
-        const flexRow = this.stylePanel.createDiv({ 
-            style: "display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;" 
-        });
-
-        // 主题色与推荐色色块
-        const colorSection = flexRow.createDiv({ style: "display: flex; align-items: center; gap: 6px;" });
-        colorSection.createEl("span", { text: t("ui_theme_color"), style: "font-size: 0.85em; color: var(--text-muted);" });
-        
-        PRESET_PALETTES.forEach(pal => {
-            const dot = colorSection.createEl("span", {
-                title: pal.name,
-                style: `display: inline-block; width: 16px; height: 16px; border-radius: 50%; background: ${pal.color}; cursor: pointer; border: ${this.themeColor === pal.color ? '2px solid var(--text-normal)' : '1px solid rgba(0,0,0,0.2)'};`
-            });
-            dot.onclick = () => {
-                this.themeColor = pal.color;
+        this.stylePanel.replaceChildren();
+        const palette = this.node(this.stylePanel, 'div', 'ec-swatches');
+        this.node(palette, 'span', 'ec-muted', t('ui_theme_color'));
+        for (const color of PRESET_PALETTES) {
+            const swatch = this.button(palette, '', () => {
+                this.data.themeColor = color.color;
                 this.renderStyleSettings();
                 this.debouncedPreview();
-            };
-        });
-
-        const colorPicker = colorSection.createEl("input", { 
-            type: "color", 
-            value: this.themeColor,
-            style: "width: 24px; height: 20px; padding: 0; border: none; cursor: pointer; vertical-align: middle;" 
-        });
-        colorPicker.onchange = (e) => { 
-            this.themeColor = e.target.value; 
-            this.debouncedPreview();
-        };
-
-        // 开关组
-        const togglesGroup = flexRow.createDiv({ style: "display: flex; gap: 12px; align-items: center;" });
-
-        const createToggle = (parent, label, value, onChange) => {
-            const wrap = parent.createDiv({ style: "display: flex; align-items: center; gap: 4px;" });
-            const toggle = wrap.createEl("input", { type: "checkbox", checked: value });
-            wrap.createEl("span", { text: label, style: "font-size: 0.85em; cursor: pointer;" }).onclick = () => {
-                toggle.checked = !toggle.checked;
-                onChange(toggle.checked);
-            };
-            toggle.onchange = (e) => onChange(e.target.checked);
-        };
-
-        createToggle(togglesGroup, t("ui_show_legend"), this.showLegend, (v) => {
-            this.showLegend = v;
-            this.debouncedPreview();
-        });
-
-        createToggle(togglesGroup, t("ui_show_labels"), this.showLabel, (v) => {
-            this.showLabel = v;
-            this.debouncedPreview();
-        });
-
-        if (this.currentType === 'line' || this.currentType === 'area') {
-            createToggle(togglesGroup, t("ui_smooth_line"), this.smoothLine, (v) => {
-                this.smoothLine = v;
-                this.debouncedPreview();
-            });
+            }, 'ec-swatch');
+            swatch.style.setProperty('--ec-color', color.color);
+            swatch.setAttribute('aria-label', color.name);
+            swatch.setAttribute('aria-pressed', String(color.color === this.data.themeColor));
         }
+        const picker = this.node(palette, 'input');
+        picker.type = 'color';
+        picker.value = this.data.themeColor;
+        picker.setAttribute('aria-label', t('ui_theme_color'));
+        picker.oninput = () => {
+            this.data.themeColor = picker.value;
+            for (const swatch of palette.querySelectorAll('button')) swatch.setAttribute('aria-pressed', 'false');
+            this.debouncedPreview();
+        };
+        const toggles = this.node(this.stylePanel, 'div', 'ec-row');
+        const toggle = (key, text) => {
+            const label = this.node(toggles, 'label', 'ec-check');
+            const input = this.node(label, 'input');
+            input.type = 'checkbox';
+            input.checked = !!this.data[key];
+            this.node(label, 'span', '', t(text));
+            input.onchange = () => { this.data[key] = input.checked; this.debouncedPreview(); };
+        };
+        toggle('showLegend', 'ui_show_legend');
+        toggle('showLabel', 'ui_show_labels');
+        if (['line', 'area', 'mixed'].includes(this.data.type)) toggle('smoothLine', 'ui_smooth_line');
+        if (['bar','horizontalBar','line','area'].includes(this.data.type)) toggle('stacked','ui_stacked');
+        if (['bar','horizontalBar','line','area','mixed','scatter'].includes(this.data.type)) toggle('dataZoom','ui_zoom');
+        if (['line', 'area', 'scatter','mixed'].includes(this.data.type)) {
+            const select = this.field(this.stylePanel, t('ui_symbol_shape'), 'select');
+            for (const [value, key] of Object.entries({emptyCircle:'ui_empty_circle',circle:'ui_circle',
+                rect:'ui_rect',triangle:'ui_triangle',diamond:'ui_diamond'})) {
+                this.node(select, 'option', '', t(key)).value = value;
+            }
+            select.value = this.data.symbolType;
+            select.onchange = () => { this.data.symbolType = select.value; this.debouncedPreview(); };
+        }
+        if (['bar','horizontalBar','line','area','mixed','scatter'].includes(this.data.type)) {
+            const axes = this.node(this.stylePanel, 'details');
+            this.node(axes,'summary','ec-muted',t('ui_axes'));
+            const fields = this.node(axes,'div','ec-fields');
+            for (const [key, text] of [['xAxisName','ui_x_axis'],['yAxisName','ui_y_axis'],
+                ...(this.data.type === 'mixed' ? [['secondaryAxisName','ui_right_axis']] : [])]) {
+                const input = this.field(fields,t(text));
+                input.value = this.data[key];
+                input.oninput = () => {this.data[key]=input.value;this.debouncedPreview();};
+            }
+        }
+    }
 
-        if (this.currentType === 'line' || this.currentType === 'area' || this.currentType === 'scatter') {
-            const symDiv = togglesGroup.createDiv({ style: "display: flex; align-items: center; gap: 4px;" });
-            symDiv.createEl("span", { text: t("ui_symbol_shape"), style: "font-size: 0.85em; color: var(--text-muted);" });
-            const select = symDiv.createEl("select", { style: "font-size: 0.8em; padding: 1px 4px;" });
-            const options = { 
-                'emptyCircle': t("ui_empty_circle"), 
-                'circle': t("ui_circle"), 
-                'rect': t("ui_rect"), 
-                'triangle': t("ui_triangle"), 
-                'diamond': t("ui_diamond") 
-            };
-            Object.entries(options).forEach(([k, v]) => {
-                const opt = select.createEl("option", { value: k, text: v });
-                if (k === this.symbolType) opt.selected = true;
-            });
-            select.onchange = (e) => {
-                this.symbolType = e.target.value;
+    renderSeriesSettings() {
+        this.seriesPanel.replaceChildren();
+        const head = this.node(this.seriesPanel,'div','ec-data-head');
+        this.node(head,'h3','',t('ui_series'));
+        this.button(head,t('ui_add_series'),() => {
+            if (!this.readTextDraft()) {this.previewErrorEl.textContent=t('ui_invalid_data');return;}
+            let i = this.data.series.length + 1;
+            while (this.data.series.some(series => series.name === `${t('ui_series')} ${i}`)) i++;
+            this.data.series.push({name:`${t('ui_series')} ${i}`,values:this.data.labels.map(()=>0),
+                type:'line',color:'',yAxisIndex:0});
+            this.syncDraft();
+            this.renderSeriesSettings();
+            this.renderDataEditor();
+            this.debouncedPreview();
+        });
+        const list = this.node(this.seriesPanel,'div','ec-series-list');
+        this.data.series.forEach((series, i) => {
+            const row = this.node(list,'div',`ec-series-row${this.data.type === 'mixed' ? ' ec-mixed-row' : ''}`);
+            const name = this.node(row,'input');
+            name.value = series.name;
+            name.setAttribute('aria-label',`${t('ui_series_name')} ${i + 1}`);
+            name.oninput = () => {
+                series.name=name.value;
+                this.syncDraft();
+                const offset=this.data.type==='scatter'?2:1;
+                const heading=this.editorContainer.querySelector('.ec-table-labels')?.children[i+offset];
+                if (heading) {heading.textContent=name.value;heading.title=name.value;}
                 this.debouncedPreview();
             };
+            const color = this.node(row,'input');
+            color.type='color';
+            color.value=series.color || (i ? ['#5470c6','#91cc75','#fac858','#ee6666'][i % 4] : this.data.themeColor);
+            color.setAttribute('aria-label',`${t('ui_series_color')} ${i + 1}`);
+            color.oninput = () => {series.color=color.value;this.debouncedPreview();};
+            if (this.data.type === 'mixed') {
+                const type = this.node(row,'select');
+                for (const value of ['bar','line','area']) this.node(type,'option','',t(`ui_${value}`)).value=value;
+                type.value=series.type;
+                type.setAttribute('aria-label',`${t('ui_series_type')} ${i + 1}`);
+                type.onchange = () => {series.type=type.value;this.debouncedPreview();};
+                const axis = this.node(row,'select');
+                this.node(axis,'option','',t('ui_left_axis')).value='0';
+                this.node(axis,'option','',t('ui_right_axis')).value='1';
+                axis.value=String(series.yAxisIndex);
+                axis.setAttribute('aria-label',`${t('ui_series_axis')} ${i + 1}`);
+                axis.onchange = () => {series.yAxisIndex=Number(axis.value);this.debouncedPreview();};
+            }
+            const remove = this.button(row,'×',() => {
+                if (!this.readTextDraft()) {this.previewErrorEl.textContent=t('ui_invalid_data');return;}
+                this.data.series.splice(i,1);
+                this.data.valueSeriesIndex=Math.min(this.data.valueSeriesIndex,this.data.series.length-1);
+                this.syncDraft();
+                this.renderSeriesSettings();
+                this.renderDataEditor();
+                this.debouncedPreview();
+            },'ec-delete');
+            remove.disabled=this.data.series.length===1;
+            remove.setAttribute('aria-label',`${t('ui_remove_series')} ${i + 1}`);
+        });
+        if (['pie','donut','rose','funnel','gauge'].includes(this.data.type)) {
+            const select = this.field(this.seriesPanel,t('ui_metric'),'select');
+            this.data.series.forEach((series,i)=>{this.node(select,'option','',series.name).value=String(i);});
+            select.value=String(this.data.valueSeriesIndex);
+            select.onchange=()=>{this.data.valueSeriesIndex=Number(select.value);this.debouncedPreview();};
+            this.node(this.seriesPanel,'div','ec-muted',t('ui_single_metric_hint'));
+        }
+        if (this.data.type === 'gauge') {
+            const fields = this.node(this.seriesPanel,'div','ec-fields');
+            for (const [key,label] of [['gaugeMin','ui_min'],['gaugeMax','ui_max']]) {
+                const input=this.field(fields,t(label));
+                input.type='number';input.step='any';input.value=this.data[key];
+                input.oninput=()=>{this.data[key]=input.valueAsNumber;this.debouncedPreview();};
+            }
+            const row=this.field(this.seriesPanel,t('ui_gauge_row'),'select');
+            this.data.labels.forEach((label,i)=>{this.node(row,'option','',label).value=String(i);});
+            row.value=String(this.data.gaugeRow);
+            row.onchange=()=>{this.data.gaugeRow=Number(row.value);this.debouncedPreview();};
         }
     }
 
     renderDataEditor() {
-        this.editorContainer.empty();
-
-        if (this.isCustom) {
-            this.editorContainer.createEl("b", { 
-                text: "Echarts Option JSON:", 
-                style: "margin-bottom: 6px; font-size: 0.9em;" 
-            });
-            const rawArea = this.editorContainer.createEl("textarea", {
-                text: this.customOptions,
-                style: "width: 100%; flex: 1; min-height: 320px; font-family: monospace; font-size: 0.88em; padding: 10px; border-radius: 6px; border: 1px solid var(--background-modifier-border); resize: none;"
-            });
-            this.rawTextArea = rawArea;
-            rawArea.addEventListener("input", (e) => {
-                this.customOptions = e.target.value;
-                this.debouncedPreview();
-            });
-            return;
-        }
-
-        const dataSplit = this.editorContainer.createDiv({ 
-            style: "display: flex; gap: 12px; flex: 1; align-items: stretch; min-height: 260px;" 
-        });
-
-        // 左侧快捷文本框
-        const textPanel = dataSplit.createDiv({ 
-            style: "flex: 1; display: flex; flex-direction: column;" 
-        });
-        textPanel.createEl("b", { 
-            text: t("ui_text_input_label"), 
-            style: "margin-bottom: 4px; font-size: 0.85em; color: var(--text-muted);" 
-        });
-        const rawTextArea = textPanel.createEl("textarea", {
-            style: "flex: 1; width: 100%; white-space: pre; font-family: monospace; font-size: 0.88em; padding: 8px; border-radius: 6px; border: 1px solid var(--background-modifier-border); resize: none;"
-        });
-        this.rawTextArea = rawTextArea;
-
-        const updateTextArea = () => {
-            rawTextArea.value = this.labels.map((l, i) => `${l},${this.values[i]}`).join('\n');
-        };
-        updateTextArea();
-
-        // 右侧表格列表
-        const tablePanel = dataSplit.createDiv({ 
-            style: "flex: 1.15; border: 1px solid var(--background-modifier-border); border-radius: 6px; padding: 8px; overflow-y: auto; max-height: 290px; background: var(--background-primary);" 
-        });
-        tablePanel.createEl("b", { 
-            text: t("ui_data_panel_label"), 
-            style: "display: block; margin-bottom: 8px; font-size: 0.85em; color: var(--text-muted);" 
-        });
-
-        const renderTable = () => {
-            tablePanel.querySelectorAll(".ymjr-row").forEach(e => e.remove());
-            this.labels.forEach((l, i) => {
-                const row = tablePanel.createDiv({ 
-                    cls: "ymjr-row", 
-                    style: "display: flex; gap: 6px; margin-bottom: 6px; align-items: center;" 
-                });
-                
-                const labelInput = row.createEl("input", { 
-                    type: "text", 
-                    value: l, 
-                    style: "flex: 2; padding: 3px 6px; font-size: 0.85em; border-radius: 4px; border: 1px solid var(--background-modifier-border);", 
-                    title: t("ui_category_name") 
-                });
-                labelInput.oninput = (e) => { 
-                    this.labels[i] = e.target.value; 
-                    updateTextArea(); 
-                    this.debouncedPreview();
-                };
-                
-                const valueInput = row.createEl("input", { 
-                    type: "number", 
-                    value: this.values[i], 
-                    style: "flex: 1.8; padding: 3px 6px; font-size: 0.85em; border-radius: 4px; border: 1px solid var(--background-modifier-border);", 
-                    title: t("ui_value") 
-                });
-                valueInput.oninput = (e) => { 
-                    this.values[i] = parseFloat(e.target.value) || 0; 
-                    updateTextArea(); 
-                    this.debouncedPreview();
-                };
-                
-                const colorDiv = row.createDiv({ style: "display: flex; align-items: center; gap: 3px;" });
-                const hasCustomColor = Boolean(this.colors[i]);
-                const colorCheckbox = colorDiv.createEl("input", { 
-                    type: "checkbox", 
-                    checked: hasCustomColor, 
-                    title: t("ui_checkbox_color_title") 
-                });
-                const colorInput = colorDiv.createEl("input", { 
-                    type: "color", 
-                    value: this.colors[i] || this.themeColor || "#5470c6", 
-                    disabled: !hasCustomColor,
-                    style: "width: 22px; height: 22px; padding: 0; border: none; cursor: pointer;" 
-                });
-                
-                colorCheckbox.onchange = (e) => {
-                    const isChecked = e.target.checked;
-                    colorInput.disabled = !isChecked;
-                    this.colors[i] = isChecked ? colorInput.value : undefined;
-                    this.debouncedPreview();
-                };
-                colorInput.onchange = (e) => {
-                    if (!colorInput.disabled) {
-                        this.colors[i] = e.target.value;
-                        this.debouncedPreview();
+        this.editorContainer.replaceChildren();
+        const head = this.node(this.editorContainer, 'div', 'ec-data-head');
+        this.node(head, 'h3', '', this.data.type === 'custom' ? 'ECharts Option JSON' : t('ui_data'));
+        if (this.data.type !== 'custom') {
+            const tabs = this.node(head, 'div', 'ec-tabs');
+            for (const mode of ['table', 'text']) {
+                const button = this.button(tabs, t(`ui_mode_${mode}`), () => {
+                    if (mode === 'table' && !this.readTextDraft()) {
+                        this.previewErrorEl.textContent=t('ui_invalid_data');return;
                     }
-                };
-
-                const delBtn = row.createEl("button", { 
-                    text: t("ui_delete"), 
-                    style: "padding: 2px 6px; font-size: 0.85em; cursor: pointer; border: none; background: transparent; opacity: 0.7;" 
+                    this.inputMode = mode;
+                    this.renderSeriesSettings();
+                    this.renderDataEditor();
                 });
-                delBtn.onclick = () => {
-                    this.labels.splice(i, 1); 
-                    this.values.splice(i, 1); 
-                    this.colors.splice(i, 1);
-                    renderTable(); 
-                    updateTextArea();
-                    this.debouncedPreview();
-                };
-            });
-
-            const addBtn = tablePanel.createEl("button", { 
-                text: t("ui_add_row"), 
-                cls: "ymjr-row", 
-                style: "width: 100%; margin-top: 6px; font-size: 0.85em; padding: 4px; border-radius: 4px; border: 1px dashed var(--background-modifier-border); cursor: pointer; background: transparent;" 
-            });
-            addBtn.onclick = () => {
-                this.labels.push(`${t("ui_category_name")}${this.labels.length + 1}`);
-                this.values.push(100);
-                this.colors.push(undefined);
-                renderTable(); 
-                updateTextArea();
+                button.setAttribute('aria-pressed', String(mode === this.inputMode));
+            }
+        }
+        if (this.data.type === 'custom' || this.inputMode === 'text') {
+            const area = this.node(this.editorContainer, 'textarea');
+            area.setAttribute('aria-label', this.data.type === 'custom' ? 'ECharts Option JSON' : t('ui_text_input_label'));
+            area.spellcheck = false;
+            area.value = this.data.type === 'custom' ? this.customOptions : this.textDraft;
+            area.oninput = () => {
+                if (this.data.type === 'custom') {this.customOptions=area.value;this.customDirty=true;}
+                else {this.textDraft=area.value;this.draftDirty=true;}
                 this.debouncedPreview();
             };
-        };
-        renderTable();
-
-        rawTextArea.addEventListener("input", (e) => {
-            const parsed = EchartsCore.parseTextToData(e.target.value);
-            if (parsed) {
-                this.labels = parsed.labels;
-                this.values = parsed.values;
-                this.colors = this.labels.map((_, i) => this.colors[i]);
-                renderTable(); 
-                this.debouncedPreview();
+            if (this.data.type !== 'custom') this.node(this.editorContainer,'div','ec-muted',
+                t(this.data.type === 'scatter' ? 'ui_xy_hint' : 'ui_text_hint'));
+            return;
+        }
+        const xy = this.data.type === 'scatter';
+        const perItem = this.data.series.length === 1 || ['pie','donut','rose','funnel'].includes(this.data.type);
+        const scroll = this.node(this.editorContainer,'div','ec-table-scroll');
+        const table = this.node(scroll, 'div', 'ec-table');
+        const seriesColumns = this.data.series.map(()=> '82px').join(' ');
+        table.style.setProperty('--ec-columns',`minmax(120px,1fr) ${xy ? '82px' : ''} ${seriesColumns} ${perItem ? '54px' : ''} 30px`);
+        table.style.minWidth=`${120+(this.data.series.length+(xy?1:0))*90+(perItem?62:0)+38}px`;
+        const heading = this.node(table, 'div', 'ec-table-row ec-table-labels');
+        for (const label of [t('ui_category_name'),...(xy?['X']:[]),...this.data.series.map(s=>s.name),...(perItem?[t('ui_color')]:[])]) {
+            const column=this.node(heading,'span','',label);column.title=label;
+        }
+        this.data.labels.forEach((label, i) => {
+            const row = this.node(table, 'div', 'ec-table-row');
+            const name = this.node(row, 'input');
+            name.value = label;
+            name.setAttribute('aria-label', `${t('ui_category_name')} ${i + 1}`);
+            const sync=()=>{this.syncDraft();this.debouncedPreview();};
+            name.oninput=()=>{this.data.labels[i]=name.value;sync();};
+            name.onblur=()=>{if(this.data.type==='gauge')this.renderSeriesSettings();};
+            const numberCell = (value,label,update) => {
+                const input=this.node(row,'input');
+                input.type='number';input.step='any';input.value=value;
+                input.setAttribute('aria-label',label);
+                input.oninput=()=>{update(input.valueAsNumber);sync();};
+            };
+            if (xy) numberCell(this.data.xValues[i],`X ${i+1}`,value=>{this.data.xValues[i]=value;});
+            this.data.series.forEach((series,index)=>numberCell(series.values[i],
+                `${t('ui_series')} ${index+1} ${t('ui_value')} ${i+1}`,value=>{series.values[i]=value;}));
+            if (perItem) {
+                const cell=this.node(row,'div','ec-color-cell');
+                const enabled=this.node(cell,'input');enabled.type='checkbox';enabled.checked=!!this.data.colors[i];
+                enabled.setAttribute('aria-label',`${t('ui_checkbox_color_title')} ${i+1}`);
+                const picker=this.node(cell,'input');picker.type='color';
+                picker.value=this.data.colors[i]||this.data.themeColor;picker.disabled=!enabled.checked;
+                picker.setAttribute('aria-label',`${t('ui_color')} ${i+1}`);
+                enabled.onchange=()=>{picker.disabled=!enabled.checked;this.data.colors[i]=enabled.checked?picker.value:undefined;this.debouncedPreview();};
+                picker.oninput=()=>{this.data.colors[i]=picker.value;this.debouncedPreview();};
             }
+            const remove=this.button(row,'×',()=>{
+                this.data.labels.splice(i,1);this.data.xValues.splice(i,1);this.data.colors.splice(i,1);
+                this.data.series.forEach(series=>series.values.splice(i,1));
+                this.data.gaugeRow=Math.max(0,Math.min(this.data.gaugeRow,this.data.labels.length-1));
+                sync();this.renderSeriesSettings();this.renderDataEditor();
+            },'ec-delete');
+            remove.setAttribute('aria-label',`${t('ui_delete')} ${i+1}`);
         });
+        this.button(this.editorContainer,t('ui_add_row'),()=>{
+            this.data.labels.push(`${t('ui_category_name')} ${this.data.labels.length+1}`);
+            this.data.xValues.push(this.data.labels.length);
+            this.data.series.forEach(series=>series.values.push(0));
+            this.syncDraft();this.renderSeriesSettings();this.renderDataEditor();
+            this.editorContainer.querySelector('.ec-table-row:last-child input')?.focus();
+            this.debouncedPreview();
+        });
+    }
+
+    syncDraft() {
+        this.textDraft=EchartsCore.serializeDataTable(this.data);
+        this.draftDirty=false;
+    }
+
+    readTextDraft() {
+        if (!this.draftDirty) return true;
+        const parsed=EchartsCore.parseTextToData(this.textDraft,{xy:this.data.type==='scatter'});
+        if (!parsed) return false;
+        const previous=this.data.series;
+        this.data.series=parsed.series.map((series,i)=>({
+            ...(previous.find(old=>old.name===series.name)||previous[i]||{type:'line',yAxisIndex:0,color:''}),...series
+        }));
+        this.data.labels=parsed.labels;
+        this.data.xValues=parsed.xValues || parsed.labels.map((_,i)=>this.data.xValues[i]??i+1);
+        this.data.valueSeriesIndex=Math.min(this.data.valueSeriesIndex,this.data.series.length-1);
+        this.data.gaugeRow=Math.max(0,Math.min(this.data.gaugeRow,this.data.labels.length-1));
+        this.draftDirty=false;
+        this.renderSeriesSettings();
+        return true;
+    }
+
+    result() {
+        if (this.data.type === 'custom') {
+            const data={schemaVersion:2,type:'custom',customOptions:this.customOptions};
+            EchartsCore.validateChartData(data);
+            return data;
+        }
+        if (!this.readTextDraft()) throw new Error(t('ui_invalid_data'));
+        EchartsCore.validateChartData(this.data);
+        return EchartsCore.normalizeChartData(this.data);
     }
 
     debouncedPreview() {
         clearTimeout(this._previewTimer);
-        this._previewTimer = setTimeout(() => {
-            this.renderLivePreview();
-        }, 120);
+        this._previewTimer = setTimeout(() => this.renderLivePreview(), 120);
     }
 
     renderLivePreview() {
-        if (!this.previewContainer) return;
-        const echartsLib = window.echarts;
-        if (!echartsLib) return;
-
-        if (!this.previewChart) {
-            this.previewChart = echartsLib.init(this.previewContainer, this.previewDark ? 'dark' : null, { renderer: 'svg' });
-        }
-
+        if (this.closed || !this.previewContainer?.isConnected) return;
         try {
-            let optStr;
-            if (this.isCustom) {
-                optStr = this.rawTextArea ? this.rawTextArea.value : this.customOptions;
-            } else {
-                optStr = EchartsCore.generateEchartsOptions({
-                    type: this.currentType,
-                    chartTitle: this.chartTitle,
-                    labels: this.labels,
-                    values: this.values,
-                    colors: this.colors,
-                    themeColor: this.themeColor,
-                    showLabel: this.showLabel,
-                    showLegend: this.showLegend,
-                    smoothLine: this.smoothLine,
-                    symbolType: this.symbolType
-                }, this.previewDark);
-            }
+            const result = this.result();
+            const lib = window.echarts;
+            if (!lib) throw new Error(t('ui_library_missing'));
+            this.previewContainer.style.backgroundColor = this.previewDark ? '#1e1e1e' : '#ffffff';
+            if (!this.previewChart) this.previewChart = lib.init(
+                this.previewContainer, this.previewDark ? 'dark' : null, {renderer:'svg'});
+            const option = JSON.parse(EchartsCore.generateEchartsOptions(result, this.previewDark));
+            this.previewChart.setOption(option, true);
+            this.previewChart.resize();
+            this.previewErrorEl.textContent = '';
+            this.saveBtn.disabled = false;
+        } catch (error) {
+            this.previewErrorEl.textContent = error.message;
+            this.saveBtn.disabled = true;
+        }
+    }
 
-            const opt = typeof optStr === 'string' ? JSON.parse(optStr) : optStr;
-            if (opt) {
-                if (!opt.backgroundColor || opt.backgroundColor === '#100c2a' || opt.backgroundColor === '#333') {
-                    opt.backgroundColor = 'transparent';
-                }
-                this.previewChart.setOption(opt, true);
-                if (this.previewErrorEl) this.previewErrorEl.style.display = "none";
-            }
-        } catch (e) {
-            if (this.previewErrorEl) {
-                this.previewErrorEl.textContent = "⚠️ " + (e.message || "JSON 格式待完善");
-                this.previewErrorEl.style.display = "block";
-            }
+    async save() {
+        if (this.saving) return;
+        try {
+            const result = this.result();
+            this.saving = true;
+            this.saveBtn.disabled = true;
+            await this.onSave(result);
+            this.saved = true;
+            this.close();
+        } catch (error) {
+            this.previewErrorEl.textContent = error.message;
+        } finally {
+            this.saving = false;
+            this.saveBtn.disabled = false;
         }
     }
 
     onClose() {
+        this.closed = true;
         clearTimeout(this._previewTimer);
-        if (this.previewChart) {
-            this.previewChart.dispose();
-            this.previewChart = null;
-        }
+        this.resizeObserver?.disconnect();
+        this.previewChart?.dispose();
+        this.previewChart = null;
+        if (!this.saved) this.onCancel();
     }
 }
 EchartsCore.EchartsEditorModal = EchartsEditorModal;
 
-// 原地或新建打开图表编辑器的核心通用方法
-EchartsCore.openEditorForElement = (el, view) => {
-    const currentEcharts = el?.customData?.echarts;
-    if (!currentEcharts) return;
-
-    let initialData = { 
-        type: 'bar', 
-        chartTitle: '',
-        labels: ['类目A', '类目B', '类目C'], 
-        values: [100, 200, 150],
-        colors: [],
-        themeColor: '#5470c6',
-        showLabel: false,
-        showLegend: true,
-        smoothLine: true,
-        symbolType: 'emptyCircle'
-    };
-
-    if (currentEcharts.rawData) {
-        initialData = { ...initialData, ...currentEcharts.rawData };
-    } else if (currentEcharts.type === 'custom') {
-        initialData.type = 'custom';
-        initialData.customOptions = currentEcharts.value;
-    } else {
-        try {
-            initialData.type = currentEcharts.type || 'bar';
-            const config = typeof currentEcharts.value === 'string' ? JSON.parse(currentEcharts.value) : currentEcharts.value;
-            initialData.chartTitle = config.title?.text || '';
-            initialData.themeColor = config.color ? config.color[0] : '#5470c6';
-            initialData.showLegend = config.legend?.show !== false;
-            initialData.showLabel = config.series?.[0]?.label?.show || false;
-            initialData.symbolType = config.series?.[0]?.symbol || 'emptyCircle';
-            initialData.smoothLine = config.series?.[0]?.smooth !== false;
-
-            const seriesData = config.series?.[0]?.data;
-            if (Array.isArray(seriesData)) {
-                initialData.values = seriesData.map(d => typeof d === 'object' && d !== null ? d.value : d);
-                initialData.labels = (initialData.type === 'pie' || initialData.type === 'donut')
-                    ? seriesData.map(d => d.name) 
-                    : (config.xAxis?.data || seriesData.map((_, i) => `Item ${i + 1}`));
-                initialData.colors = seriesData.map(d => typeof d === 'object' && d?.itemStyle?.color ? d.itemStyle.color : undefined);
-            }
-        } catch (e) {
-            console.warn(t("log_parse_failed"), e);
-            const legacyData = EchartsCore.parseTextToData(currentEcharts.value);
-            if (legacyData) {
-                initialData.labels = legacyData.labels;
-                initialData.values = legacyData.values;
-            }
-        }
+//ymjr: Preserve arbitrary legacy ECharts JSON instead of reverse-engineering only series[0].
+EchartsCore.readStoredChart = stored => {
+    if (stored.rawData && (stored.rawData.schemaVersion || 1) <= 2)
+        return EchartsCore.normalizeChartData({...stored.rawData,type:stored.rawData.type || stored.type});
+    let option;
+    try { option = typeof stored.value === 'string' ? JSON.parse(stored.value) : stored.value; }
+    catch (error) {
+        const parsed = EchartsCore.parseTextToData(stored.value);
+        if (!parsed) throw error;
+        return EchartsCore.normalizeChartData({...parsed,type:stored.type || 'bar'});
     }
-
-    new EchartsCore.EchartsEditorModal(app, initialData, async (result) => {
-        const finalOptions = EchartsCore.generateEchartsOptions(result);
-        ea.clear();
-        el.customData = el.customData || {};
-        el.customData.echarts = {
-            type: result.type,
-            value: finalOptions,
-            rawData: result
-        };
-        ea.copyViewElementsToEAforEditing([el]);
-        await ea.addElementsToView(false, false, false);
-        new Notice(t("notice_success"));
-    }).open();
+    return EchartsCore.normalizeChartData({type:'custom',customOptions:JSON.stringify(option,null,2)});
 };
 
-const handlePaste = async (context) => {
-    const { ea, api } = context;
-    if (!ea || !api) return;
+EchartsCore.storedOptions = (stored, isDark = false) => {
+    const data=EchartsCore.readStoredChart(stored);
+    return JSON.parse(EchartsCore.generateEchartsOptions(data,isDark));
+};
 
-    const payload = context;
-    let parsedData = null;
+//ymjr: A save owns its own EA workbench and commits source text deletion in the same scene update.
+EchartsCore.applyChartData = async (view, result, {elementId,center,sourceTextIds=[]} = {}) => {
+    if (!view?.excalidrawAPI) throw new Error(t('notice_save_failed'));
+    const data=EchartsCore.normalizeChartData(result);
+    const value=EchartsCore.generateEchartsOptions(data,view.excalidrawAPI.getAppState().theme==='dark');
+    const local=ea.getAPI(view);
+    try {
+        const live=local.getViewElements();
+        let target;
+        if (elementId) {
+            const existing=live.find(element=>element.id===elementId&&!element.isDeleted);
+            if (!existing) throw new Error(t('notice_save_failed'));
+            local.copyViewElementsToEAforEditing([existing]);
+            target=local.getElement(elementId);
+        } else {
+            const point=center || local.getViewCenterPosition();
+            local.style.backgroundColor='transparent';
+            local.style.strokeColor='transparent';
+            target=local.getElement(local.addRect(point.x-260,point.y-180,520,360));
+        }
+        target.customData={...target.customData,echarts:{type:data.type,value,rawData:data}};
+        if (sourceTextIds.length) {
+            const text=live.filter(element=>sourceTextIds.includes(element.id)&&element.type==='text'&&!element.isDeleted);
+            local.copyViewElementsToEAforEditing(text);
+            for (const element of text) local.getElement(element.id).isDeleted=true;
+        }
+        if (!await local.addElementsToView(false,true,false)) throw new Error(t('notice_save_failed'));
+        new Notice(t('notice_success'));
+        return target.id;
+    } finally { local.destroy(); }
+};
 
-    if (payload?.spreadsheet?.labels?.length) {
-        parsedData = {
-            labels: payload.spreadsheet.labels,
-            values: payload.spreadsheet.values.map(v => parseFloat(v) || 0)
-        };
-    } 
-    else if (payload?.payload?.text) {
-        parsedData = EchartsCore.parseTextToData(payload.payload.text);
+EchartsCore.openEditorForElement = (element, view) => {
+    if (!element?.customData?.echarts) return;
+    const initial=EchartsCore.readStoredChart(element.customData.echarts);
+    return new EchartsCore.EchartsEditorModal(app,initial,result=>
+        EchartsCore.applyChartData(view,result,{elementId:element.id})).open();
+};
+
+const handlePaste = async context => {
+    const view=context?.ea?.targetView;
+    if (!view) return false;
+    // Prefer the original table text: the host's legacy spreadsheet adapter may expose only one value column.
+    let parsed=EchartsCore.parseTextToData(context.payload?.text);
+    if (!parsed && !context.payload?.text && context.spreadsheet?.labels?.length) {
+        const sheet=context.spreadsheet;
+        if (sheet.values?.length===sheet.labels.length&&sheet.values.every(value=>
+            typeof value==='number' ? Number.isFinite(value) : chartNumber(String(value)))) {
+            parsed={labels:sheet.labels,series:[{name:t('ui_series')+' 1',values:sheet.values.map(Number)}]};
+        }
     }
+    if (!parsed) return false;
+    const center=context.ea.getViewLastPointerPosition() || context.ea.getViewCenterPosition();
+    return new Promise(resolve=>{
+        new EchartsCore.EchartsEditorModal(app,EchartsCore.normalizeChartData(parsed),async result=>{
+            await EchartsCore.applyChartData(view,result,{center});
+            resolve(true);
+        },()=>resolve(false)).open();
+    });
+};
 
-    if (parsedData) {
-        return new Promise((resolve) => {
-            new EchartsCore.EchartsEditorModal(app, { type: 'bar', ...parsedData }, async (result) => {
-                const finalOptions = EchartsCore.generateEchartsOptions(result);
-                
-                ea.clear(); 
-                ea.style.backgroundColor = "transparent";
-                ea.style.strokeColor = "transparent"; 
-                const id = ea.addRect(0, 0, 500, 350);
-                const el = ea.getElement(id);
-                
-                el.customData = { 
-                    ...el.customData, 
-                    echarts: { 
-                        type: result.type, 
-                        value: finalOptions,
-                        rawData: result 
-                    } 
-                };
-                
-                payload.text = '';
-                ea.copyViewElementsToEAforEditing([el]);
-                await ea.addElementsToView(true, false, false);
-                new Notice(t("notice_success"));
-                resolve(true); 
-            }).open();
+//ymjr: Export this element's own options even when no live iframe exists.
+const handleSvgRender = async context => {
+    const {element,svgRoot,addToRoot,offsetX,offsetY,degree,cx,cy,renderConfig}=context;
+    if (!element?.customData?.echarts) return false;
+    const doc=svgRoot.ownerDocument;
+    const container=doc.createElement('div');
+    container.style.cssText='position:fixed;left:-100000px;top:0;pointer-events:none;';
+    doc.body.appendChild(container);
+    let chart;
+    try {
+        const dark=renderConfig?.theme==='dark';
+        const option=EchartsCore.storedOptions(element.customData.echarts,dark);
+        option.animation=false;
+        chart=window.echarts.init(container,dark?'dark':null,{
+            renderer:'svg',width:element.width,height:element.height
         });
+        chart.setOption(option,true);
+        const parsed=new DOMParser().parseFromString(chart.renderToSVGString(),'image/svg+xml');
+        const group=doc.createElementNS('http://www.w3.org/2000/svg','g');
+        group.setAttribute('transform',`translate(${offsetX||0} ${offsetY||0}) rotate(${degree||0} ${cx||0} ${cy||0})`);
+        group.setAttribute('opacity',String((element.opacity??100)/100));
+        group.appendChild(doc.importNode(parsed.documentElement,true));
+        addToRoot(group,element);
+        return true;
+    } finally {
+        chart?.dispose();
+        container.remove();
     }
-    return false;
-};
-
-const handleSvgRender = async (contextPayload) => {
-    const { ea, api } = contextPayload;
-    if (!ea || !api) return;
-
-    const { addToRoot, svgRoot, element, offsetX, offsetY, degree, cx, cy } = contextPayload;
-    
-    if (element?.customData?.echarts) {
-        try {
-            const iframes = Array.from(document.querySelectorAll("iframe.excalidraw__embeddable"));
-            const targetIframe = iframes.find(f => {
-                try {
-                    return f.contentDocument?.getElementById("main");
-                } catch(e) {
-                    return false;
-                }
-            });
-
-            if (!targetIframe || !targetIframe.contentDocument) return false;
-
-            const chartSvg = targetIframe.contentDocument.querySelector("svg");
-            if (!chartSvg) return false;
-
-            const clonedSvg = chartSvg.cloneNode(true);
-            const gElement = document.createElementNS("http://www.w3.org/2000/svg", "g");
-            gElement.innerHTML = clonedSvg.innerHTML;
-            
-            Array.from(clonedSvg.attributes).forEach(attr => {
-                if (attr.name !== "transform") {
-                    gElement.setAttribute(attr.name, attr.value);
-                }
-            });
-
-            gElement.setAttribute(
-                "transform",
-                `translate(${offsetX || 0} ${offsetY || 0}) rotate(${degree} ${cx} ${cy})`
-            );
-            
-            addToRoot(gElement, element);
-            return true;
-        } catch (e) {
-            console.error(t("log_svg_render_failed"), e);
-        }
-    }
-    return false;
 };
 
 const setupCustomDocumentRenderer = () => {
@@ -1101,17 +1227,9 @@ const setupCustomDocumentRenderer = () => {
         if (element?.customData?.echarts) {
             loadEcharts(); 
             
-            const echartsData = element.customData.echarts;
-            let optionStr = echartsData.value;
-
-            if (!optionStr || typeof optionStr !== "string" || !optionStr.trim().startsWith("{")) {
-                const legacyData = EchartsCore.parseTextToData(optionStr);
-                if (legacyData) {
-                    optionStr = EchartsCore.generateEchartsOptions({type: echartsData.type, ...legacyData});
-                }
-            }
-
-            const isDark = appState?.theme === "dark" || document.body?.classList?.contains("theme-dark");
+            //ymjr: Recompute generated charts for the current canvas theme and escape inline script delimiters.
+            const isDark = appState?.theme ? appState.theme==='dark' : document.body.classList.contains('theme-dark');
+            const optionStr = JSON.stringify(EchartsCore.storedOptions(element.customData.echarts,isDark)).replace(/</g,'\\u003c');
 
             const htmlSrc = `
                 <!DOCTYPE html>
@@ -1201,18 +1319,15 @@ const handleCanvasDoubleClick = (ctx) => {
 
     for (let i = elements.length - 1; i >= 0; i--) {
         const el = elements[i];
-        if (!el?.customData?.echarts) continue;
-
-        // 检查点击坐标是否落在图表矩形包围盒内
-        const minX = el.x;
-        const maxX = el.x + el.width;
-        const minY = el.y;
-        const maxY = el.y + el.height;
-
-        if (sceneX >= minX && sceneX <= maxX && sceneY >= minY && sceneY <= maxY) {
-            const view = getActiveExcalidrawView();
-            EchartsCore.openEditorForElement?.(el, view);
-            return true; // 拦截事件，避免进入普通双击编辑
+        if (!el?.customData?.echarts || el.locked) continue;
+        //ymjr: Hit testing and persistence must use the clicked chart's view, including rotated charts.
+        const angle=el.angle||0;
+        const dx=sceneX-el.x-el.width/2, dy=sceneY-el.y-el.height/2;
+        const x=dx*Math.cos(angle)+dy*Math.sin(angle);
+        const y=-dx*Math.sin(angle)+dy*Math.cos(angle);
+        if (Math.abs(x)<=el.width/2 && Math.abs(y)<=el.height/2) {
+            EchartsCore.openEditorForElement(el,ea.targetView);
+            return true;
         }
     }
     return false;

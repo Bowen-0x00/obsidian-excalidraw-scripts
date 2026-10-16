@@ -15,6 +15,18 @@ These recordings show the capabilities behind the scripts: structured diagrams, 
 <table width="100%">
   <tr>
     <td width="50%" valign="top">
+      <h3><a href="Scripts/echarts/">ECharts 1.3.0: chart capabilities</a></h3>
+      <p>Sixteen real examples: twelve visual chart types, grouped/stacked comparisons and a custom-JSON heatmap.</p>
+      <a href="images/echarts-1.3.0/overview.png"><img src="images/echarts-1.3.0/overview.png" width="100%" alt="ECharts 1.3.0 overview with sixteen actual chart examples"></a>
+    </td>
+    <td width="50%" valign="top">
+      <h3><a href="Scripts/echarts/Action-Echarts-Manager.md">Visual editor and live preview</a></h3>
+      <p>Real Obsidian UI: configure series, mixed bar/line charts and independent Y axes. Screenshots show the Chinese UI.</p>
+      <a href="images/echarts-1.3.0/editor-dark.png"><img src="images/echarts-1.3.0/editor-dark.png" width="100%" alt="Actual ECharts editor with a live dual-axis mixed chart preview"></a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
       <h3><a href="Scripts/mindmap/">Interactive mindmaps</a></h3>
       <p>Create branches, expand or collapse nodes, and arrange the tree.</p>
       <img src="images/mindmap2.gif" width="100%" alt="Creating and arranging an interactive mindmap in Excalidraw">
@@ -111,6 +123,21 @@ This historical mobile recording illustrates the interaction, not a verification
 </details>
 
 More recordings can be added to this gallery as the scripts evolve. See all [demo assets](images/), the [example vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault), and the [video walkthrough](https://www.bilibili.com/video/BV1zN4y1H7Dx/).
+
+### ECharts 1.3.0
+
+Install both [`Feature-Echarts-Engine.md`](Scripts/echarts/Feature-Echarts-Engine.md) and [`Action-Echarts-Manager.md`](Scripts/echarts/Action-Echarts-Manager.md), then rerun the engine before opening the editor.
+
+- Multiple named/color-coded series; grouped and stacked bar/area comparisons.
+- Mixed bar/line/area series with left/right Y axes; numeric XY scatter, radar, funnel, gauge and rose charts alongside the existing common charts.
+- CSV/Excel TSV with headers, quoted fields and multiple value columns; a synchronized table editor, axis titles and data zoom.
+- Complete saved data for reopening; old option-only charts stay intact in custom JSON mode. Pie/funnel/gauge views select a metric without deleting other series.
+- Per-chart SVG export no longer depends on the first live iframe.
+
+[Editable overview drawing](images/echarts-1.3.0/overview.excalidraw.md) · [CSV editing screenshot](images/echarts-1.3.0/editor-csv.png). The drawing requires the current ECharts engine for live rendering. All data is synthetic; the heatmap uses custom JSON, not a dedicated heatmap form.
+
+Verified in Obsidian **1.14.4**, Excalidraw-ymjr **2.29.0-3**, ECharts **5.4.3**: real canvas insertion/editing, saved-file reopening, sixteen exported examples and actual editor screenshots. A narrow desktop viewport was checked; this is not a mobile-device compatibility claim.
+
 
 ## Install from the custom script market
 
