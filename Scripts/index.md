@@ -2220,7 +2220,7 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">泳道核心引擎</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.0.0</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.0.1</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/swimlane/Feature-Swimlane-Engine.md">File on GitHub</a></td></tr>
   <tr valign="top"><td class="label">Description</td><td class="data">提供泳道的自定义渲染、彻底防干扰收起展开(PointerDown级拦截)、子元素跟随及标题自适应排版。</td></tr>
   <tr valign="top"><td class="label">Usage</td><td class="data">后台常驻引擎，为带有 customData.swimlane 的矩形元素提供强大的容器行为模式。包括自动吞并移入的元素、双击展开/折叠、自适应标题高度等。</td></tr>
