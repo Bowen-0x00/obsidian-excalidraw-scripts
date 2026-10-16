@@ -16,8 +16,9 @@ These recordings show the capabilities behind the scripts: structured diagrams, 
   <tr>
     <td width="50%" valign="top">
       <h3><a href="Scripts/echarts/">ECharts 1.3.0: chart capabilities</a></h3>
-      <p>Sixteen real examples: twelve visual chart types, grouped/stacked comparisons and a custom-JSON heatmap.</p>
-      <a href="images/echarts-1.3.0/overview.png"><img src="images/echarts-1.3.0/overview.png" width="100%" alt="ECharts 1.3.0 overview with sixteen actual chart examples"></a>
+      <p>Sixteen real examples generated on an Excalidraw canvas—not pasted chart images. In the live canvas, hover for values, toggle legend entries, and edit chart data and appearance through the editor.</p>
+      <a href="images/echarts-1.3.0/overview.svg"><img src="images/echarts-1.3.0/overview.svg" width="100%" alt="Static SVG export of sixteen editable, interactive ECharts examples on an Excalidraw canvas"></a>
+      <p>This SVG is a static preview. <a href="images/echarts-1.3.0/overview.excalidraw.md">Download the editable Excalidraw canvas</a> and open it in Obsidian with Excalidraw-ymjr and the ECharts engine to interact with the charts.</p>
     </td>
     <td width="50%" valign="top">
       <h3><a href="Scripts/echarts/Action-Echarts-Manager.md">Visual editor and live preview</a></h3>
@@ -134,7 +135,7 @@ Install both [`Feature-Echarts-Engine.md`](Scripts/echarts/Feature-Echarts-Engin
 - Complete saved data for reopening; old option-only charts stay intact in custom JSON mode. Pie/funnel/gauge views select a metric without deleting other series.
 - Per-chart SVG export no longer depends on the first live iframe.
 
-[Editable overview drawing](images/echarts-1.3.0/overview.excalidraw.md) · [CSV editing screenshot](images/echarts-1.3.0/editor-csv.png). The drawing requires the current ECharts engine for live rendering. All data is synthetic; the heatmap uses custom JSON, not a dedicated heatmap form.
+[Full-resolution SVG overview](images/echarts-1.3.0/overview.svg) · [Editable Excalidraw canvas](images/echarts-1.3.0/overview.excalidraw.md) · [CSV editing screenshot](images/echarts-1.3.0/editor-csv.png). The README SVG does not run ECharts: interaction is available inside the Excalidraw canvas with the current engine. Hover for values, click legend entries to toggle series, and double-click a chart or run the manager Action to edit its data, type, colors and axes; saved configuration remains editable after reopening. All data is synthetic; the heatmap uses custom JSON, not a dedicated heatmap form.
 
 Verified in Obsidian **1.14.4**, Excalidraw-ymjr **2.29.0-3**, ECharts **5.4.3**: real canvas insertion/editing, saved-file reopening, sixteen exported examples and actual editor screenshots. A narrow desktop viewport was checked; this is not a mobile-device compatibility claim.
 

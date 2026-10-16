@@ -16,8 +16,9 @@
   <tr>
     <td width="50%" valign="top">
       <h3><a href="../Scripts/echarts/">ECharts 1.3.0 图表能力</a></h3>
-      <p>十六个真实样例：十二种可视化图表、多系列分组/堆叠，以及自定义 JSON 热力图。</p>
-      <a href="../images/echarts-1.3.0/overview.png"><img src="../images/echarts-1.3.0/overview.png" width="100%" alt="当前 ECharts 1.3.0 引擎实际导出的十六个图表示例"></a>
+      <p>十六个真实样例均在 Excalidraw 画布中生成，不是粘贴的静态图表图片。在实际画布中可悬浮查看数值、点击图例切换显示，并通过编辑器修改数据与样式。</p>
+      <a href="../images/echarts-1.3.0/overview.svg"><img src="../images/echarts-1.3.0/overview.svg" width="100%" alt="Excalidraw 画布中十六个可交互、可编辑 ECharts 图表的静态 SVG 导出预览"></a>
+      <p>此 SVG 仅为静态预览。<a href="../images/echarts-1.3.0/overview.excalidraw.md">下载可编辑 Excalidraw 画布</a>，在 Obsidian 中启用 Excalidraw-ymjr 与 ECharts 核心引擎后，即可交互操作。</p>
     </td>
     <td width="50%" valign="top">
       <h3><a href="../Scripts/echarts/Action-Echarts-Manager.md">可视化编辑与实时预览</a></h3>
@@ -134,7 +135,7 @@
 - 保存后保留完整系列配置；只有 option 的旧图以自定义 JSON 打开，不再丢弃第二条系列。饼图、漏斗、仪表盘只选择展示指标，不删除其他数据。
 - SVG 按每个图表自身配置导出，不再依赖第一个实时 iframe。
 
-[下载可编辑总览画布](../images/echarts-1.3.0/overview.excalidraw.md) · [查看 CSV 录入界面](../images/echarts-1.3.0/editor-csv.png)。画布实时显示需要当前 ECharts 核心引擎。数据均为演示样例；热力图使用自定义 JSON，不宣称已有专用表单。
+[查看完整矢量总览 SVG](../images/echarts-1.3.0/overview.svg) · [下载可编辑 Excalidraw 画布](../images/echarts-1.3.0/overview.excalidraw.md) · [查看 CSV 录入界面](../images/echarts-1.3.0/editor-csv.png)。README 的 SVG 本身不会运行 ECharts；交互能力位于启用了当前引擎的 Excalidraw 画布内。可悬浮查看数值、点击图例切换系列，双击图表或运行管理器 Action 修改数据、类型、配色和坐标轴；保存并重新打开后仍可编辑。数据均为演示样例；热力图使用自定义 JSON，不宣称已有专用表单。
 
 实测环境：Obsidian **1.14.4**、Excalidraw-ymjr **2.29.0-3**、ECharts **5.4.3**。已实际验证画布插入/编辑、保存文件重开、十六个图表示例导出及编辑器截图。窄屏检查使用桌面视口，不代表手机实机兼容性验收。
 
