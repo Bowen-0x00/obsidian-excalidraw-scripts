@@ -241,7 +241,7 @@ Node.js 维护入口是 `node Scripts/get_json.js`，路径以工具自身所在
 
 [Agent/Skill 仓库](https://github.com/Bowen-0x00/obsidian-excalidraw-agent-skill)的`bridge/shared-scripts.json`是导入白名单：共享Engine只维护这里的一份源码，不在两个仓库双写。GitHub main push触发[通知工作流](../.github/workflows/notify-skill.yml)，读取目标清单，只有涉及声明文件或通知配置才dispatch；其它脚本修改跳过。目标端校验固定源快照、语法及回归后创建/更新同一同步PR，不直接覆盖main。
 
-两仓库各配置Actions secret `SKILL_SYNC_TOKEN`；推荐限目标Agent仓库Contents/Pull requests读写及Metadata读取、有限期的fine-grained token，禁止提交凭据。可在Actions点击Run workflow补发；目标端每6小时兜底。必需源文件删除/改名会报错，不能静默保留旧副本。GitHub通知不代表Gitee镜像成功；PR不自动发布Skill、覆盖vault或重载Engine，兼容性和真实宿主验收仍需维护者确认。
+两仓库各配置Actions secret `SKILL_SYNC_TOKEN`；推荐限目标Agent仓库Contents/Pull requests读写及Metadata读取、有限期的fine-grained token，禁止提交凭据。同步只由push通知或手动触发，不再定时兜底；通知失败或遗漏时，在Actions点击Run workflow补发。必需源文件删除/改名会报错，不能静默保留旧副本。GitHub通知不代表Gitee镜像成功；PR不自动发布Skill、覆盖vault或重载Engine，兼容性和真实宿主验收仍需维护者确认。
 
 ## 致谢与许可
 
