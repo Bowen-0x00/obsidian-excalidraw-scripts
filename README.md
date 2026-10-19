@@ -170,9 +170,9 @@ Update [`Action-Progressive-Drawing-Animator.md`](Scripts/animation/Action-Progr
 - Optional **Slide navigation** moves the viewport before animating elements in the next frame or a saved `customData.slideshow` path region. Disable it to keep the current viewport.
 - Uses Excalidraw-ymjr's EA_Core hooks. Actual intermediate canvas frames, pause/resume and two-frame navigation were checked on Windows Obsidian 1.14.4 with Excalidraw-ymjr 2.29.0-5; physical mobile devices were not tested.
 
-### ECharts 1.3.0
+### ECharts 1.3.1
 
-Install both [`Feature-Echarts-Engine.md`](Scripts/echarts/Feature-Echarts-Engine.md) and [`Action-Echarts-Manager.md`](Scripts/echarts/Action-Echarts-Manager.md), then rerun the engine before opening the editor.
+Update both [`Feature-Echarts-Engine.md`](Scripts/echarts/Feature-Echarts-Engine.md) and [`Action-Echarts-Manager.md`](Scripts/echarts/Action-Echarts-Manager.md) to **1.3.1**. Close old editor dialogs and rerun the engine before opening the manager.
 
 - Multiple named/color-coded series; grouped and stacked bar/area comparisons.
 - Mixed bar/line/area series with left/right Y axes; numeric XY scatter, radar, funnel, gauge and rose charts alongside the existing common charts.
@@ -183,6 +183,15 @@ Install both [`Feature-Echarts-Engine.md`](Scripts/echarts/Feature-Echarts-Engin
 [Full-resolution SVG overview](images/echarts-1.3.0/overview.svg) · [Editable Excalidraw canvas](images/echarts-1.3.0/overview.excalidraw.md) · [CSV editing screenshot](images/echarts-1.3.0/editor-csv.png). The README SVG does not run ECharts: interaction is available inside the Excalidraw canvas with the current engine. Hover for values, click legend entries to toggle series, and double-click a chart or run the manager Action to edit its data, type, colors and axes; saved configuration remains editable after reopening. All data is synthetic; the heatmap uses custom JSON, not a dedicated heatmap form.
 
 Verified in Obsidian **1.14.4**, Excalidraw-ymjr **2.29.0-3**, ECharts **5.4.3**: real canvas insertion/editing, saved-file reopening, sixteen exported examples and actual editor screenshots. A narrow desktop viewport was checked; this is not a mobile-device compatibility claim.
+
+**1.3.1 creation fix:** saving now obtains a view-scoped EA from the plugin-owned factory instead of an expired startup-script instance. The Action checks both the runtime and editor data protocol so an older duplicate editor cannot receive the new multi-series model and crash on `initialData.values`. Keep only one enabled engine version; an old engine under `Agent-Drawing`, `Downloaded(Custom)` or a nested demo vault can override a newer one. Git ignore rules do not limit Obsidian's script discovery.
+
+- **New chart:** open an Excalidraw drawing, press `Esc` to finish text editing and clear the selection, run the manager Action, edit the table or bulk text, then choose **Generate / Update**.
+- **Text to chart:** create one canvas text element with CSV such as `Category,Revenue,Cost` followed by `Jan,120,80` and `Feb,150,95` on separate lines. Press `Esc`, select the entire text element with the selection tool (not characters in text-edit mode), and run the manager. Cancel keeps the source text; saving replaces it with the chart.
+- **Existing chart:** select its container and run the manager, or double-click it. If an older duplicate was active, close the editor and restart Obsidian after updating, then run the intended engine.
+
+The 1.3.1 lifecycle fix was exercised in Obsidian **1.14.4** with Excalidraw-ymjr **2.29.0-5**: the startup EA was destroyed and its drawing closed before creating a chart in another drawing; new-chart saving, text conversion/cancellation and existing-chart editing succeeded.
+
 
 
 ## Install from the custom script market

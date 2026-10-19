@@ -1110,12 +1110,12 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">Echarts 图表生成面板</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.3.0</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.3.1</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/echarts/Action-Echarts-Manager.md">File on GitHub</a></td></tr>
   <tr valign="top"><td class="label">Description</td><td class="data">动作脚本：唤起 Echarts 图表可视化编辑器，基于选中的文字生成图表、原地编辑现有图表或插入新图表。</td></tr>
   <tr valign="top"><td class="label">Usage</td><td class="data">选中 CSV / Excel 制表符数据文本可生成多系列图表；选中已有图表可原地编辑，未选择时新建。可在编辑器中切换对比、堆叠、混合双轴及更多图表。</td></tr>
   <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>提供数据表格双向绑定的交互式面板与实时交互预览</li><li>支持多系列、堆叠、混合双轴、XY 散点、雷达、漏斗、仪表盘、玫瑰及常见图表</li><li>支持快捷主题色与推荐配色一键应用</li><li>选中已有图表时支持原地无损读取与更新</li><li>支持自定义 Echarts JSON 配置项</li><li>取消编辑保留原文本，保存成功后才替换文本</li></ul></td></tr>
-  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>必须配合 Feature-Echarts-Engine 1.3.0 或更高版本使用</li></ul></td></tr>
+  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>必须配合 Feature-Echarts-Engine 1.3.1 或更高版本使用</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
 </table>
@@ -1128,7 +1128,7 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">Echarts 核心引擎</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.3.0</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.3.1</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/echarts/Feature-Echarts-Engine.md">File on GitHub</a></td></tr>
   <tr valign="top"><td class="label">Description</td><td class="data">后台引擎：提供 Echarts 图表生成所需的完整离线库渲染、双击编辑、实时预览、粘贴拦截与 SVG 导出支持。</td></tr>
   <tr valign="top"><td class="label">Usage</td><td class="data">后台常驻引擎。解决 Excalidraw 原生不支持复杂数据可视化的问题，为 Echarts 图表提供底层 API 支持、实时可视化编辑和画布上的 iframe 渲染能力。</td></tr>

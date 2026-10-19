@@ -170,9 +170,9 @@
 - 可选开启 **Slide 视角联动**：进入下一个 frame 或已保存的 `customData.slideshow` 路径区域前先移动视角，再播放该区域元素的动画；关闭时保留当前视角。
 - 依赖 Excalidraw-ymjr 的 EA_Core Hook。已在 Windows Obsidian 1.14.4、Excalidraw-ymjr 2.29.0-5 中查看真实逐字中间帧，并验证暂停、继续及双 frame 视角切换；未验证实体移动设备。
 
-### ECharts 1.3.0
+### ECharts 1.3.1
 
-请同时更新 [`Feature-Echarts-Engine.md`](../Scripts/echarts/Feature-Echarts-Engine.md) 与 [`Action-Echarts-Manager.md`](../Scripts/echarts/Action-Echarts-Manager.md)，先重新运行核心引擎，再打开编辑器。
+请同时将 [`Feature-Echarts-Engine.md`](../Scripts/echarts/Feature-Echarts-Engine.md) 与 [`Action-Echarts-Manager.md`](../Scripts/echarts/Action-Echarts-Manager.md) 更新至 **1.3.1**，关闭旧编辑弹窗，先重新运行核心引擎，再打开图表管理器。
 
 - 多个系列可命名、配色，支持分组比较与柱状/面积堆叠。
 - 混合图逐系列选择柱、线、面积与左/右 Y 轴；在原有常见图表之外增加数值 XY 散点、雷达、漏斗、仪表盘和玫瑰图。
@@ -183,6 +183,15 @@
 [查看完整矢量总览 SVG](../images/echarts-1.3.0/overview.svg) · [下载可编辑 Excalidraw 画布](../images/echarts-1.3.0/overview.excalidraw.md) · [查看 CSV 录入界面](../images/echarts-1.3.0/editor-csv.png)。README 的 SVG 本身不会运行 ECharts；交互能力位于启用了当前引擎的 Excalidraw 画布内。可悬浮查看数值、点击图例切换系列，双击图表或运行管理器 Action 修改数据、类型、配色和坐标轴；保存并重新打开后仍可编辑。数据均为演示样例；热力图使用自定义 JSON，不宣称已有专用表单。
 
 实测环境：Obsidian **1.14.4**、Excalidraw-ymjr **2.29.0-3**、ECharts **5.4.3**。已实际验证画布插入/编辑、保存文件重开、十六个图表示例导出及编辑器截图。窄屏检查使用桌面视口，不代表手机实机兼容性验收。
+
+**1.3.1 创建修复：** 保存时改从插件拥有的工厂创建绑定目标画布的 EA，不再依赖已经失效的引擎启动实例。Action 同时检查运行时与编辑器的数据协议，避免旧编辑器收到新多系列数据后报 `initialData.values` 错误。同一脚本根只启用一份引擎；`Agent-Drawing`、`Downloaded(Custom)` 或嵌套演示库中的旧引擎可能覆盖新版，Git ignore 不限制 Obsidian 的脚本扫描。
+
+- **新建图表：** 打开 Excalidraw 画布，按 `Esc` 结束文字编辑并取消选择，运行图表生成面板，在表格或批量文本中填数据，点击“生成/更新图表”。
+- **文本转图表：** 创建一个文本图元，第一行写 `Category,Revenue,Cost`，后两行分别写 `Jan,120,80` 与 `Feb,150,95`。按 `Esc` 后，用选择工具选中整个文本图元（不是文字编辑状态下选字符），再运行面板。取消保留原文，确认保存后替换为图表。
+- **编辑已有图表：** 选中图表容器后运行面板，或双击图表。如果之前运行过旧副本，更新后先关闭弹窗、重启 Obsidian，再运行明确路径的核心引擎。
+
+本次生命周期修复实测于 Obsidian **1.14.4**、Excalidraw-ymjr **2.29.0-5**：先销毁启动 EA 并关闭启动画布，再在另一画布新建；新建保存、文本转换/取消及已有图表修改均正常。
+
 
 
 ## 从自定义脚本市场安装

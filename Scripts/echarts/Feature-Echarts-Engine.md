@@ -2,7 +2,7 @@
 name: Echarts 核心引擎
 description: 后台引擎：提供 Echarts 图表生成所需的完整离线库渲染、双击编辑、实时预览、粘贴拦截与 SVG 导出支持。
 author: ymjr
-version: 1.3.0
+version: 1.3.1
 license: MIT
 usage: 后台常驻引擎。解决 Excalidraw 原生不支持复杂数据可视化的问题，为 Echarts 图表提供底层 API 支持、实时可视化编辑和画布上的 iframe 渲染能力。
 features:
@@ -209,9 +209,9 @@ var locales = {
 };
 
 const SCRIPT_ID = "ymjr.feature.echarts-engine";
-
-ExcalidrawAutomate.plugin._ymjr_echarts = ExcalidrawAutomate.plugin._ymjr_echarts || {};
-const EchartsCore = ExcalidrawAutomate.plugin._ymjr_echarts;
+//ymjr: Keep one coherent runtime; script-owned EA instances may be destroyed independently.
+const chartPlugin = ExcalidrawAutomate.plugin;
+const EchartsCore = {version:'1.3.1',dataSchemaVersion:2};
 
 //ymjr: Migrate legacy single-value data only at the import boundary.
 EchartsCore.normalizeChartData = (input = {}) => {
@@ -1055,6 +1055,8 @@ class EchartsEditorModal extends Modal {
         if (!this.saved) this.onCancel();
     }
 }
+//ymjr: The Action validates the editor itself, not just leftover helpers on a reused namespace.
+EchartsEditorModal.dataSchemaVersion = 2;
 EchartsCore.EchartsEditorModal = EchartsEditorModal;
 
 //ymjr: Preserve arbitrary legacy ECharts JSON instead of reverse-engineering only series[0].
@@ -1081,7 +1083,7 @@ EchartsCore.applyChartData = async (view, result, {elementId,center,sourceTextId
     if (!view?.excalidrawAPI) throw new Error(t('notice_save_failed'));
     const data=EchartsCore.normalizeChartData(result);
     const value=EchartsCore.generateEchartsOptions(data,view.excalidrawAPI.getAppState().theme==='dark');
-    const local=ea.getAPI(view);
+    const local=chartPlugin.ea.getAPI(view);
     try {
         const live=local.getViewElements();
         let target;
@@ -1335,19 +1337,21 @@ const handleCanvasDoubleClick = (ctx) => {
 
 async function mountFeature() {
     if (!window.EA_Core) return console.warn(t("log_no_core"));
-    if (typeof ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] === "function") {
-        ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`]();
+    if (typeof chartPlugin[`disable_${SCRIPT_ID}`] === "function") {
+        chartPlugin[`disable_${SCRIPT_ID}`]();
     }
 
     setupCustomDocumentRenderer();
+    chartPlugin._ymjr_echarts = EchartsCore;
 
     window.EA_Core.registerHook(SCRIPT_ID, 'onPaste', handlePaste, 50); 
     window.EA_Core.registerHook(SCRIPT_ID, 'renderElementToSvg', handleSvgRender, 60);
     window.EA_Core.registerHook(SCRIPT_ID, 'renderCustomDocument', handleCustomDocumentRender, 50);
     window.EA_Core.registerHook(SCRIPT_ID, 'handleCanvasDoubleClick', handleCanvasDoubleClick, 80);
 
-    ExcalidrawAutomate.plugin[`disable_${SCRIPT_ID}`] = () => {
+    chartPlugin[`disable_${SCRIPT_ID}`] = () => {
         if (window.EA_Core) window.EA_Core.unregisterHook(SCRIPT_ID);
+        if (chartPlugin._ymjr_echarts === EchartsCore) delete chartPlugin._ymjr_echarts;
         console.log(t("log_unmounted", { id: SCRIPT_ID }));
     };
 
