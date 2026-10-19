@@ -2,16 +2,17 @@
 name: 终极逐笔绘制动画
 description: 完美模拟手绘与打字过程。提供可拖拽的悬浮面板，支持滑动条与输入框双向绑定，方便实时调试参数。
 author: ymjr
-version: 1.1.2
+version: 1.2.1
 license: MIT
 usage: 运行脚本弹出控制台。面板可任意拖拽，不遮挡画布。可反复点击“运行”进行调试。
 features:
   - 可拖拽的悬浮 UI 控制台，沉浸式调试不打断工作流
   - 参数支持 Slider + Number Input 双向绑定同步
   - 支持后台反复重启运行，无需反复开关面板
-  - 动态克隆元素强制绕过渲染缓存，实现完美打字机
+  - 动态克隆文字绕过渲染缓存，并传递原生 Canvas 绘制所需的坐标偏移
   - 支持全局动画与仅选中元素动画切换
   - 修复文字动画重叠问题，打字机效果独立排期
+  - 可选按 frame / slideshow 路径自动平滑移动视角
 dependencies:
   - EA_Core Hook 系统
 autorun: false
@@ -32,6 +33,8 @@ var locales = {
         ui_text_mode_perchar: "单字",
         ui_text_mode_total: "总计",
         ui_gap: "出场间隔率",
+        ui_slide_navigation: "🖼️ Slide 视角联动",
+        ui_slide_hint: "进入下一个 frame/slide 前先移动视角，再播放元素动画",
         ui_hide_on_run: "🎥 录屏模式 (运行后自动隐藏面板)",
         ui_hide_hint: "提示：面板隐藏期间，再次点击工具栏的脚本图标即可强行停止动画。",
         btn_run: "▶️ 运行",
@@ -59,6 +62,8 @@ var locales = {
         ui_text_mode_perchar: "Per-char",
         ui_text_mode_total: "Total",
         ui_gap: "Gap Ratio",
+        ui_slide_navigation: "🖼️ Slide navigation",
+        ui_slide_hint: "Move to the next frame/slide before animating its elements",
         ui_hide_on_run: "🎥 Rec Mode (Auto-hide panel on run)",
         ui_hide_hint: "Hint: Click the script icon in the toolbar again to force stop.",
         btn_run: "▶️ Run",
@@ -103,6 +108,118 @@ if (!ea.plugin._ymjr_animator) {
     };
 }
 const state = ea.plugin._ymjr_animator;
+const SLIDE_TRANSITION_DURATION = 1000;
+
+const getElementCenter = (element) => ({
+    x: element.x + element.width / 2,
+    y: element.y + element.height / 2
+});
+
+const pointInRect = (point, rect) =>
+    point.x >= rect.x1 && point.x <= rect.x2 &&
+    point.y >= rect.y1 && point.y <= rect.y2;
+
+const getNavigationRect = (rect, appState) => {
+    const width = Math.max(1, Math.abs(rect.x2 - rect.x1));
+    const height = Math.max(1, Math.abs(rect.y2 - rect.y1));
+    const ratioX = appState.width / width;
+    const ratioY = appState.height / height;
+    let nextZoom = Math.min(Math.max(ratioX, ratioY), 30);
+    if (!Number.isFinite(nextZoom) || nextZoom <= 0) nextZoom = appState.zoom.value || 1;
+
+    const scaledWidth = width * nextZoom;
+    const scaledHeight = height * nextZoom;
+    if (scaledWidth > appState.width || scaledHeight > appState.height) {
+        nextZoom = Math.min(appState.width / width, appState.height / height);
+    }
+
+    const deltaX = (appState.width / nextZoom - width) / 2;
+    const deltaY = (appState.height / nextZoom - height) / 2;
+    const left = Math.min(rect.x1, rect.x2) - deltaX;
+    const top = Math.min(rect.y1, rect.y2) - deltaY;
+    return { left, top, nextZoom };
+};
+
+const getSlideNavigationModel = (elements) => {
+    const frames = elements
+        .filter(el => el.type === "frame" && !el.isDeleted)
+        .slice()
+        .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
+
+    let slides = frames.map(frame => ({
+        id: frame.id,
+        x1: frame.x,
+        y1: frame.y,
+        x2: frame.x + frame.width,
+        y2: frame.y + frame.height
+    }));
+    let source = frames.length > 0 ? "frame" : null;
+
+    if (slides.length === 0) {
+        const path = elements.find(el =>
+            (el.type === "line" || el.type === "arrow") &&
+            el.customData?.slideshow &&
+            Array.isArray(el.points) &&
+            el.points.length >= 2
+        );
+        if (path) {
+            slides = [];
+            for (let i = 0; i + 1 < path.points.length; i += 2) {
+                const pointA = path.points[i];
+                const pointB = path.points[i + 1];
+                slides.push({
+                    id: `${path.id}:${i / 2}`,
+                    x1: path.x + pointA[0],
+                    y1: path.y + pointA[1],
+                    x2: path.x + pointB[0],
+                    y2: path.y + pointB[1]
+                });
+            }
+            source = slides.length > 0 ? "slideshow-path" : null;
+        }
+    }
+
+    if (slides.length === 0) return null;
+
+    const getElementSlide = (element) => {
+        if (element.frameId) {
+            const direct = slides.findIndex(slide => slide.id === element.frameId);
+            if (direct >= 0) return direct;
+        }
+        const center = getElementCenter(element);
+        const contained = slides.findIndex(slide => pointInRect(center, slide));
+        if (contained >= 0) return contained;
+        return null;
+    };
+
+    return { slides, source, getElementSlide };
+};
+
+const getCurrentSlideIndex = (slides, appState) => {
+    if (!slides?.length) return null;
+    const zoom = appState.zoom?.value || 1;
+    const center = {
+        x: -appState.scrollX + appState.width / (2 * zoom),
+        y: -appState.scrollY + appState.height / (2 * zoom)
+    };
+    const contained = slides.findIndex(slide => pointInRect(center, slide));
+    if (contained >= 0) return contained;
+
+    let closest = 0;
+    let distance = Infinity;
+    slides.forEach((slide, index) => {
+        const slideCenter = {
+            x: (slide.x1 + slide.x2) / 2,
+            y: (slide.y1 + slide.y2) / 2
+        };
+        const currentDistance = (slideCenter.x - center.x) ** 2 + (slideCenter.y - center.y) ** 2;
+        if (currentDistance < distance) {
+            distance = currentDistance;
+            closest = index;
+        }
+    });
+    return closest;
+};
 
 // ==========================================
 // 2. UI 按钮更新与清理逻辑
@@ -143,6 +260,8 @@ const stopAnimation = (msg, silent = false) => {
     state.paused = false;
     if (state.reqId) cancelAnimationFrame(state.reqId);
     core.unregisterHook(SCRIPT_ID + '_render');
+    state.timeline = [];
+    api.updateScene({ appState: { shouldCacheIgnoreZoom: false } });
     
     if (state.elements && state.elements.length > 0) {
         state.elements.forEach(el => el.version++);
@@ -167,8 +286,8 @@ const stopAnimation = (msg, silent = false) => {
 // 3. 动画执行逻辑
 // ==========================================
 const startAnimation = (config) => {
-    const elements = config.targetMode === 'selected' 
-        ? ea.getViewSelectedElements() 
+    const elements = config.targetMode === 'selected'
+        ? ea.getViewSelectedElements()
         : ea.getViewElements();
 
     if (elements.length === 0) {
@@ -183,32 +302,62 @@ const startAnimation = (config) => {
     state.totalPausedDuration = 0;
     state.elements = elements;
     state.progressMap.clear();
+    state.timeline = [];
+    state.slideModel = config.slideNavigation
+        ? getSlideNavigationModel(ea.getViewElements())
+        : null;
 
     let currentTime = 0;
+    let currentSlideIndex = state.slideModel
+        ? getCurrentSlideIndex(state.slideModel.slides, api.getAppState())
+        : null;
+
     state.elements.forEach(el => {
-        let dur = config.shapeDuration;
-        if (el.type === 'freedraw') dur = config.freedrawDuration;
-        
-        if (el.type === 'text') {
-            if (config.textDurationMode === 'perChar') {
-                const charCount = el.text ? el.text.length : 1;
-                dur = config.textDuration * charCount;
-            } else {
-                dur = config.textDuration; 
-            }
+        const targetSlideIndex = state.slideModel?.getElementSlide(el);
+        if (
+            targetSlideIndex !== null &&
+            targetSlideIndex !== undefined &&
+            currentSlideIndex !== null &&
+            currentSlideIndex !== undefined &&
+            targetSlideIndex !== currentSlideIndex
+        ) {
+            const navigation = getNavigationRect(
+                state.slideModel.slides[targetSlideIndex],
+                api.getAppState()
+            );
+            state.timeline.push({
+                type: "slide",
+                start: currentTime,
+                end: currentTime + SLIDE_TRANSITION_DURATION,
+                targetIndex: targetSlideIndex,
+                navigation,
+                from: null
+            });
+            currentTime += SLIDE_TRANSITION_DURATION;
+            currentSlideIndex = targetSlideIndex;
         }
-        
+
+        let duration = config.shapeDuration;
+        if (el.type === "freedraw") duration = config.freedrawDuration;
+        if (el.type === "text") {
+            duration = config.textDurationMode === "perChar"
+                ? config.textDuration * Math.max(1, el.text?.length || 1)
+                : config.textDuration;
+        }
+        duration = Math.max(0, Number(duration) || 0);
+
         el._animStart = currentTime;
-        el._animEnd = currentTime + dur;
-        
-        if (el.type === 'text') {
-            currentTime += dur; 
-        } else {
-            currentTime += dur * config.gapRatio; 
-        }
+        el._animEnd = currentTime + duration;
+        state.timeline.push({
+            type: "element",
+            element: el,
+            start: el._animStart,
+            end: el._animEnd
+        });
+        currentTime += el.type === "text" ? duration : duration * config.gapRatio;
     });
 
-    state.totalDuration = state.elements[state.elements.length - 1]._animEnd;
+    state.totalDuration = currentTime;
     state.startTime = performance.now();
 
     core.registerHook(SCRIPT_ID + '_render', 'renderElementBefore', handleRenderBefore, 99);
@@ -232,15 +381,17 @@ if(!settings["shapeDuration"]) {
     settings = {
         "shapeDuration": { value: "600" },
         "freedrawDuration": { value: "800" },
-        "textDuration": { value: "50" }, 
-        "textDurationMode": { value: "perChar" }, 
+        "textDuration": { value: "50" },
+        "textDurationMode": { value: "perChar" },
         "gapRatio": { value: "0.8" },
+        "slideNavigation": { value: false },
         "hideOnRun": { value: false },
         "targetMode": { value: "all" }
     };
     ea.setScriptSettings(settings);
-} else if (settings["hideOnRun"] === undefined) {
-    settings["hideOnRun"] = { value: false }; 
+} else {
+    if (settings["slideNavigation"] === undefined) settings["slideNavigation"] = { value: false };
+    if (settings["hideOnRun"] === undefined) settings["hideOnRun"] = { value: false };
 }
 
 const isPerChar = settings.textDurationMode?.value !== 'total';
@@ -314,6 +465,16 @@ panel.innerHTML = `
         
         ${buildControlRow("gap", t("ui_gap") + " (0-1)", settings.gapRatio.value, 0, 1, 0.05)}
         
+        <div style="margin-top: 16px; margin-bottom: 12px;">
+            <label style="display: flex; align-items: center; cursor: pointer; font-size: 12px; font-weight: bold; color: var(--text-normal, #333);">
+                <input type="checkbox" id="chk-slide-navigation" ${settings.slideNavigation?.value ? 'checked' : ''} style="margin-right: 6px; cursor: pointer; accent-color: var(--interactive-accent, #007aff);">
+                ${t("ui_slide_navigation")}
+            </label>
+            <div style="font-size: 10px; color: var(--text-muted, #999); margin-left: 20px; margin-top: 2px;">
+                ${t("ui_slide_hint")}
+            </div>
+        </div>
+
         <div style="margin-top: 16px; margin-bottom: 12px;">
             <label style="display: flex; align-items: center; cursor: pointer; font-size: 12px; font-weight: bold; color: var(--text-normal, #333);">
                 <input type="checkbox" id="chk-hide" ${settings.hideOnRun?.value ? 'checked' : ''} style="margin-right: 6px; cursor: pointer; accent-color: var(--interactive-accent, #007aff);">
@@ -420,6 +581,7 @@ const getCurrentConfig = () => ({
     freedrawDuration: Number(panel.querySelector("#inp-freedraw").value),
     textDuration: Number(panel.querySelector("#inp-text").value),
     textDurationMode: panel.querySelector("#chk-text-mode").checked ? 'perChar' : 'total',
+    slideNavigation: panel.querySelector("#chk-slide-navigation").checked,
     hideOnRun: panel.querySelector("#chk-hide").checked,
     gapRatio: Number(panel.querySelector("#inp-gap").value),
     targetMode: panel.querySelector("#sel-target").value
@@ -462,6 +624,7 @@ panel.querySelector("#btn-save").onclick = () => {
     settings["freedrawDuration"].value = String(config.freedrawDuration);
     settings["textDuration"].value = String(config.textDuration);
     settings["textDurationMode"] = { value: config.textDurationMode };
+    settings["slideNavigation"] = { value: config.slideNavigation };
     settings["hideOnRun"] = { value: config.hideOnRun };
     settings["gapRatio"].value = String(config.gapRatio);
     settings["targetMode"] = { value: config.targetMode };
@@ -621,17 +784,40 @@ const drawProgressiveFreedraw = (element, context, renderConfig, progress, paylo
     context.restore();
 };
 
+const textRenderOffset = { x: 0, y: 0 };
+
 const drawProgressiveText = (element, context, renderConfig, progress, payload) => {
     const { allElementsMap, appState, generateElementWithCanvas, drawElementFromCanvas } = payload;
-    const visibleChars = Math.floor(element.text.length * progress);
-    const visibleString = element.text.substring(0, visibleChars);
-    
-    const fakeElement = { ...element, id: element.id + "_t", text: visibleString, originalText: visibleString };
-    
-    if (generateElementWithCanvas && drawElementFromCanvas) {
-        const elementWithCanvas = generateElementWithCanvas(fakeElement, allElementsMap, renderConfig, appState);
-        if (elementWithCanvas) drawElementFromCanvas(elementWithCanvas, context, renderConfig, appState, allElementsMap);
-    }
+    if (!generateElementWithCanvas || !drawElementFromCanvas) return false;
+
+    const sourceText = element.text || "";
+    const visibleChars = Math.floor(sourceText.length * progress);
+    if (visibleChars === 0) return true;
+    const visibleString = sourceText.substring(0, visibleChars);
+    const fakeElement = {
+        ...element,
+        text: visibleString,
+        rawText: visibleString,
+        originalText: visibleString
+    };
+
+    const elementWithCanvas = generateElementWithCanvas(
+        fakeElement,
+        allElementsMap,
+        renderConfig,
+        appState
+    );
+    if (!elementWithCanvas) return false;
+    // The native cached-canvas renderer requires a scene-space position offset.
+    drawElementFromCanvas(
+        elementWithCanvas,
+        context,
+        renderConfig,
+        appState,
+        allElementsMap,
+        textRenderOffset
+    );
+    return true;
 };
 
 const handleRenderBefore = (payload) => {
@@ -654,7 +840,7 @@ const handleRenderBefore = (payload) => {
         if (isDrawn) return true; 
     }
 
-    if (element.type === "text") { drawProgressiveText(element, context, renderConfig, progress, payload); return true; }
+    if (element.type === "text") return drawProgressiveText(element, context, renderConfig, progress, payload);
     if (element.type === "freedraw") { drawProgressiveFreedraw(element, context, renderConfig, progress, payload); return true; }
 
     const [x1, y1, x2, y2] = getElementAbsoluteCoords(element, allElementsMap);
@@ -677,9 +863,33 @@ const handleRenderBefore = (payload) => {
 // ==========================================
 // 6. 动画核心循环
 // ==========================================
+const applySlideTransition = (segment, progress) => {
+    if (!segment.from) {
+        const current = api.getAppState();
+        segment.from = {
+            scrollX: current.scrollX,
+            scrollY: current.scrollY,
+            zoom: current.zoom.value
+        };
+    }
+
+    const p = Math.max(0, Math.min(1, progress));
+    const target = segment.navigation;
+    api.updateScene({
+        appState: {
+            scrollX: segment.from.scrollX * (1 - p) - target.left * p,
+            scrollY: segment.from.scrollY * (1 - p) - target.top * p,
+            zoom: {
+                value: segment.from.zoom * (1 - p) + target.nextZoom * p
+            },
+            shouldCacheIgnoreZoom: p < 1
+        }
+    });
+};
+
 const loop = () => {
     if (!state.active) return;
-    
+
     if (state.paused) {
         state.reqId = requestAnimationFrame(loop);
         return;
@@ -691,13 +901,35 @@ const loop = () => {
     state.elements.forEach(el => {
         let progress = 0;
         if (elapsed >= el._animEnd) progress = 1;
-        else if (elapsed > el._animStart) progress = (elapsed - el._animStart) / (el._animEnd - el._animStart);
+        else if (elapsed > el._animStart && el._animEnd > el._animStart) {
+            progress = (elapsed - el._animStart) / (el._animEnd - el._animStart);
+        }
 
         if (state.progressMap.get(el.id) !== progress) {
             state.progressMap.set(el.id, progress);
             needsUpdate = true;
         }
     });
+
+    let activeSlide = null;
+    for (const segment of state.timeline || []) {
+        if (segment.type !== "slide") continue;
+        if (elapsed >= segment.end) {
+            if (!segment.completed) {
+                applySlideTransition(segment, 1);
+                segment.completed = true;
+            }
+        } else if (elapsed >= segment.start) {
+            activeSlide = segment;
+            break;
+        }
+    }
+
+    if (activeSlide) {
+        const progress = (elapsed - activeSlide.start) /
+            (activeSlide.end - activeSlide.start);
+        applySlideTransition(activeSlide, progress);
+    }
 
     if (needsUpdate) api.updateScene({ elements: api.getSceneElements() });
 

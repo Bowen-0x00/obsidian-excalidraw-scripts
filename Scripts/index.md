@@ -413,11 +413,11 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
 <table>
   <tr valign="top"><td class="label">Name</td><td class="data">终极逐笔绘制动画</td></tr>
   <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
-  <tr valign="top"><td class="label">Version</td><td class="data">1.1.2</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.2.1</td></tr>
   <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/animation/Action-Progressive-Drawing-Animator.md">File on GitHub</a></td></tr>
   <tr valign="top"><td class="label">Description</td><td class="data">完美模拟手绘与打字过程。提供可拖拽的悬浮面板，支持滑动条与输入框双向绑定，方便实时调试参数。</td></tr>
   <tr valign="top"><td class="label">Usage</td><td class="data">运行脚本弹出控制台。面板可任意拖拽，不遮挡画布。可反复点击“运行”进行调试。</td></tr>
-  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>可拖拽的悬浮 UI 控制台，沉浸式调试不打断工作流</li><li>参数支持 Slider + Number Input 双向绑定同步</li><li>支持后台反复重启运行，无需反复开关面板</li><li>动态克隆元素强制绕过渲染缓存，实现完美打字机</li><li>支持全局动画与仅选中元素动画切换</li><li>修复文字动画重叠问题，打字机效果独立排期</li></ul></td></tr>
+  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>可拖拽的悬浮 UI 控制台，沉浸式调试不打断工作流</li><li>参数支持 Slider + Number Input 双向绑定同步</li><li>支持后台反复重启运行，无需反复开关面板</li><li>动态克隆文字绕过渲染缓存，并传递原生 Canvas 绘制所需的坐标偏移</li><li>支持全局动画与仅选中元素动画切换</li><li>修复文字动画重叠问题，打字机效果独立排期</li><li>可选按 frame / slideshow 路径自动平滑移动视角</li></ul></td></tr>
   <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>EA_Core Hook 系统</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>

@@ -162,6 +162,14 @@
 
 后续会随脚本演进继续补充演示图片。更多内容见[全部演示素材](../images/)、[示例 vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault)与[视频演示](https://www.bilibili.com/video/BV1zN4y1H7Dx/)。
 
+### 逐笔绘制动画 1.2.1
+
+更新 [`Action-Progressive-Drawing-Animator.md`](../Scripts/animation/Action-Progressive-Drawing-Animator.md) 后，先停止并关闭旧控制台，再重新运行脚本。
+
+- 普通文字恢复逐字显示：补齐原生 Canvas 绘制必需的坐标偏移参数，不再吞掉异常后回退为完整句子。
+- 可选开启 **Slide 视角联动**：进入下一个 frame 或已保存的 `customData.slideshow` 路径区域前先移动视角，再播放该区域元素的动画；关闭时保留当前视角。
+- 依赖 Excalidraw-ymjr 的 EA_Core Hook。已在 Windows Obsidian 1.14.4、Excalidraw-ymjr 2.29.0-5 中查看真实逐字中间帧，并验证暂停、继续及双 frame 视角切换；未验证实体移动设备。
+
 ### ECharts 1.3.0
 
 请同时更新 [`Feature-Echarts-Engine.md`](../Scripts/echarts/Feature-Echarts-Engine.md) 与 [`Action-Echarts-Manager.md`](../Scripts/echarts/Action-Echarts-Manager.md)，先重新运行核心引擎，再打开编辑器。

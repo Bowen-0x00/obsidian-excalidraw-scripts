@@ -162,6 +162,14 @@ This historical mobile recording illustrates the interaction, not a verification
 
 More recordings can be added to this gallery as the scripts evolve. See all [demo assets](images/), the [example vault](https://github.com/Bowen-0x00/obsidian-excalidraw-example-vault), and the [video walkthrough](https://www.bilibili.com/video/BV1zN4y1H7Dx/).
 
+### Progressive drawing animation 1.2.1
+
+Update [`Action-Progressive-Drawing-Animator.md`](Scripts/animation/Action-Progressive-Drawing-Animator.md), then stop and close the old console before running the script again.
+
+- Ordinary text now reveals character by character: the native cached-canvas draw call receives its required position offset instead of silently falling back to the complete sentence.
+- Optional **Slide navigation** moves the viewport before animating elements in the next frame or a saved `customData.slideshow` path region. Disable it to keep the current viewport.
+- Uses Excalidraw-ymjr's EA_Core hooks. Actual intermediate canvas frames, pause/resume and two-frame navigation were checked on Windows Obsidian 1.14.4 with Excalidraw-ymjr 2.29.0-5; physical mobile devices were not tested.
+
 ### ECharts 1.3.0
 
 Install both [`Feature-Echarts-Engine.md`](Scripts/echarts/Feature-Echarts-Engine.md) and [`Action-Echarts-Manager.md`](Scripts/echarts/Action-Echarts-Manager.md), then rerun the engine before opening the editor.
