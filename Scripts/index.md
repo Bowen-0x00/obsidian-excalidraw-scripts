@@ -346,6 +346,7 @@
 
 | Script | Details |
 | --- | --- |
+|<span>Action-Check-Unregistered-Fonts.md</span>|[[#Action-Check-Unregistered-Fonts]]|
 |<span>Action-Format-Text-Global-Silent.md</span>|[[#Action-Format-Text-Global-Silent]]|
 |<span>Action-Format-Text-Globals.md</span>|[[#Action-Format-Text-Globals]]|
 |<span>Action-Format-Text-Partials-Silent.md</span>|[[#Action-Format-Text-Partials-Silent]]|
@@ -353,6 +354,7 @@
 |<span>Action-Highlight-Background-Silent.md</span>|[[#Action-Highlight-Background-Silent]]|
 |<span>Action-Highlight-Background-UI.md</span>|[[#Action-Highlight-Background-UI]]|
 |<span>Action-Paste-Wrapped-Text.md</span>|[[#Action-Paste-Wrapped-Text]]|
+|<span>Action-Runtime-Font-Manager.md</span>|[[#Action-Runtime-Font-Manager]]|
 |<span>Action-Split-Text-Segments.md</span>|[[#Action-Split-Text-Segments]]|
 |<span>Action-Text-Copy-Elements.md</span>|[[#Action-Text-Copy-Elements]]|
 |<span>Feature-Input-Emoji-Engine.md</span>|[[#Feature-Input-Emoji-Engine]]|
@@ -2279,6 +2281,23 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
 </table>
 
+## Action-Check-Unregistered-Fonts
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/text/Action-Check-Unregistered-Fonts.md
+```
+<table>
+  <tr valign="top"><td class="label">Name</td><td class="data">检测画布未注册字体 (Audit Canvas Fonts)</td></tr>
+  <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.0.0</td></tr>
+  <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/text/Action-Check-Unregistered-Fonts.md">File on GitHub</a></td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">深度扫描当前活动画布的所有文本元素，精准检测是否存在未注册或缺失的字体，并提供元素高亮定位、一键系统检索载入与批量字体替换功能。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">打开任意 Excalidraw 画布并运行此脚本。脚本将自动扫描画布所有文本元素，若发现未注册字体，面板将列出具体字体、受影响元素数量与样例文本，支持一键尝试从系统/Vault载入补全，或一键批量替换为已注册字体。</td></tr>
+  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>智能扫描当前画布所有文本元素的 fontFamily</li><li>对比 Excalidraw 运行时注册表与内置字体标准列表</li><li>清晰列出所有缺失字体家族、受影响元素总数与文字样张</li><li>一键在画布中选中并高亮对应文本元素</li><li>一键从操作系统/Vault检索并补全载入（支持自动存入 Vault 持久化）</li><li>支持将缺失字体一键批量替换为画布现存可用字体</li></ul></td></tr>
+  <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
+  <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
+</table>
+
 ## Action-Format-Text-Global-Silent
 
 ```excalidraw-script-install
@@ -2401,6 +2420,23 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
   <tr valign="top"><td class="label">Usage</td><td class="data">复制大段文本后运行此脚本，脚本将弹出一个输入框询问每行允许的最大字符数，随后自动读取剪贴板并在画板中心以指定宽度自动换行生成文本节点。</td></tr>
   <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>支持中英文混合的字符串截断排版算法</li><li>自动拦截并处理剪贴板的异步读取</li></ul></td></tr>
   <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>无依赖</li></ul></td></tr>
+  <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
+  <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
+</table>
+
+## Action-Runtime-Font-Manager
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/text/Action-Runtime-Font-Manager.md
+```
+<table>
+  <tr valign="top"><td class="label">Name</td><td class="data">运行时字体管理器 (Runtime Font Manager Pro)</td></tr>
+  <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">2.0.0</td></tr>
+  <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/text/Action-Runtime-Font-Manager.md">File on GitHub</a></td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">现代精致的 Excalidraw 运行时字体管理面板。支持极速检索 600+ 本机系统字体、实时字体排版样张预览、一键加载入画布、网络字体下载与 Vault 持久化同步。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">运行此脚本呼出专业字体管理悬浮面板。可在“系统字体”、“画布字体”、“网络下载”与“目录同步”间快速切换，支持即时搜索与所见即所得样张预览。</td></tr>
+  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>自动极速扫描 600+ 本机系统字体（Windows/macOS/Linux），支持即时中文/英文/等宽筛选</li><li>所见即所得排版样张预览，点击即刻完成字体注册与应用</li><li>管理画布当前已注册字体，一键应用到当前选中文本</li><li>精选开源名牌字体一键下载（得意黑、霞鹜文楷、Fira Code 等），支持自定义 URL 下载并自动持久化至 Vault</li><li>手动触发 initializeFonts() 重新扫描加载多字体文件夹</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
 </table>

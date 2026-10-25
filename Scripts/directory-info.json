@@ -535,6 +535,11 @@
     "mtime": 1778241860759.9297
   },
   {
+    "fname": "Action-Check-Unregistered-Fonts.md",
+    "relativePath": "text/Action-Check-Unregistered-Fonts.md",
+    "mtime": 1792936798172.5757
+  },
+  {
     "fname": "Action-Format-Text-Global-Silent.md",
     "relativePath": "text/Action-Format-Text-Global-Silent.md",
     "mtime": 1778241860789.7288
@@ -568,6 +573,11 @@
     "fname": "Action-Paste-Wrapped-Text.md",
     "relativePath": "text/Action-Paste-Wrapped-Text.md",
     "mtime": 1778241860785.6694
+  },
+  {
+    "fname": "Action-Runtime-Font-Manager.md",
+    "relativePath": "text/Action-Runtime-Font-Manager.md",
+    "mtime": 1792936748396.39
   },
   {
     "fname": "Action-Split-Text-Segments.md",
