@@ -567,6 +567,7 @@ async function renderMainPanel() {
         systemFontsList = scanSystemFontsDirectly();
       }
       isScanningSystem = false;
+    }
 
     const searchInput = searchRow.querySelector("#sys-search");
     const clearBtn = searchRow.querySelector("#clear-search");
