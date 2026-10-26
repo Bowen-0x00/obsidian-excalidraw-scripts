@@ -214,6 +214,124 @@ async function confirmSaveToVaultDialog(fontName) {
   });
 }
 
+function readFontFamilyFastScript(filePath, fsModule) {
+  let fd = null;
+  try {
+    fd = fsModule.openSync(filePath, "r");
+    const headerBuf = new Uint8Array(4096);
+    fsModule.readSync(fd, headerBuf, 0, 4096, 0);
+    const view = new DataView(headerBuf.buffer, headerBuf.byteOffset, headerBuf.byteLength);
+    let baseOffset = 0;
+    const sig = view.getUint32(0);
+    if (sig === 0x74746366) baseOffset = view.getUint32(12);
+    if (view.byteLength < baseOffset + 12) return null;
+    const tableCount = view.getUint16(baseOffset + 4);
+    let nameOffset = -1;
+    let nameLength = 0;
+    for (let i = 0; i < tableCount; i++) {
+      const rec = baseOffset + 12 + i * 16;
+      if (view.byteLength < rec + 16) break;
+      if (view.getUint32(rec) === 0x6e616d65) {
+        nameOffset = view.getUint32(rec + 8);
+        nameLength = view.getUint32(rec + 12);
+        break;
+      }
+    }
+    if (nameOffset === -1 || nameLength <= 6) return null;
+    const nameBuf = new Uint8Array(nameLength);
+    fsModule.readSync(fd, nameBuf, 0, nameLength, nameOffset);
+    const nView = new DataView(nameBuf.buffer, nameBuf.byteOffset, nameBuf.byteLength);
+    const count = nView.getUint16(2);
+    const stringOffset = nView.getUint16(4);
+    let preferredName = null;
+    let fallbackName = null;
+    for (let i = 0; i < count; i++) {
+      const rec = 6 + i * 12;
+      if (nView.byteLength < rec + 12) break;
+      const platformID = nView.getUint16(rec);
+      const languageID = nView.getUint16(rec + 4);
+      const nameID = nView.getUint16(rec + 6);
+      const length = nView.getUint16(rec + 8);
+      const strOff = stringOffset + nView.getUint16(rec + 10);
+      if (nView.byteLength < strOff + length) continue;
+      if (nameID === 1 || nameID === 4 || nameID === 16) {
+        let str = "";
+        if (platformID === 3 || platformID === 0) {
+          for (let b = 0; b < length; b += 2) str += String.fromCharCode(nView.getUint16(strOff + b));
+        } else if (platformID === 1) {
+          for (let b = 0; b < length; b++) str += String.fromCharCode(nView.getUint8(strOff + b));
+        }
+        str = str.trim();
+        if (!str) continue;
+        if (nameID === 1 && (languageID === 0x0409 || platformID === 0)) return str;
+        if (nameID === 1 && !preferredName) preferredName = str;
+        if (!fallbackName) fallbackName = str;
+      }
+    }
+    return preferredName || fallbackName;
+  } catch (e) {
+    return null;
+  } finally {
+    if (fd !== null) {
+      try { fsModule.closeSync(fd); } catch (e) {}
+    }
+  }
+}
+
+function scanSystemFontsDirectly() {
+  const electronWin = window;
+  const fs = typeof electronWin.require === "function" ? electronWin.require("fs") : (typeof require === "function" ? require("fs") : null);
+  const pathModule = typeof electronWin.require === "function" ? electronWin.require("path") : (typeof require === "function" ? require("path") : null);
+  if (!fs || !pathModule) return [];
+
+  const candidateDirs = [];
+  const nodeProcess = typeof process !== "undefined" ? process : (electronWin.process || {});
+  const env = nodeProcess.env || {};
+  const isWin = (typeof navigator !== "undefined" && /win/i.test(navigator.platform || navigator.userAgent)) || nodeProcess.platform === "win32";
+  const isMac = (typeof navigator !== "undefined" && /mac/i.test(navigator.platform || navigator.userAgent)) || nodeProcess.platform === "darwin";
+
+  if (isWin) {
+    const winDir = env.WINDIR || env.windir || env.SystemRoot || env.SYSTEMROOT || "C:\\Windows";
+    candidateDirs.push(pathModule.join(winDir, "Fonts"));
+    const localApp = env.LOCALAPPDATA || env.LocalAppData || env.localappdata;
+    if (localApp) {
+      candidateDirs.push(pathModule.join(localApp, "Microsoft", "Windows", "Fonts"));
+    }
+  } else if (isMac) {
+    candidateDirs.push("/System/Library/Fonts", "/Library/Fonts", pathModule.join(env.HOME || "~", "Library/Fonts"));
+  } else {
+    candidateDirs.push("/usr/share/fonts", "/usr/local/share/fonts", pathModule.join(env.HOME || "~", ".local/share/fonts"));
+  }
+
+  const results = [];
+  const seenFamilies = new Set();
+  const currentLoaded = new Set((ea.getFontFamilies ? ea.getFontFamilies() : []).map(f => f.toLowerCase()));
+
+  for (const dir of candidateDirs) {
+    if (!fs.existsSync(dir)) continue;
+    try {
+      const entries = fs.readdirSync(dir);
+      for (const entry of entries) {
+        if (!/\.(ttf|ttc|otf|woff2)$/i.test(entry)) continue;
+        const fullPath = pathModule.join(dir, entry);
+        const family = readFontFamilyFastScript(fullPath, fs) || entry.replace(/\.[^/.]+$/, "");
+        const key = family.toLowerCase();
+        if (!seenFamilies.has(key)) {
+          seenFamilies.add(key);
+          results.push({
+            family,
+            fileName: entry,
+            path: fullPath,
+            isLoaded: currentLoaded.has(key)
+          });
+        }
+      }
+    } catch (e) {}
+  }
+  results.sort((a, b) => a.family.localeCompare(b.family));
+  return results;
+}
+
 async function renderMainPanel() {
   const PANEL_ID = "ea-runtime-font-manager-pro";
   const existing = document.getElementById(PANEL_ID);
@@ -443,11 +561,12 @@ async function renderMainPanel() {
           systemFontsList = await ea.plugin.getSystemFonts();
         }
       } catch (e) {
-        console.error(e);
-      } finally {
-        isScanningSystem = false;
+        console.warn("ea.getSystemFonts failed, falling back to direct scan:", e);
       }
-    }
+      if (!systemFontsList || systemFontsList.length === 0) {
+        systemFontsList = scanSystemFontsDirectly();
+      }
+      isScanningSystem = false;
 
     const searchInput = searchRow.querySelector("#sys-search");
     const clearBtn = searchRow.querySelector("#clear-search");
