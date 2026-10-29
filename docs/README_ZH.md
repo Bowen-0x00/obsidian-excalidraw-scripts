@@ -192,7 +192,27 @@
 
 本次生命周期修复实测于 Obsidian **1.14.4**、Excalidraw-ymjr **2.29.0-5**：先销毁启动 EA 并关闭启动画布，再在另一画布新建；新建保存、文本转换/取消及已有图表修改均正常。
 
+### 矢量与多色图标库 1.0.0
 
+安装 [`Action-Icon-Library.md`](../Scripts/icon/Action-Icon-Library.md)。需要 **Excalidraw-ymjr 2.29.0-9 或更高版本**。
+
+- **单色与多色矢量图标：** 原生 `svgLayers` 多图层 Path 渲染原子图元。支持手绘风格（Roughness 1-3）或纯净锐利几何矢量（Roughness 0）。
+- **动态属性与调色板联动：** 单色图标实时响应 Excalidraw 属性侧栏的线条色与背景填充色，线宽滑块（1/2/4x）等比调节笔触粗细；多色图标保持原色并支持自定义描边与背景色块填充。
+- **Vault 本地目录即真理源：** 点击标题栏路径即可呼出 Vault 文件夹选择器，清晰展示各路径及 SVG 图标数量；子目录自动映射为分类标签；配置路径自动持久化至标准脚本设置中。
+- **JIT 2D 盒图元生成：** 采用标准的 2D Bounding Box 契约，支持 8 锚点等比缩放、自由平移与旋转，彻底隔绝折线端点编辑导致的几何塌陷。
+
+<table width="100%">
+  <tr>
+    <td width="50%" valign="top">
+      <h4>手绘风与纯净风双模式画廊</h4>
+      <a href="../images/icon-library/gallery-showcase.png"><img src="../images/icon-library/gallery-showcase.png" width="100%" alt="多色矢量图标手绘与纯净模式渲染"></a>
+    </td>
+    <td width="50%" valign="top">
+      <h4>全键盘检索与分类浏览面板</h4>
+      <a href="../images/icon-library/modal-ui.png"><img src="../images/icon-library/modal-ui.png" width="100%" alt="图标库管理器检索与分类界面"></a>
+    </td>
+  </tr>
+</table>
 
 ## 从自定义脚本市场安装
 

@@ -192,7 +192,27 @@ Verified in Obsidian **1.14.4**, Excalidraw-ymjr **2.29.0-3**, ECharts **5.4.3**
 
 The 1.3.1 lifecycle fix was exercised in Obsidian **1.14.4** with Excalidraw-ymjr **2.29.0-5**: the startup EA was destroyed and its drawing closed before creating a chart in another drawing; new-chart saving, text conversion/cancellation and existing-chart editing succeeded.
 
+### Vector & Multi-Color Icon Library 1.0.0
 
+Install [`Action-Icon-Library.md`](Scripts/icon/Action-Icon-Library.md). Requires **Excalidraw-ymjr 2.29.0-9 or later**.
+
+- **Multi-color and single-color vector icons:** Native `svgLayers` multi-path rendering on atomic elements. Renders icons with Rough sketch styling or crisp pure vector geometry.
+- **Dynamic styling & palette responsiveness:** Single-color icons dynamically respond to stroke color and background fill from Excalidraw's property panel. Multi-color icons retain original colors or support outline and fill tinting.
+- **Vault folder as source of truth:** Select any folder in your Vault using the interactive folder picker modal; subfolders are automatically mapped to categories. Configured path is persisted to standard script settings.
+- **JIT 2D box placement:** Inserts icons as native 2D bounding boxes at viewport center; supports standard 8-handle scaling, aspect ratio locking, and smooth movement without vertex collapse.
+
+<table width="100%">
+  <tr>
+    <td width="50%" valign="top">
+      <h4>Hand-drawn and sharp vector gallery</h4>
+      <a href="images/icon-library/gallery-showcase.png"><img src="images/icon-library/gallery-showcase.png" width="100%" alt="Multi-color vector icons gallery in rough and sharp modes"></a>
+    </td>
+    <td width="50%" valign="top">
+      <h4>Modal search and category picker</h4>
+      <a href="images/icon-library/modal-ui.png"><img src="images/icon-library/modal-ui.png" width="100%" alt="Icon library modal UI with search, categories, and size selector"></a>
+    </td>
+  </tr>
+</table>
 
 ## Install from the custom script market
 

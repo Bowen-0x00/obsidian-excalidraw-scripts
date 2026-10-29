@@ -186,6 +186,13 @@
 |<span>Action-Toggle-Hover.md</span>|[[#Action-Toggle-Hover]]|
 |<span>Feature-Hover-Engine.md</span>|[[#Feature-Hover-Engine]]|
 
+## Icon
+**Keywords**: Icon
+
+| Script | Details |
+| --- | --- |
+|<span>Action-Icon-Library.md</span>|[[#Action-Icon-Library]]|
+
 ## Latex
 **Keywords**: Latex
 
@@ -1561,6 +1568,24 @@ https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Sc
   <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>维持全局的 Hover 状态机（activeIds 和 triggerId）</li><li>解析 hover 自定义数据中的 target 目标</li><li>控制 Excalidraw 画布中鼠标指针的样式（如变手型）</li></ul></td></tr>
   <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>无前置依赖</li><li>为其他交互型脚本提供基础支持（如 Collapse, Mindmap, 连线高亮等）</li></ul></td></tr>
   <tr valign="top"><td class="label">Autorun</td><td class="data">true</td></tr>
+  <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
+</table>
+
+## Action-Icon-Library
+
+```excalidraw-script-install
+https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/icon/Action-Icon-Library.md
+```
+<table>
+  <tr valign="top"><td class="label">Name</td><td class="data">图标库管理器 (Icon Library)</td></tr>
+  <tr valign="top"><td class="label">Author</td><td class="data">ymjr</td></tr>
+  <tr valign="top"><td class="label">Version</td><td class="data">1.0.0</td></tr>
+  <tr valign="top"><td class="label">Source</td><td class="data"><a href="https://raw.githubusercontent.com/Bowen-0x00/obsidian-excalidraw-scripts/main/Scripts/icon/Action-Icon-Library.md">File on GitHub</a></td></tr>
+  <tr valign="top"><td class="label">Description</td><td class="data">现代矢量与多色图标库管理面板。支持指定本地图标库路径、多分类与模糊搜索、多色/单色矢量 Path (方案 1.2 svgLayers) JIT 按需插入画布。</td></tr>
+  <tr valign="top"><td class="label">Usage</td><td class="data">运行脚本呼出图标库选择面板。可使用全键盘操作：键入关键词模糊搜索、上下左右键选择、Enter 键一键将图标插入到当前画布中心。</td></tr>
+  <tr valign="top"><td class="label">Features</td><td class="data"><ul><li>原生支持单色与多色图标 (方案 1.2: svgLayers 多图层 Path 渲染)</li><li>本地文件夹即真理源，支持自定义本地图标路径 (Vault 文件夹)</li><li>智能提取多图层颜色与 ViewBox，无缝缩放与手绘/精准风格切换</li><li>媲美现代组件库 (Figma / Raycast) 的极致 UI 与全键盘交互</li></ul></td></tr>
+  <tr valign="top"><td class="label">Dependencies</td><td class="data"><ul><li>独立运行</li></ul></td></tr>
+  <tr valign="top"><td class="label">Autorun</td><td class="data">false</td></tr>
   <tr valign="top"><td class="label">License</td><td class="data">MIT</td></tr>
 </table>
 
